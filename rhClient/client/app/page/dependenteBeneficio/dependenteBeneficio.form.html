@@ -1,0 +1,175 @@
+<div class="page" ng-controller="dependenteBeneficioFormCtrl">
+    <div class="row ui-section">
+        <div class="col-lg-8 clearfix">
+            <h2 class="section-header">{{!detalhes ? 'Formulário Dependente' : 'Detalhes do Dependente'}}</h2>
+        </div>
+        <div class="col-md-12">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <div class="row">
+                        <div class="col-lg-12 col-lg-offset-0">
+                            <div layout="column" ng-cloak class="md-inline-form inputdemoBasicUsage">
+                                <div layout-padding>
+                                        <div layout layout-sm="column">
+                                            <md-input-container flex>
+                                                <label>Matrícula</label>
+                                                <input ng-disabled="true" ng-model="dependenteBeneficio.dependente.funcionario.matricula">
+                                            </md-input-container>
+                                            <md-input-container flex>
+                                                <label>Nome do Funcionário</label>
+                                                <input ng-disabled="true" ng-model="dependenteBeneficio.dependente.funcionario.nome">
+                                            </md-input-container>
+                                        </div>
+                                        <div layout layout-sm="column">
+                                            <md-input-container flex>
+                                                <label>Nome do Dependente</label>
+                                                <input ng-disabled="true" ng-model="dependenteBeneficio.dependente.nome">
+                                            </md-input-container>
+                                        </div>      
+                                        <h4>Consignado</h4>
+                                        <div layout layout-sm="column">
+                                            <div class="col-lg-8">
+                                                <md-autocomplete ng-disabled="detalhes" ng-model="consignado.nome" ng-change="validarBotao()" md-no-cache="noCache" md-floating-label="Buscar Consignado" md-selected-item="consignado" md-search-text="search" md-items="item in querySearchConsignado(search)" md-item-text="item.descricao" md-delay="100" md-min-length="3">
+                                                    <md-item-template>
+                                                        <span  md-highlight-text="search" md-highlight-flags="^i">
+                                                            {{item.descricao}}
+                                                        </span>
+                                                    </md-item-template>
+                                                    <md-not-found>
+                                                        Item
+                                                        "{{search}}"
+                                                        não
+                                                        encontrado.
+                                                    </md-not-found>
+                                                </md-autocomplete>
+                                            </div>
+                                            <div class="col-lg-4">
+                                                <md-input-container>
+                                                    <label>Valor (R$)</label>
+                                                    <input ng-disabled="detalhes" ng-model="valor" ng-change="validarBotao()" name="valor" ui-number-mask="2">
+                                                </md-intput-container>
+                                                
+                                            </div>
+                                            <div class="col-lg-2">
+                                                <md-input-container>
+                                                    <button ng-show="validateButton" ng-click="consignadoSelecionado()" style="background-color: #01722C;color: #FFF;"><i class="fa fa-plus fa-md"></i></button>
+                                                </md-intput-container>
+                                            </div>                                            
+                                        </div>         
+                                                                                                     
+                                    <form ng-hide="detalhes" name="dependentesForm" ng-submit="save()">
+                                        <div layout layout-sm="column" ng-if="dependenteBeneficio.consignados.length > 0">
+                                            <md-table-container flex>
+                                                <table md-table>
+                                                    <thead md-head>
+                                                        <tr md-row>
+                                                            <th md-column>Consignado</th>
+                                                            <th md-column>Valor</th>
+                                                            <th md-column>Ações</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody md-body>
+                                                        <tr md-row ng-repeat="consignado in dependenteBeneficio.consignados">
+                                                            <td md-cell>{{consignado.descricao}}</td>
+                                                            <td md-cell>{{consignado.valor | currency:'R$'}}</td>
+                                                            <td md-cell ng-if="!detalhes">
+                                                                <a ng-click="removerConsignado($index)">
+                                                                    <md-tooltip md-direction="top">Excluir</md-tooltip>
+                                                                    <i class="fa fa-trash-o fa-lg"></i>
+                                                                </a>
+                                                            </td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </md-table-container>
+                                        </div>
+                                </div>
+
+                                <div class="col-md-12 text-center" style="margin-top: 20px">
+                                    <p ng-if="!detalhes" ng-show="verifyPermission" ng-click="adicionarDependente()"
+                                        ui-wave class="btn btn-primary btn-w-md">Inserir</p>
+                                </div>
+
+                                <md-table-container>
+                                    <table md-table ng-model="selected" ng-if="dependentes.dependentes.length > 0" md-progress="promise" style="margin-top: 20px">
+                                        <thead ng-if="!options.decapitate" md-head md-order="query.order" md-on-reorder="loadList">
+                                            <tr md-row>
+                                                <th md-column md-order-by="nome">
+                                                    <span>Nome do Dependente</span>
+                                                </th>
+                                                <th md-column>
+                                                    <span>Início Motivo Dependente</span>
+                                                </th>
+                                                <th md-column>
+                                                    <span>Fim Motivo Dependente</span>
+                                                </th>
+                                                <th md-column>
+                                                    <span>Ações</span>
+                                                </th>
+                                            </tr>
+                                        </thead>
+                                        <tbody md-body>
+                                            <tr md-row md-select="item" md-select-id="item" md-auto-select ng-repeat="item in dependentes.dependentes">
+                                                <td md-cell>{{item.nome}}</td>
+                                                <td md-cell>{{item.inicioMotivo | date : "dd/MM/y"}}</td>
+                                                <td md-cell>{{item.fimMotivo | date : "dd/MM/y"}}</td>
+                                                <td md-cell>
+                                                    <a ng-if="!botoesGestao && !detalhes" ng-click="editarDependente($index)">
+                                                        <md-tooltip md-direction="top">Editar Dependente</md-tooltip>
+                                                        <i class="fa fa-pencil fa-lg"></i>
+                                                    </a>
+                                                    <a ng-if="!botoesGestao && !detalhes" ng-click="removerDependente($index)">
+                                                        <md-tooltip md-direction="top">Excluir</md-tooltip>
+                                                        <i class="fa fa-trash-o fa-lg"></i>
+                                                    </a>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </md-table-container>
+
+                                <!-- <div ng-if="detalhes" layout layout-sm="column">
+                                    <table md-table md-progress="promise">
+                                        <thead md-head>
+                                            <tr md-row>
+                                                <th md-column>
+                                                    <span>Criado em:</span>
+                                                </th>
+                                                <th md-column>
+                                                    <span>Atualizado em:</span>
+                                                </th>
+                                                <th md-column>
+                                                    <span>Criado por:</span>
+                                                </th>
+                                                <th md-column>
+                                                    <span>Atualizado por:</span>
+                                                </th>
+                                            </tr>
+                                        </thead>
+                                        <tbody md-body>
+                                            <tr md-row>
+                                                <td md-cell>{{dependentes.criadoEm | date:'dd/MM/yy - HH:mm'}}</td>
+                                                <td md-cell>{{dependentes.alteradoEm | date:'dd/MM/yy - HH:mm'}}</td>
+                                                <td md-cell>{{dependentes.criadoPor}}</td>
+                                                <td md-cell>{{dependentes.alteradoPor}}</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div> -->
+                                
+                                <div class="row">
+                                    <div class="col-md-12 text-center" style="margin-top: 40px">
+                                        <button ng-if="!detalhes" ng-disabled="dependenteForm.$invalid" type="submit"
+                                            ui-wave class="btn btn-primary btn-w-md" ng-click="save()">Salvar</button>
+                                        <p class="btn btn-default btn-w-md" ui-wave data-ng-click="goBack()">Voltar</p>
+                                    </div>
+                                </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

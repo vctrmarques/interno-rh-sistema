@@ -1,0 +1,132 @@
+<div class="page" ng-controller="crmCreaFormCtrl">
+    <div class="row ui-section">
+        <div class="col-lg-8 clearfix">
+            <h2 class="section-header">{{!detalhes ? 'Formulário CRM / CREA' : 'Detalhes CRM / CREA'}}</h2>
+        </div>
+        <div class="col-md-12">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <form ng-disabled="detalhes" name="crmCreaForm" ng-submit="save()">
+                                <div layout="column" ng-cloak class="md-inline-form inputdemoBasicUsage">
+                                    <div layout-padding>
+
+                                        <div layout layout-sm="column">
+                                            <md-input-container flex>
+                                                <label>Nome do conveniado</label>
+                                                <input ng-disabled="detalhes" minlength="3" required ng-model="crmCrea.nomeConveniado"
+                                                    name="nomeConveniado">
+                                                <div ng-messages="crmCreaForm.nomeConveniado.$error" multiple >
+                                                    <div ng-message="minlength">Número de carácteres deve ser maior que 2</div>
+                                                    <div ng-message="required">Campo de preenchimento obrigatório.</div>
+                                                </div>
+                                            </md-input-container>
+                                        </div>
+                                        <md-input-container class="md-block col-lg-3">
+                                            <label>Tipo de Conselho</label>
+                                            <md-select ng-disabled="detalhes" ng-model="crmCrea.tipo" name="tipo">
+                                                <md-option value="CRM">
+                                                    CRM
+                                                </md-option>
+                                                <md-option value="CREA">
+                                                    CREA
+                                                </md-option>
+                                            </md-select>
+                                        </md-input-container>
+                                        <div layout layout-sm="column">
+                                            <md-input-container flex>
+                                                <label>Número de CRM / CREA</label>
+                                                <input ng-disabled="detalhes || crmCrea.tipo==null" ng-required="true"
+                                                    ng-model="crmCrea.numeroCrmCrea" name="numeroCrmCrea">
+                                                    <div ng-messages="crmCreaForm.numeroCrmCrea.$error" multiple >
+                                                        <div ng-message="required">Campo de preenchimento obrigatório.</div>
+                                                    </div>
+                                            </md-input-container>
+                                        </div>
+                                        <md-input-container class="md-block">
+                                            <div class="col-md-4">
+                                                <label>Coordenador(a) do PCMSO</label>
+                                            </div>
+                                            <div class="col-md-2">
+                                                <md-switch ng-disabled="detalhes || crmCrea.tipo=='CREA'" ng-model="crmCrea.coordenadorPcmso"
+                                                    aria-label="Ativo">{{
+                                                    crmCrea.coordenadorPcmso
+                                                    ?
+                                                    'Sim':'Não'}} </md-switch>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <label>Responsável pelo LTCAT</label>
+                                            </div>
+                                            <div class="col-md-2">
+                                                <md-switch ng-disabled="detalhes || crmCrea.tipo=='CRM'" ng-model="crmCrea.responsavelLtcat"
+                                                    aria-label="Ativo">{{
+                                                    crmCrea.responsavelLtcat
+                                                    ?
+                                                    'Sim':'Não'}} </md-switch>
+                                            </div>
+                                        </md-input-container>
+
+                                        <h2 class="md-title">Convênios</h2>
+                                        <div class="padding: 8px">
+                                            <md-chips readonly="detalhes" ng-model="crmCrea.convenios"
+                                                md-autocomplete-snap md-transform-chip="transformChip($chip)"
+                                                md-require-match="true">
+                                                <md-autocomplete md-selected-item="selectedItem" md-search-text="searchText"
+                                                    md-items="item in querySearchConvenio(searchText)" md-item-text="item.descricao"
+                                                    placeholder="Busque um convênio">
+                                                    <span md-highlight-text="searchText">{{item.descricao}}</span>
+                                                </md-autocomplete>
+                                                <md-chip-template>
+                                                    <span>
+                                                        <strong>{{$chip.descricao}}</strong>
+                                                    </span>
+                                                </md-chip-template>
+                                            </md-chips>
+                                        </div>
+                                        <div ng-if="detalhes" layout layout-sm="column">
+                                            <table md-table md-progress="promise">
+                                                <thead md-head>
+                                                    <tr md-row>
+                                                        <th md-column>
+                                                            <span>Criado em:</span>
+                                                        </th>
+                                                        <th md-column>
+                                                            <span>Atualizado em:</span>
+                                                        </th>
+                                                        <th md-column>
+                                                            <span>Criado por:</span>
+                                                        </th>
+                                                        <th md-column>
+                                                            <span>Atualizado por:</span>
+                                                        </th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody md-body>
+                                                    <tr md-row>
+                                                        <td md-cell>{{crmCrea.criadoEm | date:'dd/MM/yy - HH:mm'}}</td>
+                                                        <td md-cell>{{crmCrea.alteradoEm | date:'dd/MM/yy -
+                                                            HH:mm'}}</td>
+                                                        <td md-cell>{{crmCrea.criadoPor}}</td>
+                                                        <td md-cell>{{crmCrea.alteradoPor}}</td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+
+                                        <div class="row" style="margin-top: 30px">
+                                            <div class="col-md-12 text-center">
+                                                <button ng-if="!detalhes" ng-disabled="crmCreaForm.$invalid" type="submit"
+                                                ui-wave class="btn btn-primary btn-w-md">Salvar</button>
+                                            <p class="btn btn-default btn-w-md" ui-wave data-ng-click="goBack()">Voltar</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

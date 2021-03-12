@@ -1,0 +1,120 @@
+<section class="page container-fluid with-maxwidth chapter" ng-controller="arrecadacaoAliquotaCtrl">
+
+    <div class="row ui-section">
+        <div class="col-lg-9 clearfix">
+            <h2 class="section-header">Arrecadação - Alíquotas e Encargos</h2>
+        </div>
+        <div class="col-lg-3 clearfix" style="padding-top: 10px;">
+            <div class="pull-right">
+                <md-button class="md-fab md-primary" ng-href="" ng-click="showRelatorio()">
+                    <md-tooltip md-direction="bottom">Relatório</md-tooltip>
+                    <span class="fa fa-file-pdf-o"></span>
+                </md-button>
+                <md-button ng-show="permissao.podeGerenciar" class="md-fab md-accent" ng-href="#!/arrecadacaoAliquota/formulario">
+                    <md-tooltip md-direction="bottom">Novo Cadastro</md-tooltip>
+                    <span class="fa fa-plus"></span>
+                </md-button>
+            </div>
+        </div>
+        <div class="col-md-12">
+            <article class="article">
+
+                <md-card class="no-margin-h">
+                    <div layout="column">
+                        <div layout-padding>
+                            <div layout layout-sm="column">
+                                <md-input-container flex>
+                                    <md-icon class="material-icons icon-momentpicker"
+                                        ng-class="md-datepicker-calendar-icon" aria-label="md-calendar">
+                                        date_range
+                                    </md-icon>
+                                    <input moment-picker="inicioVigencia"
+                                        placeholder="Vigência inicial" name="inicioVigencia"
+                                        max-date="fimVigencia"
+                                        ng-model="inicioVigencia" format="DD/MM/YYYY"
+                                        locale="pt-br" start-view="month" ng-model-options="{ updateOn: 'blur' }">
+                                </md-input-container>
+
+                                <md-input-container flex>
+                                    <md-icon class="material-icons icon-momentpicker"
+                                        ng-class="md-datepicker-calendar-icon" aria-label="md-calendar">
+                                        date_range
+                                    </md-icon>
+                                    <input moment-picker="fimVigencia"
+                                        placeholder="Vigência final" name="fimVigencia"
+                                        min-date="inicioVigencia"
+                                        ng-model="fimVigencia" format="DD/MM/YYYY"
+                                        locale="pt-br" start-view="month" ng-model-options="{ updateOn: 'blur' }">
+                                </md-input-container>
+
+                                <!-- <md-input-container flex>
+                                    <md-select ng-model="selectedEncargos" placeholder="Alíquotas / Encargos "
+                                        data-md-container-class="selectdemoSelectHeader" multiple>
+                                        <md-select-header class="demo-select-header">
+                                        </md-select-header>
+                                        <md-optgroup label="Alíquotas / Encargos">
+                                            <md-option ng-value="item.value" ng-repeat="item in lista.encargo">
+                                                {{item.label}}
+                                            </md-option>
+                                        </md-optgroup>
+                                    </md-select>
+                                </md-input-container> -->
+
+                                <md-button class="md-icon-button" ng-click="limpaFiltro()">
+                                    <md-tooltip md-direction="top">Limpar Filtros</md-tooltip>
+                                    <md-icon>autorenew</md-icon>
+                                </md-button>
+                                <md-button class="md-icon-button" ng-click="loadList()">
+                                    <md-tooltip md-direction="top">Atualizar</md-tooltip>
+                                    <md-icon>refresh</md-icon>
+                                </md-button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <md-table-container>
+                        <div ng-repeat="item in list.data track by $index">
+                            <div ng-class="getAccordionClass($index)" id="{{'accordion-aliquota'+item.id}}" ng-click="accordion(item.id)">
+                                Vigência - {{convertDate(item.inicioVigencia, false)}} à {{convertDate(item.fimVigencia, false)}}
+
+                                <a href="" class="icon" ui-sref="arrecadacaoAliquotaEdit({id: item.id})">
+                                    <md-tooltip md-direction="top">Editar</md-tooltip>
+                                    <i class="fa fa-pencil fa-sm"></i>
+                                </a>
+                                <a class="icon" ui-sref="arrecadacaoAliquotaDetalhes({ id: item.id, detalhes: true })">
+                                    <md-tooltip md-direction="top">Detalhes Cadastrais</md-tooltip>
+                                    <i class="fa fa-search fa-sm"></i>
+                                </a>
+                            </div>
+                            <div class="accordion-content">
+                                <md-table-container>
+                                    <table md-table ng-model="selected" md-progress="promise">
+                                        <thead ng-if="!options.decapitate" md-head md-order="query.order" md-on-reorder="loadList">
+                                            <tr md-row>
+                                                <th md-column>
+                                                    <span>Alíquota / Encargo</span>
+                                                </th>
+                                                <th md-column>
+                                                    <span>Alíquota</span>
+                                                </th>
+                                            </tr>
+                                        </thead>
+                                        <tbody md-body>
+                                            <tr md-row md-auto-select ng-repeat="e in item.encargos | orderBy : 'other'">
+                                                <td md-cell>{{e.aliquotaEncargo}}</td>
+                                                <td md-cell>{{e.aliquota.toLocaleString()}}%</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </md-table-container>
+                            </div>
+                        </div>
+                    </md-table-container>
+                    <md-table-pagination md-label="{page: 'Página:', rowsPerPage: 'Registros por página:', of: 'de'}"
+                        md-limit="query.limit" md-limit-options="limitOptions" md-page="query.page"
+                        md-total="{{list.count}}" md-on-paginate="loadList" md-page-select></md-table-pagination>
+                </md-card>
+            </article>
+        </div>
+    </div>
+</section>

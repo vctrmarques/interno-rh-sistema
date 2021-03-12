@@ -1,0 +1,30 @@
+<div class="page">
+    <div class="row ui-section">
+        <div>
+            <h4 class="section-header" style="float: left;">Programar Fechamento da Competência
+                {{folhaCompetencia.mesAno}}</h4>
+            <div style="float: right">
+                <span class="space"></span>
+            </div>
+        </div>
+        <md-input-container>
+            <label>Data De Fechamento</label>
+            <md-icon class="material-icons icon-momentpicker" ng-class="md-datepicker-calendar-icon"
+                aria-label="md-calendar">
+                date_range</md-icon>
+            <input  change="checarDataMenorQueHoje(programacaoFechamento)" name="programacaoFechamento" moment-picker="programacaoFechamento"
+                placeholder="Selecione a data" ng-model="programacaoFechamento" today="true" format="DD/MM/YYYY" locale="pt-br"  start-view="month" ng-model-options="{ updateOn: 'blur' }" ng-required="true"
+                min-date="hoje">
+        </md-input-container>
+        <div>
+            <button style="width:50%" ng-if="!detalhes" ng-click="agendamentoFechamento(programacaoFechamento)" type="submit" ui-wave
+                class="btn-form btn btn-primary btn-w-md">
+                <span ng-if="folhaCompetencia.fimCompetencia==null">Realizar</span>
+                <span ng-if="folhaCompetencia.fimCompetencia!=null">Alterar</span>
+                Agendamento
+            </button>
+            <button style="width:45%" class="btn-form btn btn-default btn-w-md" ui-wave
+                data-ng-click="cancel()">Voltar</button>
+        </div>
+    </div>
+</div>

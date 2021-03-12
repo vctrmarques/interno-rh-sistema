@@ -1,0 +1,118 @@
+<div class="page" ng-controller="classificacaoInternacionalDoencaFormCtrl">
+    <div class="row ui-section">
+        <div class="col-lg-8 clearfix">
+            <h2 class="section-header">{{!detalhes ? 'Formulário de Classificação Internacional de Doença' : 'Detalhes de Classificação Internacional de Doença'}}</h2>
+        </div>
+        <div class="col-md-12">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <div class="row">
+                        <div class="col-lg-8 col-lg-offset-2">
+                            <form ng-disabled="detalhes" name="classificacaoInternacionalDoencaForm" ng-submit="save()">
+                                <div layout="column" ng-cloak class="md-inline-form inputdemoBasicUsage">
+                                    <div layout-padding>
+
+                                        <div layout layout-sm="column">
+                                            <md-input-container flex>
+                                                <label>Código</label>
+                                                <input ng-disabled="detalhes" ng-required="true" ng-model="classificacaoInternacionalDoenca.codigo"
+                                                    name="codigo">
+                                            </md-input-container>
+                                        </div>
+
+                                        <div layout layout-sm="column">
+                                            <md-input-container flex>
+                                                <label>Descrição</label>
+                                                <input ng-disabled="detalhes" ng-required="true" ng-model="classificacaoInternacionalDoenca.descricao"
+                                                    name="descricao">
+                                            </md-input-container>
+                                        </div>
+
+                                        <div layout layout-sm="column">
+                                            <md-autocomplete ng-disabled="detalhes" md-no-cache="classificacaoInternacionalDoencaForm.noCache"
+                                                md-selected-item="classificacaoInternacionalDoenca.categoriaDoenca"
+                                                md-search-text="classificacaoInternacionalDoencaForm.searchBuscaCategoria"
+                                                md-items="item in querySearchCategoria(classificacaoInternacionalDoencaForm.searchBuscaCategoria)"
+                                                md-item-text="item.descricao" md-delay="100" md-min-length="3"
+                                                md-floating-label="Categoria de Doença" md-require-match>
+                                                <md-item-template>
+                                                    <span md-highlight-text="classificacaoInternacionalDoencaForm.searchBuscaCategoria"
+                                                        md-highlight-flags="^i">{{item.codigo}} -
+                                                        {{item.descricao}}</span>
+                                                </md-item-template>
+                                                <md-not-found>
+                                                    Item
+                                                    "{{classificacaoInternacionalDoencaForm.searchBuscaCategoria}}"
+                                                    não
+                                                    encontrado.
+                                                </md-not-found>
+                                            </md-autocomplete>
+                                        </div>
+
+                                        <div layout layout-sm="column">
+                                            <md-autocomplete ng-disabled="detalhes" md-no-cache="classificacaoInternacionalDoencaForm.noCache"
+                                                md-selected-item="classificacaoInternacionalDoenca.subCategoriaDoenca"
+                                                md-search-text="classificacaoInternacionalDoencaForm.searchBuscaSubCategoria"
+                                                md-items="item in querySearchSubCategoria(classificacaoInternacionalDoencaForm.searchBuscaSubCategoria)"
+                                                md-item-text="item.descricao" md-delay="100" md-min-length="3"
+                                                md-floating-label="Subcategoria de Doença" md-require-match>
+                                                <md-item-template>
+                                                    <span md-highlight-text="classificacaoInternacionalDoencaForm.searchBuscaSubCategoria"
+                                                        md-highlight-flags="^i">{{item.codigo}} -
+                                                        {{item.descricao}}</span>
+                                                </md-item-template>
+                                                <md-not-found>
+                                                    Item
+                                                    "{{classificacaoInternacionalDoencaForm.searchBuscaSubCategoria}}"
+                                                    não
+                                                    encontrado.
+                                                </md-not-found>
+                                            </md-autocomplete>
+                                        </div>
+
+                                    </div>
+
+                                    <div ng-if="detalhes" layout layout-sm="column">
+                                            <table md-table md-progress="promise">
+                                                <thead md-head>
+                                                    <tr md-row>
+                                                        <th md-column>
+                                                            <span>Criado em:</span>
+                                                        </th>
+                                                        <th md-column>
+                                                            <span>Atualizado em:</span>
+                                                        </th>
+                                                        <th md-column>
+                                                            <span>Criado por:</span>
+                                                        </th>
+                                                        <th md-column>
+                                                            <span>Atualizado por:</span>
+                                                        </th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody md-body>
+                                                    <tr md-row>
+                                                        <td md-cell>{{classificacaoInternacionalDoenca.criadoEm | date:'dd/MM/yy - HH:mm'}}</td>
+                                                        <td md-cell>{{classificacaoInternacionalDoenca.alteradoEm | date:'dd/MM/yy - HH:mm'}}</td>
+                                                        <td md-cell>{{classificacaoInternacionalDoenca.criadoPor}}</td>
+                                                        <td md-cell>{{classificacaoInternacionalDoenca.alteradoPor}}</td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="col-md-12 text-center">
+                                            <button ng-if="!detalhes" ng-disabled="classificacaoInternacionalDoencaNocivoForm.$invalid" type="submit" ui-wave class="btn btn-primary btn-w-md">Salvar</button>
+                                            <p class="btn btn-default btn-w-md" ui-wave data-ng-click="goBack()">Voltar</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,66 @@
+<md-dialog aria-label="Detalhamento de Auditoria" flex="50">
+    <form ng-cloak>
+        <md-toolbar>
+            <div class="md-toolbar-tools">
+                <h2>Detalhamento de Auditoria</h2>
+                <span flex></span>
+                <md-button class="md-icon-button" ng-click="cancel()">
+                    <md-icon class="material-icons">close</md-icon>
+                </md-button>
+            </div>
+        </md-toolbar>
+
+        <md-dialog-content>
+            <div class="md-dialog-content">
+                <h5>Dados Gerais</h5>
+                <div layout layout-sm="column">
+                    <md-input-container flex>
+                        <label>Tabela</label>
+                        <md-select ng-model="auditoria.entidade.value" ng-disabled="true">
+                            <md-option ng-value="obj.value" ng-repeat="obj in auditoriaEntityList">
+                                {{obj.label}}
+                            </md-option>
+                        </md-select>
+                    </md-input-container>
+                    <md-input-container flex>
+                        <label>Operação</label>
+                        <md-select ng-model="auditoria.acao" ng-disabled="true">
+                            <md-option ng-value="obj.label" ng-repeat="obj in acaoAuditoriaEnumList">
+                                {{obj.label}}
+                            </md-option>
+                        </md-select>
+                    </md-input-container>
+                </div>
+                <div layout layout-sm="column">
+                    <md-input-container flex>
+                        <label>Usuário</label> <input ng-disabled="true" ng-model="auditoria.criadoPor" />
+                    </md-input-container>
+                    <md-input-container flex>
+                        <label>Data</label>
+                        <md-icon class="material-icons icon-momentpicker" ng-class="md-datepicker-calendar-icon"
+                            aria-label="md-calendar">
+                            date_range
+                        </md-icon>
+                        <input moment-picker="auditoria.criadoEm" name="criadoEm" ng-disabled="true"
+                            ng-model="auditoria.criadoEm" format="DD/MM/YYYY HH:mm" locale="pt-br" start-view="month"
+                            ng-model-options="{ updateOn: 'blur' }">
+                    </md-input-container>
+                </div>
+                <h5>Dados Auditados</h5>
+                <div ng-repeat="item in auditoria.auditoriaDescricaoDto.itemList">
+                    <span style="font-weight: bold;">{{item.campo}}: </span>
+                    <span ng-if="isArray(item.valor) === false">{{item.valor}}{{$index + 1 !== auditoria.auditoriaDescricaoDto.itemList.length ? ';':''}}{{$index + 1 === auditoria.auditoriaDescricaoDto.itemList.length ? '.':''}}</span>
+                    <span ng-if="isArray(item.valor) === true"
+                        ng-repeat="itemValor in item.valor">{{itemValor}}{{$index + 1 !== item.valor.length ? ' - ':''}}{{$index + 1 === item.valor.length ? ';':''}}
+                    </span>
+                </div>
+            </div>
+        </md-dialog-content>
+
+        <md-dialog-actions layout="row">
+            <md-button ng-click="cancel()">
+                Fechar
+            </md-button>
+        </md-dialog-actions>
+    </form>
+</md-dialog>

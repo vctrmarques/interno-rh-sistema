@@ -1,0 +1,170 @@
+<div class="page" ng-controller="tomadorServicoFormCtrl">
+    <div class="row ui-section">
+        <div class="col-lg-8 clearfix">
+            <h2 class="section-header">{{!detalhes ? 'Formulário Tomador de Serviço' : 'Detalhes do Tomador de Serviço'}}</h2>
+        </div>
+        <div class="col-md-12">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div layout="column" ng-cloak class="md-inline-form inputdemoBasicUsage">
+                                <div layout-padding>
+                                    <form name="tomadorServicoForm" ng-submit="save()">
+                                        <div layout layout-sm="column">
+                                            <md-radio-group ng-disabled="detalhes" ng-model="tomadorServico.tipoInscricao">
+                                                <label>Tipo de Inscrição</label>
+                                                <md-radio-button value="CNPJ" class="md-primary">CNPJ</md-radio-button>
+                                                <md-radio-button value="CEI"  class="md-primary"> CEI </md-radio-button>
+                                            </md-radio-group>
+                                        </div>
+                                        <div layout layout-sm="column">
+                                            <md-input-container class="md-block">
+                                                <label ng-if="tomadorServico.tipoInscricao == 'CNPJ'">CNPJ</label>
+                                                <label ng-if="tomadorServico.tipoInscricao == 'CEI'">CEI</label>
+                                                <input required ng-disabled="detalhes" ng-model="tomadorServico.cnpj" name="cnpj" ui-br-cnpj-mask>
+                                                <div ng-messages="tomadorServicoForm.cnpj.$error" role="alert" multiple>
+                                                    <div ng-message="required">Campo de preenchimento obrigatório.</div>
+                                                    <div ng-message="cnpj">CNPJ Inválido.</div>
+                                                </div>
+                                            </md-input-container>
+                                            <md-input-container flex>
+                                                <label>Razão Social</label>
+                                                <input required ng-disabled="detalhes" ng-model="tomadorServico.razaoSocial" name="razaoSocial">
+                                                <div ng-messages="tomadorServicoForm.razaoSocial.$error" role="alert" multiple>
+                                                    <div ng-message="required">Campo de preenchimento obrigatório.</div>
+                                                </div>
+                                            </md-input-container>
+                                        </div>
+                                        <div layout layout-sm="column">
+                                            <md-input-container flex>
+                                                <label>Logradouro</label>
+                                                <input ng-disabled="detalhes" ng-model="tomadorServico.endereco.logradouro" name="logradouro" required>
+                                                <div ng-messages="tomadorServicoForm.logradouro.$error" role="alert" multiple>
+                                                    <div ng-message="required">Campo de preenchimento obrigatório.</div>
+                                                </div>
+                                            </md-input-container>
+                                            <md-input-container class="md-block">
+                                                <label>Número</label>
+                                                <input ng-disabled="detalhes" ng-model="tomadorServico.endereco.numero" name="numero" required>
+                                                <div ng-messages="tomadorServicoForm.numero.$error" role="alert" multiple>
+                                                    <div ng-message="required">Campo de preenchimento obrigatório.</div>
+                                                </div>
+                                            </md-input-container>
+                                            <md-input-container flex>
+                                                <label>Complemento</label>
+                                                <input ng-disabled="detalhes" ng-model="tomadorServico.endereco.complemento" name="complemento" required>
+                                                <div ng-messages="tomadorServicoForm.complemento.$error" role="alert" multiple>
+                                                    <div ng-message="required">Campo de preenchimento obrigatório.</div>
+                                                </div>
+                                            </md-input-container>
+                                        </div>
+                                        <div layout layout-sm="column">
+                                            <md-input-container flex>
+                                                <label>Bairro</label>
+                                                <input ng-disabled="detalhes" ng-model="tomadorServico.endereco.bairro" name="bairro" required>
+                                                <div ng-messages="tomadorServicoForm.bairro.$error" role="alert" multiple>
+                                                    <div ng-message="required">Campo de preenchimento obrigatório.</div>
+                                                </div>
+                                            </md-input-container>
+                                            <md-input-container flex>
+                                                <label>Cidade</label>
+                                                <input ng-disabled="detalhes" ng-model="tomadorServico.endereco.cidade" name="cidade" required>
+                                                <div ng-messages="tomadorServicoForm.cidade.$error" role="alert" multiple>
+                                                    <div ng-message="required">Campo de preenchimento obrigatório.</div>
+                                                </div>
+                                            </md-input-container>
+                                            <md-input-container class="md-block">
+                                                <label>UF</label>
+                                                <md-select ng-disabled="detalhes" ng-model="tomadorServico.endereco.estado" name="estado" required>
+                                                    <md-option ng-repeat="state in states" value="{{state.value}}">
+                                                        {{state.label}}
+                                                    </md-option>
+                                                </md-select>
+                                                <div ng-messages="tomadorServicoForm.estado.$error" role="alert" multiple>
+                                                    <div ng-message="required">Campo de preenchimento obrigatório.</div>
+                                                </div>
+                                            </md-input-container>
+                                            <md-input-container class="md-block">
+                                                <label>CEP</label>
+                                                <input ng-disabled="detalhes" ng-model="tomadorServico.endereco.cep" name="cep" ui-br-cep-mask required>
+                                                <div ng-messages="tomadorServicoForm.cep.$error" role="alert" multiple>
+                                                    <div ng-message="cep">CEP Inválido.</div>
+                                                </div>
+                                                <div ng-messages="tomadorServicoForm.cep.$error" role="alert" multiple>
+                                                    <div ng-message="required">Campo de preenchimento obrigatório.</div>
+                                                </div>
+                                            </md-input-container>
+                                        </div>
+                                        <div layout layout-sm="column">
+                                            <md-input-container flex>
+                                                <label>Código de Recolhimento</label>
+                                                <md-select ng-disabled="detalhes" name="codigoRecolhimento" ng-model="tomadorServico.codigoRecolhimentoId">
+                                                    <md-option ng-value=null><em>-- Selecione --</em></md-option>
+                                                    <md-option ng-repeat="codigoRec in listCodigoRecolhimento.data" ng-value="codigoRec.id">
+                                                        {{codigoRec.descricao}}
+                                                    </md-option>
+                                                </md-select>
+                                            </md-input-container>
+                                        </div>
+                                        <div layout layout-sm="column">
+                                            <md-input-container flex>
+                                                <label>Código de Pagamento GPS</label>
+                                                <md-select ng-disabled="detalhes" name="codigoPagamentoGps" ng-model="tomadorServico.codigoPagamentoGpsId">
+                                                    <md-option ng-value=null><em>-- Selecione --</em></md-option>
+                                                    <md-option ng-repeat="codigoPag in listCodigoPagamentoGps.data" ng-value="codigoPag.id">
+                                                        {{codigoPag.descricao}}
+                                                    </md-option>
+                                                </md-select>
+                                            </md-input-container>
+                                        </div>
+
+                                        <div ng-if="detalhes" layout layout-sm="column">
+                                            <table md-table md-progress="promise">
+                                                <thead md-head>
+                                                    <tr md-row>
+                                                        <th md-column>
+                                                            <span>Criado em:</span>
+                                                        </th>
+                                                        <th md-column>
+                                                            <span>Atualizado em:</span>
+                                                        </th>
+                                                        <th md-column>
+                                                            <span>Criado por:</span>
+                                                        </th>
+                                                        <th md-column>
+                                                            <span>Atualizado por:</span>
+                                                        </th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody md-body>
+                                                    <tr md-row>
+                                                        <td md-cell>{{tomadorServico.criadoEm | date:'dd/MM/yy - HH:mm'}}</td>
+                                                        <td md-cell>{{tomadorServico.alteradoEm | date:'dd/MM/yy - HH:mm'}}</td>
+                                                        <td md-cell>{{tomadorServico.criadoPor}}</td>
+                                                        <td md-cell>{{tomadorServico.alteradoPor}}</td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+
+                                        <div class="row">
+                                            <div class="col-md-12 text-center">
+                                                <button ng-if="!detalhes" ng-disabled="tomadorServicoForm.$invalid" type="submit" ui-wave class="btn btn-primary btn-w-md">Salvar</button>
+                                                <p class="btn btn-default btn-w-md" ui-wave data-ng-click="goBack()">Voltar</p>
+                                                <md-button ng-if="detalhes && tomadorServico.compensacaoId" class="md-raised btn-w-md md-accent" ng-click="detalhesCompensacao()">
+                                                    <md-tooltip md-direction="top">Detalhes da Compensação</md-tooltip>
+                                                    Compensação
+                                                </md-button>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

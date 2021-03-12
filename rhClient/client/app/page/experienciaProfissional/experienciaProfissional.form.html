@@ -1,0 +1,185 @@
+<div class="page" ng-controller="experienciaProfissionalFormCtrl">
+    <div class="row ui-section">
+        <div class="col-lg-8 clearfix">
+            <h2 class="section-header">{{!detalhes ? 'Formulário de Experiência Profissional' : 'Detalhes de Experiência Profissional'}}</h2>
+        </div>
+        <div class="col-md-12">
+            <div class="panel panel-default">
+                <div class="panel-body" style="margin: 15px 10px 5px 10px !important;">
+                    <div class="row">
+                        <div class="col-lg-16">
+                            <form ng-disabled="detalhes" name="experienciaForm" ng-submit="save()">
+                                <div layout="column" ng-cloak class="md-inline-form inputdemoBasicUsage">
+
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <md-autocomplete md-no-cache="cargoForm.noCache" md-input-name="funcionarioSelecionado" required ng-disabled="funcionario.id"
+                                                md-selected-item="funcionario" md-search-text="cargoForm.searchBuscaCbo"
+                                                md-items="item in funcionarioSearch(cargoForm.searchBuscaCbo)"
+                                                md-item-text="item.nome" md-delay="100" md-min-length="3"
+                                                md-floating-label="Funcionário" md-require-match>
+                                                <md-item-template>
+                                                    <span md-highlight-text="cargoForm.searchBuscaCbo"
+                                                        md-highlight-flags="^i">
+                                                        {{item.nome}}</span>
+                                                </md-item-template>
+                                                <md-not-found>
+                                                    Item
+                                                    "{{cargoForm.searchBuscaCbo}}"
+                                                    não
+                                                    encontrado.
+                                                </md-not-found>
+                                                <div ng-messages="experienciaForm.funcionarioSelecionado.$error" ng-if="experienciaForm.funcionarioSelecionado.$touched">
+                                                    <div ng-message="required">Campo de preenchimento obrigatório.</div>
+                                                </div>
+                                            </md-autocomplete>
+                                        </div>
+                                    </div>
+
+                                    <div layout layout-sm="column" style="margin: 15px 0px 5px 0px !important;">
+                                        <md-input-container flex>
+                                                <label>Matricula</label>
+                                                <input name="matriculaFuncionario" ng-model="funcionario.matricula" ng-disabled="true">
+                                        </md-input-container>
+    
+                                        <md-input-container flex>
+                                                <label>Nome</label>
+                                                <input name="nomeFuncionario" ng-model="funcionario.nome" ng-disabled="true">
+                                        </md-input-container>
+    
+                                        <md-input-container flex>
+                                                <label>Empresa</label>
+                                                <input name="empresaFuncionario" ng-model="funcionario.empresa.sigla" ng-disabled="true">
+                                        </md-input-container>
+    
+                                        <md-input-container flex>
+                                                <label>Filial</label>
+                                                <input name="filialFuncionario" ng-model="funcionario.empresa.nomeFilial" ng-disabled="true">
+                                        </md-input-container>
+                                    </div>
+                                    <div layout layout-sm="column" style="margin: 15px 0px 5px 0px !important;">
+                                        <md-input-container flex>
+                                            <label>Função</label>
+                                            <md-select ng-disabled="detalhes" name="funcaoSelecionada" ng-change="updateAbas()" 
+                                            required ng-model="funcaoSelecionadaId">
+                                                <md-option ng-repeat="funcao in list.funcao"
+                                                    value="{{funcao.id}}">
+                                                    {{funcao.nome}}
+                                                </md-option>
+                                            </md-select>
+                                            <div ng-messages="experienciaForm.funcaoSelecionada.$error" multiple role="alert">
+                                                <div ng-message="required">Campo de preenchimento obrigatório.</div>
+                                            </div>
+                                        </md-input-container>
+                                    </div>
+                                    <md-tabs ng-if="funcaoSelecionadaId" md-dynamic-height md-border-bottom>
+                                        <md-tab label="Atividades">
+                                            <div layout-padding>
+                                                <div layout layout-sm="column">
+                                                    <md-table-container flex>
+                                                        <table md-table>
+                                                            <thead md-head>
+                                                                <tr md-row>
+                                                                    <th md-column>Descrição</th>
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody md-body>
+                                                                <tr md-row  md-select="atividade.id" md-select-id="atividade.id" ng-repeat="atividade in funcaoSelecionada.atividades">
+                                                                    <td md-cell>{{atividade.descricao}}</td>
+                                                                </tr>
+                                                            </tbody>
+                                                        </table>
+                                                    </md-table-container>
+                                                </div>
+                                            </div>
+                                        </md-tab>
+                                        <md-tab label="Habilidades">
+                                            <div layout layout-sm="column">
+                                                <md-table-container flex>
+                                                    <table md-table>
+                                                        <thead md-head>
+                                                            <tr md-row>
+                                                                <th md-column>Descrição</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody md-body>
+                                                            <tr md-row ng-repeat="habilidade in funcaoSelecionada.habilidades">
+                                                                <td md-cell>{{habilidade.descricao}}</td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </md-table-container>
+                                            </div>
+                                        </md-tab>
+                                        <md-tab label="Cursos">
+                                            <div layout layout-sm="column">
+                                                <md-table-container flex>
+                                                    <table md-table>
+                                                        <thead md-head>
+                                                            <tr md-row>
+                                                                <th md-column>Área</th>
+                                                                <th md-column>Grau</th>
+                                                                <th md-column>Curso</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody md-body>
+                                                            <tr md-row ng-repeat="curso in funcaoSelecionada.cursos">
+                                                                <td md-cell>{{curso.nomeCurso}}</td>
+                                                                <td md-cell>{{curso.grauAcademico.nome}}</td>
+                                                                <td md-cell>{{curso.areaFormacao.areaFormacao}}</td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </md-table-container>
+                                            </div>
+                                        </md-tab>
+                                        
+                                    </md-tabs>
+                                    <div ng-if="detalhes" layout layout-sm="column">
+                                        <table md-table md-progress="promise">
+                                            <thead md-head>
+                                                <tr md-row>
+                                                    <th md-column>
+                                                        <span>Criado em:</span>
+                                                    </th>
+                                                    <th md-column>
+                                                        <span>Atualizado em:</span>
+                                                    </th>
+                                                    <th md-column>
+                                                        <span>Criado por:</span>
+                                                    </th>
+                                                    <th md-column>
+                                                        <span>Atualizado por:</span>
+                                                    </th>
+                                                </tr>
+                                            </thead>
+                                            <tbody md-body>
+                                                <tr md-row>
+                                                    <td md-cell>{{experienciaProfissional.criadoEm | date:'dd/MM/yy - HH:mm'}}</td>
+                                                    <td md-cell>{{experienciaProfissional.alteradoEm | date:'dd/MM/yy - HH:mm'}}</td>
+                                                    <td md-cell>{{experienciaProfissional.criadoPor}}</td>
+                                                    <td md-cell>{{experienciaProfissional.alteradoPor}}</td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="col-md-12 text-center">
+                                            <button ng-if="!detalhes" ng-disabled="funcaoForm.$invalid" type="submit"
+                                                ui-wave class="btn btn-primary btn-w-md">
+                                                <md-tooltip ng-if="funcaoForm.$invalid" md-direction="top">Preencha todos os campos obrigatórios.</md-tooltip>
+                                                Salvar
+                                            </button>
+                                            <p class="btn btn-default btn-w-md" ui-wave data-ng-click="goBack()">Voltar</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

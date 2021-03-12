@@ -1,0 +1,211 @@
+<div class="page" ng-controller="licencaFormCtrl">
+    <div class="row ui-section">
+        <div class="col-lg-8 clearfix">
+            <h2 class="section-header">{{!detalhes ? 'Formulário Licença Médica' : 'Detalhes da Licença Médica'}}</h2>
+        </div>
+        <div class="col-md-12">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <form ng-disabled="detalhes" name="licencaForm" ng-submit="save()">
+                                <div layout="column" ng-cloak class="md-inline-form inputdemoBasicUsage">
+                                    <div layout-padding>
+                                        <div class="row">
+                                            <div layout class="col-lg-2" layout-sm="colum">
+                                                <md-input-container flex>
+                                                    <label>Matrícula</label>
+                                                    <input ng-disabled="detalhes" readonly="true" ng-model="funcionario.matricula"
+                                                        name="empresaNome">
+                                                </md-input-container>
+                                            </div>
+                                            <div class="col-lg-10" layout-sm="column">
+                                                <md-autocomplete ng-disabled="detalhes" flex required
+                                                    md-input-name="func"
+                                                    md-selected-item="funcionario"
+                                                    md-search-text="searchText"
+                                                    md-items="funcionario in searchFuncionario(searchText)"
+                                                    md-item-text="funcionario.nome"
+                                                    md-require-match
+                                                    md-floating-label="Nome do Funcionário"
+                                                    input-aria-describedby="favoriteStateDescription"
+                                                    md-selected-item-change="funcionarioSelect()">
+                                                    <md-item-template>
+                                                        <div>{{funcionario.nome}}</div>
+                                                    </md-item-template>
+                                                    <div ng-messages="licencaForm.func.$error" multiple role="alert">
+                                                        <div ng-message="required">Campo de preenchimento obrigatório.</div>
+                                                    </div>
+                                                </md-autocomplete>
+                                            </div>
+                                        </div>
+
+
+                                        <div class="row">
+                                            <div layout class="col-lg-6" layout-sm="colum">
+                                                <md-input-container flex>
+                                                    <label>Empresa</label>
+                                                    <input ng-disabled="detalhes" readonly="true" ng-model="funcionario.empresa.nomeFilial"
+                                                        name="empresaNome">
+                                                </md-input-container>
+                                            </div>
+                                            <div layout class="col-lg-6" layout-sm="colum">
+                                                <md-input-container flex>
+                                                    <label>Filial</label>
+                                                    <input ng-disabled="detalhes" readonly="true" ng-model="funcionario.filial.nomeFilial"
+                                                        name="filialNome">
+                                                </md-input-container>
+                                            </div>
+                                        </div>
+
+                                        <div class="row">
+                                            <div layout class="col-lg-4" layout-sm="colum">
+                                                <md-input-container flex>
+                                                    <label>Afastamento</label>
+                                                    <md-select required ng-disabled="detalhes" name="afastamento"
+                                                        ng-model="licencaMedica.afastamentoId">
+                                                        <md-option ng-repeat="afastamento in list.afastamento" ng-value="afastamento.id">
+                                                            {{afastamento.descricao}}
+                                                        </md-option>
+                                                    </md-select>
+                                                    <div ng-messages="licencaForm.afastamento.$error" multiple role="alert">
+                                                        <div ng-message="required">Campo de preenchimento obrigatório.</div>
+                                                    </div>
+                                                </md-input-container>
+                                            </div>
+                                            <div layout class="col-lg-4" layout-sm="colum">
+                                                <md-input-container flex>
+                                                    <label>Motivo Afastamento</label>
+                                                    <md-select required ng-disabled="detalhes" name="motivoAfastamento"
+                                                        ng-model="licencaMedica.motivoAfastamentoId">
+                                                        <md-option ng-repeat="motivoAfastamento in list.motivoAfastamento" ng-value="motivoAfastamento.id">
+                                                            {{motivoAfastamento.descricao}}
+                                                        </md-option>
+                                                    </md-select>
+                                                    <div ng-messages="licencaForm.motivoAfastamento.$error" multiple role="alert">
+                                                        <div ng-message="required">Campo de preenchimento obrigatório.</div>
+                                                    </div>
+                                                </md-input-container>
+                                            </div>
+                                            <div class="col-lg-4" layout-sm="column">
+                                                <md-autocomplete ng-disabled="detalhes" flex required
+                                                    md-input-name="autocompleteField"
+                                                    md-selected-item="cid"
+                                                    md-search-text="searchCid"
+                                                    md-items="cid in cidSearch(searchCid)"
+                                                    md-item-text="cid.codigo +' - '+ cid.descricao"
+                                                    md-require-match
+                                                    md-floating-label="CID"
+                                                    input-aria-describedby="favoriteStateDescription"
+                                                    md-selected-item-change="cidSelect()">
+                                                    <md-item-template>
+                                                        <div>{{cid.codigo}} - {{cid.descricao}}</div>
+                                                    </md-item-template>
+                                                    <div ng-messages="licencaForm.autocompleteField.$error" multiple role="alert">
+                                                        <div ng-message="required">Campo de preenchimento obrigatório.</div>
+                                                    </div>
+                                                </md-autocomplete>
+                                            </div>
+                                        </div>
+
+                                        <div class="row">
+                                            <div layout class="col-md-3" layout-sm="column">
+                                                <md-input-container flex>
+                                                    <label>Data Inspeção</label>
+                                                    <md-icon class="material-icons icon-momentpicker" ng-class="md-datepicker-calendar-icon"
+                                                        aria-label="md-calendar">date_range</md-icon>
+                                                    <input required name="dataInspecao" moment-picker="licencaMedica.dataInspecao" p
+                                                    laceholder="Selecione a data"
+                                                        ng-model="licencaMedica.dataInspecao" format="DD/MM/YYYY" locale="pt-br" start-view="month"
+                                                        ng-model-options="{ updateOn: 'blur' }" ng-disabled="detalhes">
+                                                        <div ng-messages="licencaForm.dataInspecao.$error" multiple role="alert">
+                                                            <div ng-message="required">Campo de preenchimento obrigatório.</div>
+                                                        </div>
+                                                </md-input-container>
+                                            </div>
+                                            <div layout class="col-md-9" layout-sm="colum">
+                                                <md-input-container flex>
+                                                    <label>CRM</label>
+                                                    <md-select ng-disabled="detalhes" name="crm"
+                                                        ng-model="licencaMedica.crmId">
+                                                        <md-option ng-value=null><em>-- Selecione --</em></md-option>
+                                                        <md-option ng-repeat="crm in list.crm" ng-value="crm.id">
+                                                            {{crm.numeroCrmCrea}} - {{crm.nomeConveniado}}
+                                                        </md-option>
+                                                    </md-select>
+                                                </md-input-container>
+                                            </div>
+                                        </div>
+
+                                        <div class="row">
+                                            <div layout class="col-md-4" layout-sm="column">
+                                                <md-input-container flex>
+                                                    <label>Período Inicial</label>
+                                                    <md-icon class="material-icons icon-momentpicker" ng-class="md-datepicker-calendar-icon"
+                                                        aria-label="md-calendar">date_range</md-icon>
+                                                    <input required name="periodoInicial" moment-picker="licencaMedica.periodoInicial"
+                                                     placeholder="Selecione a data"
+                                                        ng-model="licencaMedica.periodoInicial" format="DD/MM/YYYY" locale="pt-br" start-view="month"
+                                                        ng-model-options="{ updateOn: 'blur' }" ng-disabled="detalhes">
+                                                        <div ng-messages="licencaForm.periodoInicial.$error" multiple role="alert">
+                                                            <div ng-message="required">Campo de preenchimento obrigatório.</div>
+                                                        </div>
+                                                </md-input-container>
+                                            </div>
+                                            <div layout class="col-md-4" layout-sm="column">
+                                                <md-input-container flex>
+                                                    <label>Período Fiinal</label>
+                                                    <md-icon class="material-icons icon-momentpicker" ng-class="md-datepicker-calendar-icon"
+                                                        aria-label="md-calendar">date_range</md-icon>
+                                                    <input name="periodoFinal" moment-picker="licencaMedica.periodoFinal" 
+                                                    placeholder="Selecione a data"
+                                                        ng-model="licencaMedica.periodoFinal" format="DD/MM/YYYY" locale="pt-br" start-view="month"
+                                                        ng-model-options="{ updateOn: 'blur' }" ng-disabled="detalhes">
+                                                </md-input-container>
+                                            </div>
+                                        </div>
+                                        <div ng-if="detalhes" layout layout-sm="column">
+                                            <table md-table md-progress="promise">
+                                                <thead md-head>
+                                                    <tr md-row>
+                                                        <th md-column>
+                                                            <span>Criado em:</span>
+                                                        </th>
+                                                        <th md-column>
+                                                            <span>Atualizado em:</span>
+                                                        </th>
+                                                        <th md-column>
+                                                            <span>Criado por:</span>
+                                                        </th>
+                                                        <th md-column>
+                                                            <span>Atualizado por:</span>
+                                                        </th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody md-body>
+                                                    <tr md-row>
+                                                        <td md-cell>{{licencaMedica.criadoEm | date:'dd/MM/yy - HH:mm'}}</td>
+                                                        <td md-cell>{{licencaMedica.alteradoEm | date:'dd/MM/yy -
+                                                            HH:mm'}}</td>
+                                                        <td md-cell>{{licencaMedica.criadoPor}}</td>
+                                                        <td md-cell>{{licencaMedica.alteradoPor}}</td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-12 text-center">
+                                                <button ng-if="!detalhes" ng-disabled="licencaForm.$invalid" type="submit"
+                                                    ui-wave class="btn btn-primary btn-w-md">Salvar</button>
+                                                <p class="btn btn-default btn-w-md" ui-wave data-ng-click="goBack()">Voltar</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>

@@ -1,0 +1,58 @@
+<md-dialog>
+    <form ng-cloak>
+        <md-toolbar>
+            <div style="background-color: #01722c" class="md-toolbar-tools">
+                <h2>Personalizar Agenda Semanal</h2>
+                <span flex></span>
+                <a ng-click="cancel()">
+                    <i class="fa fa-close"></i>
+                </a>
+            </div>
+        </md-toolbar>
+
+        <md-dialog-content>
+            <div class="page">
+                <h4>Escolha abaixo os dias da semana.</h4>
+                <div class="divider divider-xl"></div>
+
+                <md-checkbox ng-disabled="detalhes" ng-model="checkeAllSemana" ng-change="isAllSemanalSelected()">
+                    <span>Selecionar Tudo</span>
+                </md-checkbox>
+
+                <div class="divider divider-lg divider-dashed"></div>
+
+                <md-checkbox ng-disabled="detalhes" ng-model="agendaMedica.domingo">
+                    <span>Domingo</span>
+                </md-checkbox>
+                <md-checkbox ng-disabled="detalhes" ng-model="agendaMedica.segunda">
+                    <span>Segunda-feira</span>
+                </md-checkbox>
+                <md-checkbox ng-disabled="detalhes" ng-model="agendaMedica.terca">
+                    <span>Terça-feira</span>
+                </md-checkbox>
+                <md-checkbox ng-disabled="detalhes" ng-model="agendaMedica.quarta">
+                    <span>Quarta-feira</span>
+                </md-checkbox>
+                <md-checkbox ng-disabled="detalhes" ng-model="agendaMedica.quinta">
+                    <span>Quinta-feira</span>
+                </md-checkbox>
+                <md-checkbox ng-disabled="detalhes" ng-model="agendaMedica.sexta">
+                    <span>Sexta-feira</span>
+                </md-checkbox>
+                <md-checkbox ng-disabled="detalhes" ng-model="agendaMedica.sabado">
+                    <span>Sábado</span>
+                </md-checkbox>
+            </div>
+        </md-dialog-content>
+        <md-dialog-actions layout="row">
+            <div style="padding: 15px;">
+                <md-button md-no-ink class="md-primary" ng-click="salvar()">
+                    Salvar
+                </md-button>
+                <md-button ng-click="cancel()">
+                    Cancelar
+                </md-button>
+            </div>
+        </md-dialog-actions>
+    </form>
+</md-dialog>

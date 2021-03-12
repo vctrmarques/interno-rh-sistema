@@ -1,0 +1,157 @@
+<div class="page" ng-controller="faixaSalarialFormCtrl">
+    <div class="row ui-section">
+        <div class="col-lg-8 clearfix">
+            <h2 class="section-header">{{!detalhes ? 'Formulário de Faixa Salarial' : 'Detalhes de Faixa Salarial'}}
+            </h2>
+        </div>
+        <div class="col-md-12">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <div class="row">
+                        <div class="col-lg-8 col-lg-offset-2">
+                            <div layout="column" ng-cloak class="md-inline-form inputdemoBasicUsage">
+                                <div layout-padding>
+                                    <form ng-disabled="detalhes" name="faixaSalarialForm" ng-submit="save()">
+                                        <div layout layout-sm="column">
+                                            <md-input-container flex>
+                                                <label>Grupo Salarial</label>
+                                                <md-select ng-change="grupoSelecionado(faixaSalarial.grupoSalarialId)"
+                                                    ng-disabled="detalhes || faixaSalarial.id" name="grupoSalarialId"
+                                                    ng-model="faixaSalarial.grupoSalarialId" required>
+                                                    <md-option ng-repeat="grupoSalarial in list.grupoSalarial"
+                                                        ng-value="grupoSalarial.id">
+                                                        {{grupoSalarial.nome}}
+                                                    </md-option>
+                                                </md-select>
+                                                <div ng-messages="faixaSalarialForm.grupoSalarialId.$error" multiple>
+                                                    <div ng-message="required">Campo de preenchimento obrigatório.</div>
+                                                </div>
+                                            </md-input-container>
+                                            <a ng-if="!faixaSalarial.id" href="#!/grupoSalarial/formulario"
+                                                style="margin-left:10px; margin-right: 10px;">
+                                                <md-tooltip md-direction="top">Inserir Informação</md-tooltip>
+                                                <i class="fa fa-plus fa-lg"></i>
+                                            </a>
+
+                                            <a ng-if="!faixaSalarial.id"
+                                                href="#!/grupoSalarial/formulario/{{faixaSalarial.grupoSalarialId}}"
+                                                style="margin-left:10px; margin-right: 10px;">
+                                                <md-tooltip md-direction="top">Editar Informação </md-tooltip>
+                                                <i class="fa fa-pencil fa-lg"></i>
+                                            </a>
+
+                                            <a ng-if="!faixaSalarial.id && !detalhes" href=""
+                                                ng-click="deleteGrupoSalarial(faixaSalarial.grupoSalarialId)"
+                                                style="margin-right: 10px;">
+                                                <md-tooltip md-direction="top">Apagar Informação</md-tooltip>
+                                                <i class="fa fa-trash-o fa-lg"></i>
+                                            </a>
+                                        </div>
+
+                                        <div layout layout-sm="column">
+                                            <md-input-container flex>
+                                                <label>Nível</label>
+                                                <md-select
+                                                    ng-disabled="detalhes || list.classeSalarial.length==0 || faixaSalarial.id"
+                                                    name="classeSalarialId" ng-model="faixaSalarial.classeSalarialId"
+                                                    required>
+                                                    <md-option ng-repeat="classeSalarial in list.classeSalarial"
+                                                        ng-value="classeSalarial.id">
+                                                        {{classeSalarial.nome}}
+                                                    </md-option>
+                                                </md-select>
+                                                <div ng-messages="faixaSalarialForm.classeSalarialId.$error" multiple>
+                                                    <div ng-message="required">Campo de preenchimento obrigatório.</div>
+                                                </div>
+                                            </md-input-container>
+                                        </div>
+
+                                        <!-- <div layout="column" style="margin-left: 130px; margin-right: 250px;">
+                                            <div layout-padding>
+                                                <div layout layout-sm="column">
+                                                    <md-input-container flex>
+                                                        <label>Descricao</label>
+                                                        <input ng-model="descricaoBusca" placeholder="Buscar por descricao...">
+                                                    </md-input-container>
+                                                    <md-button class="md-icon-button" ng-click="loadList()">
+                                                        <md-tooltip md-direction="top">Atualizar</md-tooltip>
+                                                        <md-icon>refresh</md-icon>
+                                                    </md-button>
+                                                </div>
+                                            </div>
+                                        </div> -->
+
+                                        <h2 class="md-title">Referências salariais</h2>
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <md-table-container>
+                                                    <table md-table md-row-select="true" multiple="true"
+                                                        ng-model="faixaSalarial.niveisSalariaisIds">
+                                                        <thead md-head md-order="name">
+                                                            <tr md-row>
+                                                                <th md-column md-order-by="name"><span>Nível</span></th>
+                                                                <th md-column md-order-by="valor"><span>Valor</span>
+                                                                </th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody md-body>
+                                                            <tr  md-row md-select="item.id" ng-repeat="item in niveis">
+                                                                <td md-cell>{{item.descricao}}</td>
+                                                                <td md-cell>{{item.valor | currency:'R$'}}</td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </md-table-container>
+                                            </div>
+                                        </div>
+
+                                        <div ng-if="detalhes" layout layout-sm="column">
+                                            <table md-table md-progress="promise">
+                                                <thead md-head>
+                                                    <tr md-row>
+                                                        <th md-column>
+                                                            <span>Criado em:</span>
+                                                        </th>
+                                                        <th md-column>
+                                                            <span>Atualizado em:</span>
+                                                        </th>
+                                                        <th md-column>
+                                                            <span>Criado por:</span>
+                                                        </th>
+                                                        <th md-column>
+                                                            <span>Atualizado por:</span>
+                                                        </th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody md-body>
+                                                    <tr md-row>
+                                                        <td md-cell>{{faixaSalarial.criadoEm | date:'dd/MM/yy -
+                                                            HH:mm'}}</td>
+                                                        <td md-cell>{{faixaSalarial.alteradoEm | date:'dd/MM/yy -
+                                                            HH:mm'}}</td>
+                                                        <td md-cell>{{faixaSalarial.criadoPor}}</td>
+                                                        <td md-cell>{{faixaSalarial.alteradoPor}}</td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+
+                                        <div class="row">
+                                            <div class="col-md-12 text-center">
+                                                <button ng-if="!detalhes"
+                                                    ng-disabled="faixaSalarialForm.$invalid || faixaSalarial.niveisSalariaisIds.length==0"
+                                                    type="submit" ui-wave
+                                                    class="btn btn-primary btn-w-md">Salvar</button>
+                                                <p class="btn btn-default btn-w-md" ui-wave data-ng-click="goBack()">
+                                                    Voltar</p>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>

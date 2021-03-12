@@ -1,0 +1,12 @@
+if OBJECT_ID('fk_certidao_ex_segurado_assinatura_funcionario_criacao') is not null
+begin
+	ALTER TABLE certidao_ex_segurado_assinatura DROP CONSTRAINT fk_certidao_ex_segurado_assinatura_funcionario_criacao
+end
+
+if OBJECT_ID('fk_certidao_ex_segurado_assinatura_funcionario_atualizacao') is not null
+begin
+	ALTER TABLE certidao_ex_segurado_assinatura DROP CONSTRAINT fk_certidao_ex_segurado_assinatura_funcionario_atualizacao
+end
+
+
+

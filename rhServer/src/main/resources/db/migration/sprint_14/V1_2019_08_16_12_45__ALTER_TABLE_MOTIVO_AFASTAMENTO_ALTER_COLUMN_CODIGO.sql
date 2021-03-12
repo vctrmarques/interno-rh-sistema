@@ -1,0 +1,1 @@
+ALTER TABLE motivo_afastamento ALTER COLUMN codigo VARCHAR(255) NOT NULL;

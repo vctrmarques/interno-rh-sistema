@@ -1,0 +1,150 @@
+<md-dialog>
+    <form ng-cloak>
+        <md-toolbar>
+            <div style="background-color: #01722c" class="md-toolbar-tools">
+                <h2>Funcionário - Edição</h2>
+                <span flex></span>
+                <a ng-click="cancel()">
+                    <i class="fa fa-close"></i>
+                </a>
+            </div>
+        </md-toolbar>
+
+        <md-dialog-content>
+            <div class="page">
+	        	<div class="alert alert-danger">Qualquer informação editada será atualizada no cadastro geral do funcionário!</div>
+
+				 <div layout layout-sm="column">
+	                <md-input-container flex>
+	                    <label>Matrícula</label>
+	                    <input ng-model="funcionarioEditar.matricula" />
+	                </md-input-container>
+	                
+	                <md-input-container flex>
+	                    <label>Nome</label>
+	                    <input ng-model="funcionarioEditar.nome" />
+	                </md-input-container>
+
+	                <md-input-container flex>
+	                    <label>Gênero</label>
+	                    <md-select ng-model="funcionarioEditar.sexo">
+	                        <md-option value="M">Masculino</md-option>
+	                        <md-option value="F">Feminino</md-option>
+	                        <md-option value="N">Não Informado</md-option>
+	                    </md-select>
+	                </md-input-container>
+                </div>
+
+                <div layout layout-sm="column">
+	                <md-input-container flex>
+	                    <label>RG - Número</label>
+	                    <input ng-model="funcionarioEditar.identidade" />
+	                </md-input-container>
+	                
+	                <md-input-container flex>
+	                    <label>RG - Órgão Expeditor</label>
+	                    <input ng-model="funcionarioEditar.orgaoExpeditor" />
+	                </md-input-container>
+	                
+	                <md-input-container flex>
+	                    <label>RG - UF Órgão Expeditor</label>
+	                    <md-select ng-model="funcionarioEditar.ufOrgaoExpeditorId">
+                            <md-option ng-repeat="uf in lista.uf" value="{{uf.id}}">
+                                {{uf.sigla}} - {{uf.estado}}
+                            </md-option>
+                        </md-select>
+	                </md-input-container>
+	                
+	                <md-input-container flex>
+	                    <label>RG - Data Expedição</label>
+		                <input moment-picker="funcionarioEditar.dataExpedicaoRg" placeholder="Selecione a data" ng-model="funcionarioEditar.dataExpedicaoRg" 
+		                	format="DD/MM/YYYY" locale="pt-br" start-view="month" ng-model-options="{ updateOn: 'blur' }">
+	                </md-input-container>
+                </div>
+                
+                <div layout layout-sm="column">
+	                <md-input-container flex>
+	                    <label>Data de Nascimento</label>
+	                     <input moment-picker="funcionarioEditar.dataNascimento" placeholder="Selecione a data" ng-model="funcionarioEditar.dataNascimento" format="DD/MM/YYYY" locale="pt-br" start-view="month"
+	                     	ng-model-options="{ updateOn: 'blur' }">
+	                </md-input-container>
+	                
+	                <md-input-container flex>
+	                    <label>CPF</label>
+	                    <input ng-model="funcionarioEditar.cpf" ui-br-cpf-mask/>
+	                </md-input-container>
+	                
+	                <md-input-container flex>
+	                    <label>PIS / PASEP</label>
+	                    <input ng-model="funcionarioEditar.pisPasep" />
+	                </md-input-container>
+                </div>
+                
+                <div layout layout-sm="column">
+                	<md-input-container flex>
+	                    <label>Logradouro</label>
+	                    <input ng-model="funcionarioEditar.logradouro" />
+	                </md-input-container>
+	                
+	                <md-input-container flex>
+	                    <label>Número</label>
+	                    <input ng-model="funcionarioEditar.numero" />
+	                </md-input-container>
+	                
+	                <md-input-container flex>
+	                    <label>Complemento</label>
+	                    <input ng-model="funcionarioEditar.complemento" />
+	                </md-input-container>
+                </div>
+                
+                <div layout layout-sm="column">
+                	<md-input-container flex>
+	                    <label>UF</label>
+	                    <md-select ng-model="funcionarioEditar.municipio.uf.id" ng-change="getMunicipiosByUf(funcionarioEditar.municipio.uf.id)">
+                            <md-option ng-repeat="obj in lista.uf" value="{{obj.id}}">
+                                {{obj.sigla}} - {{obj.estado}}
+                            </md-option>
+                        </md-select>
+	                </md-input-container>
+	                
+	                <md-input-container flex>
+	                    <label>Município</label>
+	                    <md-select ng-model="funcionarioEditar.municipioId">
+                            <md-option ng-repeat="obj in lista.municipio" value="{{obj.id}}">
+                                {{obj.descricao}}
+                            </md-option>
+                        </md-select>
+	                </md-input-container>
+	                
+	                <md-input-container flex>
+	                    <label>Bairro</label>
+	                    <input ng-model="funcionarioEditar.bairro" />
+	                </md-input-container>
+	                
+	                <md-input-container flex>
+	                    <label>CEP</label>
+	                    <input ng-model="funcionarioEditar.cep" ui-br-cep-mask/>
+	                </md-input-container>
+                </div>
+                
+                <div layout layout-sm="column">
+	                <md-input-container flex>
+	                    <label>Nome da Mãe</label>
+	                    <input ng-model="funcionarioEditar.nomeMae" />
+	                </md-input-container>
+	                
+	                <md-input-container flex>
+	                    <label>Nome do Pai</label>
+	                    <input ng-model="funcionarioEditar.nomePai" />
+	                </md-input-container>
+                </div>
+                
+	        </div>
+
+            <div class="md-dialog-content text-center">
+               	<button class="btn btn-primary btn-w-md" ng-click="salvarEdicao()">Salvar Edição</button>
+				<button class="btn btn-default btn-w-md" ng-click="cancel()">Voltar</button>
+            </div>
+        </md-dialog-content>
+    </form>
+</md-dialog>

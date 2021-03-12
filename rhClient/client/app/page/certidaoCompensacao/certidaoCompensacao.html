@@ -1,0 +1,369 @@
+<div class="page" ng-controller="certidaoCompensacaoCtrl">
+	<div class="row ui-section">
+		<div class="col-lg-12 clearfix">
+			<h2 class="section-header" style="float: left;">Certidão de Tempo de Contribuição - Compensação</h2>
+			<div style="float: right">
+				<md-menu md-position-mode="target-right target">
+					<md-button class="md-fab md-primary" md-no-ink ng-mouseenter="$mdMenu.open()">
+						<span class="fa fa-file-text-o"></span>
+					</md-button>
+					<md-menu-content width="3" ng-mouseleave="$mdMenu.close()">
+						<md-menu-item>
+							<md-button class="md-primary" ng-click="showRelatorioStatus($event, 'excel')">
+								Relatório por Status - EXCEL
+							</md-button>
+						</md-menu-item>
+						<md-menu-item>
+							<md-button class="md-primary" ng-click="showRelatorioStatus($event, 'pdf')">
+								Relatório por Status - PDF
+							</md-button>
+						</md-menu-item>
+					</md-menu-content>
+				</md-menu>
+				<md-button class="md-fab md-primary" md-no-ink ng-click="showRelatorio()">
+					<md-tooltip md-direction="bottom">Relatório</md-tooltip>
+					<span class="fa fa-file-pdf-o"></span>
+				</md-button>
+				<md-button class="md-fab md-accent" ng-href="#!/certidaoTempoContribuicaoCompensacao/formulario">
+					<md-tooltip md-direction="bottom">Nova Certidão</md-tooltip>
+					<span class="fa fa-plus"></span>
+				</md-button>
+				<span class="space"></span>
+			</div>
+		</div>
+		<div class="col-md-12">
+			<div class="panel panel-default">
+				<div class="panel-body">
+					<article class="article">
+						<md-card class="no-margin-h">
+							<div layout="column">
+								<div layout-padding>
+									<form autocomplete="off" ng-submit="loadList()">
+										<div layout layout-sm="column">
+											<md-input-container flex>
+												<label>Funcionário, Matrícula, CPF ou PIS/PASEP
+												</label>
+												<input ng-model="descricaoBusca" placeholder="Digite aqui..."
+													ng-mouseover="loadFeedback('descricao')"
+													ng-mouseleave="deleteFeedback()">
+											</md-input-container>
+											<md-input-container flex style="max-width: 200px;">
+												<label>Status</label>
+												<md-select ng-model="selectedStatus" placeholder="Selecione status"
+													ng-mouseover="loadFeedback('status')"
+													ng-mouseleave="deleteFeedback()"
+													data-md-container-class="selectdemoSelectHeader" multiple>
+													<md-select-header class="demo-select-header">
+													</md-select-header>
+													<md-optgroup label="status">
+														<md-option ng-value="obj" ng-repeat="obj in lista.status">
+															{{obj.label}}
+														</md-option>
+													</md-optgroup>
+												</md-select>
+											</md-input-container>
+											<md-input-container flex style="max-width: 200px;">
+												<label>Fundo</label>
+												<md-select ng-model="selectedFundos" placeholder="Selecione fundos"
+													ng-mouseover="loadFeedback('fundo')"
+													ng-mouseleave="deleteFeedback()"
+													data-md-container-class="selectdemoSelectHeader" multiple>
+													<md-select-header class="demo-select-header">
+													</md-select-header>
+													<md-optgroup label="fundos">
+														<md-option ng-value="obj" ng-repeat="obj in lista.fundos">
+															{{obj.label}}
+														</md-option>
+													</md-optgroup>
+												</md-select>
+											</md-input-container>
+											<md-input-container flex style="max-width: 200px;" ng-show="aba == 'TODOS'">
+												<label>Classificação</label>
+												<md-select ng-model="selectedClassificacoes"
+													placeholder="Selecione classificações"
+													ng-mouseover="loadFeedback('classificacao')"
+													ng-mouseleave="deleteFeedback()"
+													data-md-container-class="selectdemoSelectHeader" multiple>
+													<md-select-header class="demo-select-header">
+													</md-select-header>
+													<md-optgroup label="classificacoes">
+														<md-option ng-value="obj"
+															ng-repeat="obj in lista.classificacoes">
+															{{obj.label}}
+														</md-option>
+													</md-optgroup>
+												</md-select>
+											</md-input-container>
+											<md-input-container flex style="max-width: 200px;"
+												ng-show="aba == 'APOSENTADORIA'">
+												<label>Classificação</label>
+												<md-select ng-model="selectedClassificacoesEspecial"
+													placeholder="Selecione classificações"
+													ng-mouseover="loadFeedback('classificacaoEspecial')"
+													ng-mouseleave="deleteFeedback()"
+													data-md-container-class="selectdemoSelectHeader" multiple>
+													<md-select-header class="demo-select-header">
+													</md-select-header>
+													<md-optgroup label="classificacoes">
+														<md-option ng-value="obj"
+															ng-repeat="obj in lista.classificacoesEspecial">
+															{{obj.label}}
+														</md-option>
+													</md-optgroup>
+												</md-select>
+											</md-input-container>
+											<md-input-container flex style="max-width: 150px;">
+												<label>Data inicial</label>
+												<md-icon class="material-icons icon-momentpicker"
+													ng-class="md-datepicker-calendar-icon" aria-label="md-calendar">
+													date_range
+												</md-icon>
+												<input moment-picker="dataInicial" placeholder="Selecione a data"
+													ng-mouseover="loadFeedback('dataInicial')"
+													ng-mouseleave="deleteFeedback()" name="dataInicial"
+													max-date="dataFinal" ng-model="dataInicial" format="DD/MM/YYYY"
+													locale="pt-br" start-view="month" ng-disabled="detalhes"
+													ng-model-options="{ updateOn: 'blur' }">
+											</md-input-container>
+											<md-input-container flex style="max-width: 150px;">
+												<label>Data final</label>
+												<md-icon class="material-icons icon-momentpicker"
+													ng-class="md-datepicker-calendar-icon" aria-label="md-calendar">
+													date_range
+												</md-icon>
+												<input moment-picker="dataFinal" placeholder="Selecione a data"
+													name="dataFinal" min-date="dataInicial" ng-model="dataFinal"
+													ng-mouseover="loadFeedback('dataFinal')"
+													ng-mouseleave="deleteFeedback()" format="DD/MM/YYYY" locale="pt-br"
+													start-view="month" ng-disabled="detalhes"
+													ng-model-options="{ updateOn: 'blur' }">
+											</md-input-container>
+											<md-button class="md-icon-button" ng-click="limpaFiltro()">
+												<md-tooltip md-direction="top">Limpar Filtros</md-tooltip>
+												<md-icon>autorenew</md-icon>
+											</md-button>
+											<md-button class="md-icon-button" ng-click="loadList()">
+												<md-tooltip md-direction="top">Atualizar</md-tooltip>
+												<md-icon>refresh</md-icon>
+											</md-button>
+										</div>
+										<p ng-if="tootipFeedback" style="color: #01722c;top: 100px;position: absolute;">
+											<strong>{{tootipFeedback.title}}</strong>
+											<span>{{tootipFeedback.description}}</span></p>
+										<input style="display: none;" type='submit' />
+									</form>
+								</div>
+							</div>
+							<md-tabs md-dynamic-height md-border-bottom md-selected="abaActive">
+								<md-tab label="{{c.label}}" ng-repeat="c in lista.classificacoes"
+									md-on-select="abaAtual(c.value)">
+									<md-content class="md-padding">
+										<md-table-container>
+											<table md-table ng-model="selected" md-progress="promise">
+												<thead ng-if="!options.decapitate" md-head md-order="query.order"
+													md-on-reorder="loadList">
+													<tr md-row>
+														<th md-column md-order-by="descricao">
+															<span>Funcionário</span>
+														</th>
+														<th md-column>
+															<span>Matrícula</span>
+														</th>
+														<th md-column>
+															<span>PIS/PASEP</span>
+														</th>
+														<th md-column>
+															<span>Tipo de Declaração</span>
+														</th>
+														<th md-column>
+															<span>CPF</span>
+														</th>
+														<th md-column>
+															<span>Fundo</span>
+														</th>
+														<th md-column>
+															<span>Classificação</span>
+														</th>
+														<th md-column>
+															<span>Status</span>
+														</th>
+														<th md-column>
+															<span>Ações</span>
+														</th>
+													</tr>
+												</thead>
+												<tbody md-body>
+													<tr md-row md-select="item" md-select-id="item" md-auto-select
+														ng-repeat="item in list.data">
+														<td md-cell style="word-break: break-word;">
+															{{item.funcionario.nome}}</td>
+														<td md-cell>{{item.funcionario.matricula}}</td>
+														<td md-cell>{{item.funcionario.pisPasep}}</td>
+														<td md-cell>{{item.tipoCertidaoCompensacaoLabel}}
+															{{item.tipoCertidaoCompensacao === 'RETIFICACAO' ? 'Nº ' + item.numeroRetificacao : ''}}
+														</td>
+														<td md-cell>{{item.funcionario.cpf}}</td>
+														<td md-cell>{{item.fundo}}</td>
+														<td md-cell style="text-align: center;">
+															<i class="fa fa-info fa-lg">
+																<md-tooltip md-direction="top">
+																	{{item.classificacoesConcat}}</md-tooltip>
+															</i>
+														</td>
+														<td md-cell style="word-break: break-word;">{{item.statusAtual}}
+														</td>
+														<td md-cell style="width: 115px;">
+															<a href="" ng-show="podeAtualizar"
+																ui-sref="certidaoTempoContribuicaoCompensacaoFormularioEdit({ id: item.id })">
+																<md-tooltip md-direction="top">Editar</md-tooltip>
+																<i class="fa fa-pencil fa-lg"></i>
+															</a>
+															<a href="" ng-show="podeCadastrar && !item.rascunho"
+																ng-click="showConfirmRetificar($event,item.id)">
+																<md-tooltip md-direction="top">Retificar</md-tooltip>
+																<i class="fa fa-clone fa-lg"></i>
+															</a>
+															<a href=""
+																ui-sref="certidaoTempoContribuicaoCompensacaoFormularioDetalhes({ id: item.id, detalhes: true })">
+																<md-tooltip md-direction="top">Detalhes Cadastrais
+																</md-tooltip>
+																<i class="fa fa-search fa-lg"></i>
+															</a>
+															<a ng-click="dialogAlterarStatus(item)">
+																<md-tooltip md-direction="top">Alterar Status
+																</md-tooltip>
+																<i class="fa fa-search-plus fa-lg"></i>
+															</a>
+															<a href="" ng-click="imprimirCertidao(item.id)">
+																<md-tooltip md-direction="top">Imprimir Certidão
+																</md-tooltip>
+																<i class="fa fa-print fa-lg"></i>
+															</a>
+															<a href="" ng-show="podeExcluir"
+																ng-click="showConfirm($event,item.id)">
+																<md-tooltip md-direction="top">Excluir</md-tooltip>
+																<i class="fa fa-trash-o fa-lg"></i>
+															</a>
+														</td>
+													</tr>
+												</tbody>
+											</table>
+										</md-table-container>
+										<md-table-pagination
+											md-label="{page: 'Página:', rowsPerPage: 'Registros por página:', of: 'de'}"
+											md-limit="query.limit" md-limit-options="limitOptions" md-page="query.page"
+											md-total="{{list.count}}" md-on-paginate="loadList" md-page-select>
+										</md-table-pagination>
+									</md-content>
+								</md-tab>
+								<md-tab label="TODOS" ng-click="abaAtual('TODOS')">
+									<md-content class="md-padding">
+										<md-table-container>
+											<table md-table ng-model="selected" md-progress="promise">
+												<thead ng-if="!options.decapitate" md-head md-order="query.order"
+													md-on-reorder="loadList">
+													<tr md-row>
+														<th md-column md-order-by="descricao">
+															<span>Funcionário</span>
+														</th>
+														<th md-column>
+															<span>Matrícula</span>
+														</th>
+														<th md-column>
+															<span>PIS/PASEP</span>
+														</th>
+														<th md-column>
+															<span>Tipo de Declaração</span>
+														</th>
+														<th md-column>
+															<span>CPF</span>
+														</th>
+														<th md-column>
+															<span>Fundo</span>
+														</th>
+														<th md-column>
+															<span>Classificação</span>
+														</th>
+														<th md-column>
+															<span>Status</span>
+														</th>
+														<th md-column>
+															<span>Ações</span>
+														</th>
+													</tr>
+												</thead>
+												<tbody md-body>
+													<tr md-row md-select="item" md-select-id="item" md-auto-select
+														ng-repeat="item in list.data">
+														<td md-cell style="word-break: break-word;">
+															{{item.funcionario.nome}}</td>
+														<td md-cell>{{item.funcionario.matricula}}</td>
+														<td md-cell>{{item.funcionario.pisPasep}}</td>
+														<td md-cell>{{item.tipoCertidaoCompensacaoLabel}}
+															{{item.tipoCertidaoCompensacao === 'RETIFICACAO' ? 'Nº ' + item.numeroRetificacao : ''}}
+														</td>
+														<td md-cell>{{item.funcionario.cpf}}</td>
+														<td md-cell>{{item.fundo}}</td>
+														<td md-cell style="text-align: center;">
+															<i class="fa fa-info fa-lg">
+																<md-tooltip md-direction="top">
+																	{{item.classificacoesConcat}}</md-tooltip>
+															</i>
+														</td>
+														<td md-cell style="word-break: break-word;">
+															{{item.statusAtual}}
+														</td>
+														<td md-cell style="width: 115px;">
+															<a href="" ng-show="podeAtualizar"
+																ui-sref="certidaoTempoContribuicaoCompensacaoFormularioEdit({ id: item.id })">
+																<md-tooltip md-direction="top">Editar</md-tooltip>
+																<i class="fa fa-pencil fa-lg"></i>
+															</a>
+															<a href="" ng-show="podeCadastrar && !item.rascunho"
+																ng-click="showConfirmRetificar($event,item.id)">
+																<md-tooltip md-direction="top">Retificar</md-tooltip>
+																<i class="fa fa-clone fa-lg"></i>
+															</a>
+															<a href=""
+																ui-sref="certidaoTempoContribuicaoCompensacaoFormularioDetalhes({ id: item.id, detalhes: true })">
+																<md-tooltip md-direction="top">Detalhes Cadastrais
+																</md-tooltip>
+																<i class="fa fa-search fa-lg"></i>
+															</a>
+															<a href="" ng-show="podeAtualizar"
+																ng-click="dialogAlterarStatus(item)">
+																<md-tooltip md-direction="top">Alterar Status
+																</md-tooltip>
+																<i class="fa fa-search-plus fa-lg"></i>
+															</a>
+															<a href="" ng-click="imprimirCertidao(item.id)">
+																<md-tooltip md-direction="top">Imprimir Certidão
+																</md-tooltip>
+																<i class="fa fa-print fa-lg"></i>
+															</a>
+															<a href="" ng-show="podeExcluir"
+																ng-click="showConfirm($event,item.id)">
+																<md-tooltip md-direction="top">Excluir</md-tooltip>
+																<i class="fa fa-trash-o fa-lg"></i>
+															</a>
+														</td>
+													</tr>
+												</tbody>
+											</table>
+										</md-table-container>
+										<md-table-pagination
+											md-label="{page: 'Página:', rowsPerPage: 'Registros por página:', of: 'de'}"
+											md-limit="query.limit" md-limit-options="limitOptions" md-page="query.page"
+											md-total="{{list.count}}" md-on-paginate="loadList" md-page-select>
+										</md-table-pagination>
+									</md-content>
+								</md-tab>
+							</md-tabs>
+						</md-card>
+					</article>
+
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

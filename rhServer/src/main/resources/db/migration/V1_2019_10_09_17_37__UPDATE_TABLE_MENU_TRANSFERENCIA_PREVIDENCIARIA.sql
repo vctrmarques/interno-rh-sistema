@@ -1,0 +1,1 @@
+update menu set url = '/transferenciaPrevidenciaFuncionario/gestao' where nome = 'Transferência';

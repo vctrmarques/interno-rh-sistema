@@ -1,0 +1,67 @@
+<md-dialog>
+    <form ng-cloak>
+        <md-toolbar>
+            <div class="md-toolbar-tools">
+                <h2>IMPRIMIR FICHA FINANCEIRA</h2>
+                <span flex></span>
+            </div>
+        </md-toolbar>
+        <div style="text-align: center;">
+            Modo De Impressão
+            <div>
+                <md-radio-group class="ui-md-radio-group-inline" ng-model="selectRadioButton" ng-click="cleanAtributes()">
+                    <md-radio-button value="anoCompleto" >Ano Completo
+                    </md-radio-button>
+                    <md-radio-button value="dozeMeses" >12 Meses
+                    </md-radio-button>
+                    <md-radio-button value="periodos" >Períodos
+                    </md-radio-button>
+                </md-radio-group>
+            </div>
+        </div>
+        <div>
+            <div id="dm" ng-if="selectRadioButton === 'dozeMeses'" layout
+                layout-sm="column">
+                <md-input-container flex>
+                    <md-icon class="material-icons icon-momentpicker" ng-class="md-datepicker-calendar-icon"
+                        aria-label="md-calendar">date_range</md-icon>
+                    <input aria-label="Entrada1" nome="dataInicial" placeholder="Selecione a data"
+                        ng-model="search.dataInicial" moment-picker="search.dataInicial" format="YYYY" locale="pt-br"
+                        start-view="year" change="changeData()" />
+                </md-input-container>
+                <md-input-container flex>
+                    <md-icon class="material-icons icon-momentpicker" ng-class="md-datepicker-calendar-icon"
+                        aria-label="md-calendar">date_range</md-icon>
+                    <input name="dataFinal" moment-picker="search.dataFinal"
+                        placeholder="Selecione a data" ng-model="search.dataFinal" format="YYYY" change="changeData()"
+                        locale="pt-br" start-view="year" ng-model-options="{ updateOn: 'blur' }" ng-disabled="selectRadioButton === 'dozeMeses'"
+                        ng-required="true">
+                </md-input-container>
+            </div>
+            <div id="periodo" ng-show="selectRadioButton === 'periodos'">
+                <md-input-container flex>
+                    <md-icon class="material-icons icon-momentpicker" ng-class="md-datepicker-calendar-icon"
+                        aria-label="md-calendar">date_range</md-icon>
+                    <input aria-label="Entrada3"  ng-model="search.dataInicial" placeholder="Selecione a data"
+                        moment-picker="search.dataInicial" format="YYYY/MM" change="changeData()" locale="pt-br"
+                        start-view="month" />
+                </md-input-container>
+                <md-input-container flex>
+                    <md-icon class="material-icons icon-momentpicker" ng-class="md-datepicker-calendar-icon"
+                        aria-label="md-calendar">date_range</md-icon>
+                    <input aria-label="Entrada4" ng-model="search.dataFinal" placeholder="Selecione a data"
+                        moment-picker="search.dataFinal" format="YYYY/MM" change="changeData()"  locale="pt-br"
+                        start-view="month" />
+                </md-input-container>
+            </div>
+        </div>
+        <md-dialog-actions layout="row">
+            <md-button target="_blank" ng-click="btnImprimir($event)">
+                IMPRIMIR
+            </md-button>
+            <md-button ng-click="cancel()" style="margin-right:20px;">
+                CANCELAR
+            </md-button>
+        </md-dialog-actions>
+    </form>
+</md-dialog>

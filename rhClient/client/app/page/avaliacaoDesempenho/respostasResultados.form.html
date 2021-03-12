@@ -1,0 +1,291 @@
+<div class="page" ng-controller="respostasResultadosFormCtrl">
+    <div class="row ui-section">
+        <div class="col-lg-8 clearfix">
+            <h2 class="section-header">{{!detalhes ? 'Formulário de Avaliação' : 'Detalhes da Avaliação'}}</h2>
+        </div>
+        <div class="col-md-12">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="md-inline-form inputdemoBasicUsage" layout="column" ng-cloak>
+                                <div layout-padding>
+                                    <form name="avaliacaoForm" ng-disabled="detalhes" ng-submit="save()">
+                                        <md-tabs md-border-bottom md-dynamic-height>
+                                            <md-tab label="Avaliação">
+                                                <md-content class="md-padding">
+                                                    <div class="divider divider"></div>
+                                                    <div layout layout-sm="column">
+                                                        <md-input-container class="md-block">
+                                                            <label>Código da Avaliação</label>
+                                                            <input name="codAvaliacao" ng-disabled="detalhes || edit" ng-model="avaliacao.codAvaliacao" ng-pattern="/^[0-9]*$/" required>
+                                                            <div multiple ng-messages="avaliacaoForm.codAvaliacao.$error" role="alert">
+                                                                <div ng-message="required">Campo de preenchimento obrigatório.</div>
+                                                                <div ng-message="pattern">Este campo só permite números</div>
+                                                            </div>
+                                                        </md-input-container>
+                                                        <md-input-container flex>
+                                                            <label>Avaliação</label>
+                                                            <input name="avaliacao" ng-disabled="detalhes || edit" ng-model="avaliacao.nome" required>
+                                                            <div multiple ng-messages="avaliacaoForm.avaliacao.$error" role="alert">
+                                                                <div ng-message="required">Campo de preenchimento obrigatório.</div>
+                                                            </div>
+                                                        </md-input-container>
+                                                        <md-input-container flex>
+                                                            <label>Modelo</label>
+                                                            <md-select name="modelo" ng-disabled="detalhes" ng-model="avaliacao.modelo" required>
+                                                                <md-option ng-repeat="modelo in list.modelo" value="{{modelo.value}}">
+                                                                    {{modelo.label}}
+                                                                </md-option>
+                                                            </md-select>
+                                                            <div multiple ng-messages="avaliacaoForm.modelo.$error" role="alert">
+                                                                <div ng-message="required">Campo de preenchimento obrigatório.</div>
+                                                            </div>
+                                                        </md-input-container>
+                                                    </div>
+                                                    <div layout layout-sm="column">
+                                                        <md-input-container flex>
+                                                            <label>Empresa</label>
+                                                            <md-select name="empresa" ng-disabled="detalhes || edit" ng-model="avaliacao.empresaId" required>
+                                                                <md-option ng-repeat="empresa in list.empresa" value="{{empresa.id}}">
+                                                                    {{empresa.nomeFilial}}
+                                                                </md-option>
+                                                            </md-select>
+                                                            <div multiple ng-messages="avaliacaoForm.empresa.$error" role="alert">
+                                                                <div ng-message="required">Campo de preenchimento obrigatório.</div>
+                                                            </div>
+                                                        </md-input-container>
+                                                        <md-input-container flex>
+                                                            <label>Lotação</label>
+                                                            <md-select name="lotacao" ng-disabled="detalhes" ng-model="funcionario.lotacaoId">
+                                                                <md-option ng-repeat="lotacao in list.lotacao" value="{{lotacao.id}}">
+                                                                    {{lotacao.descricao}}
+                                                                </md-option>
+                                                                <md-option ng-if="list.lotacao.length <= 0">
+                                                                    Não existem lotações para esta filial
+                                                                </md-option>
+                                                            </md-select>
+                                                        </md-input-container>
+                                                        <md-input-container flex>
+                                                            <label>Lotação</label>
+                                                            <md-select data-md-container-class="selectdemoSelectHeader"
+                                                                       md-on-close="clearSearchTerm()"
+                                                                       multiple
+                                                                       ng-model="selectListLotacoes">
+                                                                <md-select-header class="demo-select-header">
+                                                                    <input class="demo-header-searchbox md-text"
+                                                                           ng-model="searchTerm"
+                                                                           placeholder="Pesquise por descrição da lotação..."
+                                                                           type="search">
+                                                                </md-select-header>
+                                                                <md-optgroup label="item.descricao">
+                                                                    <md-option ng-repeat="item in list.lotacao |
+                                                                            filter:searchTerm" ng-value="item">{{item.descricao}}
+                                                                    </md-option>
+                                                                </md-optgroup>
+                                                            </md-select>
+                                                        </md-input-container>
+                                                    </div>
+                                                    <div layout layout-sm="column">
+                                                        <md-input-container flex>
+                                                            <label>Função</label>
+                                                            <md-select name="modelo" ng-disabled="detalhes" ng-model="avaliacao.modelo" required>
+                                                                <md-option ng-repeat="modelo in list.modelo" value="{{modelo.value}}">
+                                                                    {{modelo.label}}
+                                                                </md-option>
+                                                            </md-select>
+                                                            <div multiple ng-messages="avaliacaoForm.modelo.$error" role="alert">
+                                                                <div ng-message="required">Campo de preenchimento obrigatório.</div>
+                                                            </div>
+                                                        </md-input-container>
+                                                        <md-input-container class="md-block">
+                                                            <a href="">
+                                                                <i aria-hidden="true" class="fa fa-plus"></i>
+                                                            </a>
+                                                        </md-input-container>
+                                                        <md-input-container flex>
+                                                            <label>Cargo</label>
+                                                            <md-select name="modelo" ng-disabled="detalhes" ng-model="avaliacao.modelo" required>
+                                                                <md-option ng-repeat="modelo in list.modelo" value="{{modelo.value}}">
+                                                                    {{modelo.label}}
+                                                                </md-option>
+                                                            </md-select>
+                                                            <div multiple ng-messages="avaliacaoForm.modelo.$error" role="alert">
+                                                                <div ng-message="required">Campo de preenchimento obrigatório.</div>
+                                                            </div>
+                                                        </md-input-container>
+                                                        <md-input-container class="md-block">
+                                                            <a href="">
+                                                                <i aria-hidden="true" class="fa fa-plus"></i>
+                                                            </a>
+                                                        </md-input-container>
+                                                    </div>
+                                                    <div layout layout-sm="column" style="margin-top: 3%;">
+                                                    </div>
+                                                </md-content>
+                                            </md-tab>
+                                            <md-tab label="Item">
+                                                <md-content class="md-padding">
+                                                    <div class="divider divider"></div>
+                                                    <div layout layout-sm="column">
+                                                        <md-input-container class="md-block">
+                                                            <label>Cód. Item da Avaliação</label>
+                                                            <input name="codAvaliacao" ng-model="itemAvaliacao.codItem" ng-pattern="/^[0-9]*$/">
+                                                        </md-input-container>
+                                                        <md-input-container flex>
+                                                            <label>Descrição Resumida</label>
+                                                            <input name="descricaoResumida" ng-model="itemAvaliacao.descricaoResumida">
+                                                        </md-input-container>
+                                                    </div>
+                                                    <div layout layout-sm="column">
+                                                        <md-input-container class="md-block">
+                                                            <label>Sequência na Avaliação</label>
+                                                            <input name="sequencia" ng-model="itemAvaliacao.sequencia" ng-pattern="/^[0-9]*$/">
+                                                        </md-input-container>
+                                                        <md-input-container flex>
+                                                            <label>Descrição do Item da Avaliação</label>
+                                                            <input name="descricao" ng-model="itemAvaliacao.descricao">
+                                                        </md-input-container>
+                                                    </div>
+                                                    <div layout layout-sm="column">
+                                                        <md-input-container flex>
+                                                            <label>Tipo da Questão</label>
+                                                            <md-select ng-model="itemAvaliacao.tipoQuestao">
+                                                                <md-option value="Disciplina">Disciplina</md-option>
+                                                                <md-option value="Desempenho Funcional">Desempenho Funcional</md-option>
+                                                                <md-option value="Habilidades Pessoais">Habilidades Pessoais</md-option>
+                                                            </md-select>
+                                                        </md-input-container>
+                                                        <md-input-container class="md-block">
+                                                        </md-input-container>
+                                                        <md-input-container flex>
+                                                            <h4>Formas de Avaliação:</h4>
+                                                            <md-radio-group ng-model="data.group1">
+                                                                <md-radio-button class="md-primary" value="Sim/Não"> Sim/Não</md-radio-button>
+                                                                <br/>
+                                                                <md-radio-button value="Certo/Errado"> Certo/Errado</md-radio-button>
+                                                                <br/>
+                                                                <md-radio-button value="Bom/Regular/Ruim">Bom/Regular/Ruim</md-radio-button>
+                                                                <br/>
+                                                                <md-radio-button value="Muito Bom/Bom/Regular/Ruim/Pessimo"> Muito Bom/Bom/Regular/Ruim/Pessimo</md-radio-button>
+                                                                <br/>
+                                                                <md-radio-button value="Nunca/As Vezes/Sempre">Nunca/As Vezes/Sempre</md-radio-button>
+                                                                <br/>
+                                                                <md-radio-button value="Resposta Livre"> Resposta Livre</md-radio-button>
+                                                            </md-radio-group>
+                                                        </md-input-container>
+                                                        <md-input-container flex>
+                                                            <button class="btn btn-primary btn-w-md" ng-disabled="" style="float: right;" ui-wave>
+                                                                Adicionar Item da Avaliação
+                                                            </button>
+                                                        </md-input-container>
+                                                    </div>
+                                                </md-content>
+                                            </md-tab>
+                                            <md-tab label="Peso">
+                                                <md-content class="md-padding">
+                                                    <div layout layout-sm="column">
+                                                        <md-input-container class="md-block">
+                                                            <label>Código de Avaliação</label>
+                                                            <input name="codigoDeAvaliacao" ng-model="peso.codigo">
+                                                        </md-input-container>
+                                                        <md-input-container flex>
+                                                            <label>Nome da Avaliação</label>
+                                                            <input name="nomeAvaliacao" ng-model="peso.nomeAvaliacao">
+                                                        </md-input-container>
+                                                        <md-input-container class="md-block">
+                                                            <label>Peso Total da Avaliação</label>
+                                                            <input name="pesototal" ng-model="peso.pesoTotal">
+                                                        </md-input-container>
+                                                    </div>
+                                                    <div layout layout-sm="column">
+                                                        <md-table-container>
+                                                            <table md-table>
+                                                                <thead md-head>
+                                                                <tr md-row>
+                                                                    <th md-column>
+                                                                        <span>Marcar</span>
+                                                                    </th>
+                                                                    <th md-column>
+                                                                        <span>Cód. do Item</span>
+                                                                    </th>
+                                                                    <th md-column>
+                                                                        <span>Descrição Resumida</span>
+                                                                    </th>
+                                                                    <th md-column>
+                                                                        <span>Seq. na Avaliação</span>
+                                                                    </th>
+                                                                    <th md-column>
+                                                                        <span>Forma de Avaliação</span>
+                                                                    </th>
+                                                                    <th md-column>
+                                                                        <span>Tipo de Questão</span>
+                                                                    </th>
+                                                                </tr>
+                                                                </thead>
+                                                                <tbody md-body>
+                                                                <tr md-auto-select md-row md-select="item" md-select-id="item" ng-repeat="item in list.item">
+                                                                    <td md-cell>
+                                                                        <md-checkbox aria-label="checkbox" ng-model="">
+                                                                        </md-checkbox>
+                                                                    </td>
+                                                                    <td md-cell>{{item.codAvaliacao}}</td>
+                                                                    <td md-cell>{{item.nome}}</td>
+                                                                    <td md-cell>{{item.modelo}}</td>
+                                                                    <td md-cell>{{item.empresaFilial.nomeFilial}}</td>
+                                                                    <td md-cell>{{item.lotacoes.length}}</td>
+                                                                </tr>
+                                                                </tbody>
+                                                            </table>
+                                                        </md-table-container>
+                                                    </div>
+                                                </md-content>
+                                            </md-tab>
+                                        </md-tabs>
+                                        <br/>
+                                        <!-- <div ng-if="detalhes" layout layout-sm="column">
+											<table md-table md-progress="promise">
+												<thead md-head>
+													<tr md-row>
+														<th md-column>
+															<span>Criado em:</span>
+														</th>
+														<th md-column>
+															<span>Atualizado em:</span>
+														</th>
+														<th md-column>
+															<span>Criado por:</span>
+														</th>
+														<th md-column>
+															<span>Atualizado por:</span>
+														</th>
+													</tr>
+												</thead>
+												<tbody md-body>
+													<tr md-row>
+														<td md-cell>{{funcionario.criadoEm | date:'dd/MM/yy - HH:mm'}}</td>
+														<td md-cell>{{funcionario.alteradoEm | date:'dd/MM/yy - HH:mm'}}</td>
+														<td md-cell>{{funcionario.criadoPor}}</td>
+														<td md-cell>{{funcionario.alteradoPor}}</td>
+													</tr>
+												</tbody>
+											</table>
+										</div> -->
+                                        <div class="row">
+                                            <div class="col-md-12 text-center">
+                                                <button class="btn btn-primary btn-w-md" ng-disabled="avaliacaoForm.$invalid" ng-if="!detalhes" type="submit" ui-wave>
+                                                    <md-tooltip md-direction="top" ng-if="avaliacaoForm.$invalid">Preencha todos os campos obrigatórios.</md-tooltip>
+                                                    Salvar
+                                                </button>
+                                                <p class="btn btn-default btn-w-md" data-ng-click="goBack()" ui-wave>Voltar</p>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>

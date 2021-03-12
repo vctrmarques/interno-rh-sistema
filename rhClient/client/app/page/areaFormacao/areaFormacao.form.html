@@ -1,0 +1,67 @@
+<div class="page" ng-controller="areaFormacaoFormCtrl">
+    <div class="row ui-section">
+        <div class="col-lg-8 clearfix">
+            <h2 class="section-header">{{!detalhes ? 'Formulário de Área de Formação' : 'Detalhes de Área de Formação'}}</h2>
+        </div>
+        <div class="col-md-12">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <div class="row">
+                        <div class="col-lg-8 col-lg-offset-2">
+                            <div layout="column" ng-cloak class="md-inline-form inputdemoBasicUsage">
+                                <div layout-padding>
+                                    <form ng-disabled="detalhes" name="areaFormacaoForm" ng-submit="save()">
+                                        <div layout layout-sm="column">
+                                            <md-input-container flex>
+                                                <label>Área de Formação</label>
+                                                <input ng-disabled="detalhes" ng-required="true" ng-model="areaFormacao.areaFormacao" name="areaFormacao">
+                                                <div ng-messages="areaFormacaoForm.areaFormacao.$error" multiple ng-if='areaFormacaoForm.areaFormacao.$dirty'>
+                                                    <div ng-message="required">Campo de preenchimento obrigatório.</div>
+                                                </div>
+                                            </md-input-container>
+                                        </div>
+
+                                        <div ng-if="detalhes" layout layout-sm="column">
+                                            <table md-table md-progress="promise">
+                                                <thead md-head>
+                                                    <tr md-row>
+                                                        <th md-column>
+                                                            <span>Criado em:</span>
+                                                        </th>
+                                                        <th md-column>
+                                                            <span>Atualizado em:</span>
+                                                        </th>
+                                                        <th md-column>
+                                                            <span>Criado por:</span>
+                                                        </th>
+                                                        <th md-column>
+                                                            <span>Atualizado por:</span>
+                                                        </th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody md-body>
+                                                    <tr md-row>
+                                                        <td md-cell>{{areaFormacao.criadoEm | date:'dd/MM/yy - HH:mm'}}</td>
+                                                        <td md-cell>{{areaFormacao.alteradoEm | date:'dd/MM/yy - HH:mm'}}</td>
+                                                        <td md-cell>{{areaFormacao.criadoPor}}</td>
+                                                        <td md-cell>{{areaFormacao.alteradoPor}}</td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+
+                                        <div class="row">
+                                                <div class="col-md-12 text-center">
+                                                    <button ng-if="!detalhes" ng-disabled="areaFormacaoForm.$invalid" type="submit" ui-wave class="btn btn-primary btn-w-md">Salvar</button>
+                                                    <p class="btn btn-default btn-w-md" ui-wave data-ng-click="goBack()">Voltar</p>
+                                                </div>
+                                            </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>

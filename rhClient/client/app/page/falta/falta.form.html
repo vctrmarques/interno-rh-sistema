@@ -1,0 +1,237 @@
+<div class="page" ng-controller="faltaFormCtrl">
+    <div class="row ui-section">
+        <div class="col-lg-8 clearfix">
+            <h2 class="section-header">{{!detalhes ? 'Formulário Falta' : 'Detalhes da Falta'}}</h2>
+        </div>
+        <div class="col-md-12">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <form ng-disabled="detalhes" name="faltaForm" ng-submit="save()">
+                        <div layout="column" ng-cloak class="md-inline-form inputdemoBasicUsage">
+                            <div layout-padding>
+                                <div class="row">
+                                    <div layout class="col-lg-2" layout-sm="colum">
+                                        <md-input-container flex>
+                                            <label>Matrícula</label>
+                                            <input ng-disabled="detalhes || jaRegistrado" readonly="true" ng-model="funcionario.matricula"
+                                                name="matricula">
+                                        </md-input-container>
+                                    </div>
+                                    <div class="col-lg-10" layout-sm="column">
+                                        <md-autocomplete ng-disabled="detalhes || frequencia.id !=null || jaRegistrado"
+                                            md-input-name="autocompleteField" ng-required="true" md-no-cache="noCache"
+                                            md-floating-label="Funcionário" md-selected-item="funcionario"
+                                            md-search-text="searchFuncionario" md-items="funcionario in querySearchFuncionario(searchFuncionario)"
+                                            md-item-text="funcionario.nome" md-delay="100" md-min-length="3"
+                                            md-selected-item-change="funcionarioSelect()">
+                                            <md-item-template>
+                                                <div>{{funcionario.matricula}} - {{funcionario.nome}}</div>
+                                            </md-item-template>
+                                        </md-autocomplete>
+                                    </div>
+                                </div>
+
+
+                                <div class="row">
+                                    <div layout class="col-lg-12" layout-sm="colum">
+                                        <md-input-container flex>
+                                            <label>Empresa</label>
+                                            <input ng-disabled="detalhes || jaRegistrado" readonly="true" ng-model="funcionario.empresa.nomeFilial"
+                                                name="empresaNome">
+                                        </md-input-container>
+                                    </div>
+                                </div>
+
+
+                                <div class="row">
+                                    <div layout class="col-md-3" layout-sm="column">
+                                        <md-input-container flex>
+                                            <label>Data Inicio</label>
+                                            <md-icon class="material-icons icon-momentpicker" ng-class="md-datepicker-calendar-icon"
+                                                aria-label="md-calendar">date_range</md-icon>
+                                            <input required name="dataInicio" moment-picker="falta.dataInicio"
+                                                placeholder="Selecione" ng-model="falta.dataInicio" format="DD/MM/YYYY"
+                                                locale="pt-br" start-view="month" ng-model-options="{ updateOn: 'blur' }"
+                                                ng-disabled="detalhes || jaRegistrado">
+                                            <div ng-messages="faltaForm.dataInicio.$error" multiple>
+                                                <div ng-message="required">Campo de preenchimento obrigatório.</div>
+                                            </div>
+                                        </md-input-container>
+                                    </div>
+                                    <div layout class="col-md-3" layout-sm="column">
+                                        <md-input-container flex>
+                                            <label>Data Retorno</label>
+                                            <md-icon class="material-icons icon-momentpicker" ng-class="md-datepicker-calendar-icon"
+                                                aria-label="md-calendar">date_range</md-icon>
+                                            <input name="dataRetorno" moment-picker="falta.dataRetorno" placeholder="Selecione"
+                                                ng-model="falta.dataRetorno" format="DD/MM/YYYY" locale="pt-br"
+                                                start-view="month" ng-model-options="{ updateOn: 'blur' }" ng-disabled="detalhes || jaRegistrado">
+                                        </md-input-container>
+                                    </div>
+                                    <div layout class="col-md-6" layout-sm="colum">
+                                        <md-input-container flex>
+                                            <label>Diagnóstico/Alegação</label>
+                                            <input required ng-model="falta.diagnosticoMedico" name="diagnosticoMedico"
+                                                ng-disabled="detalhes || jaRegistrado">
+                                            <div ng-messages="faltaForm.diagnosticoMedico.$error" multiple>
+                                                <div ng-message="required">Campo de preenchimento obrigatório.</div>
+                                            </div>
+                                        </md-input-container>
+                                    </div>
+                                </div>
+                                <div class="row">
+
+                                    <div layout class="col-lg-6" layout-sm="colum">
+                                        <md-input-container flex>
+                                            <label>Afastamento</label>
+                                            <md-select required ng-disabled="detalhes || jaRegistrado" name="situacao"
+                                                ng-model="falta.afastamentoId">
+                                                <md-option ng-repeat="a in afastamentos" value="{{a.id}}">
+                                                    {{a.descricao}}
+                                                </md-option>
+                                            </md-select>
+                                        </md-input-container>
+                                    </div>
+                                    <div layout class="col-lg-6" layout-sm="colum">
+                                        <md-input-container flex>
+                                            <label>Motivo Afastamento</label>
+                                            <md-select required ng-disabled="detalhes || jaRegistrado" name="situacao"
+                                                ng-model="falta.motivoAfastamentoId">
+                                                <md-option ng-repeat="m in motivos" value="{{m.id}}">
+                                                    {{m.descricao}}
+                                                </md-option>
+                                            </md-select>
+                                        </md-input-container>
+                                    </div>
+                                    <div layout class="col-md-12" layout-sm="colum">
+                                        <md-input-container flex>
+                                            <label>Observação documento</label>
+                                            <input ng-disabled="detalhes || jaRegistrado" ng-model="falta.observacaoDocumento"
+                                                name="valor">
+                                        </md-input-container>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="panel panel-default">
+                                            <div class="panel-body">
+                                                <article class="article">
+                                                    <md-card class="no-margin-h">
+                                                        <div class="col-md-12">
+                                                            <form ng-disabled="detalhes" enctype="multipart/form-data"
+                                                                name="formAnexar">
+                                                                <div ng-if="!detalhes" class="row">
+                                                                    <div class="col-md-10" layout layout-sm="column">
+                                                                        <md-input-container flex>
+                                                                            <input type="file" id="anexo-file" name="file"
+                                                                                ng-file="getFile($file)" />
+                                                                        </md-input-container>
+                                                                    </div>
+                                                                    <div class="col-md-2" layout-sm="column">
+                                                                        <md-input-container>
+                                                                            <md-button ng-disabled="anexos.length>0 || jaRegistrado"
+                                                                                ng-click="showConfirm($event)" class="md-raised
+                                                                                    md-primary">Anexar</md-button>
+                                                                        </md-input-container>
+                                                                    </div>
+                                                                </div>
+                                                            </form>
+                                                        </div>
+                                                        <md-table-container>
+                                                            <table md-table ng-model="selected" md-progress="promise">
+                                                                <thead ng-if="!options.decapitate" md-head md-order="query.order"
+                                                                    md-on-reorder="loadList">
+                                                                    <tr md-row>
+                                                                        <th md-column md-order-by="nome">
+                                                                            <span>Nome Documento</span>
+                                                                        </th>
+                                                                        <th md-column md-order-by="nome">
+                                                                            <span>Data de Anexo</span>
+                                                                        </th>
+                                                                        <th md-column md-order-by="nome">
+                                                                            <span>Tipo de Arquivo</span>
+                                                                        </th>
+                                                                        <th md-column md-order-by="nome">
+                                                                            <span>Tamanho</span>
+                                                                        </th>
+                                                                        <th ng-if="!detalhes" md-column>
+                                                                            <span>Ações</span>
+                                                                        </th>
+                                                                    </tr>
+                                                                </thead>
+                                                                <tbody md-body>
+                                                                    <tr md-row md-select="item" md-select-id="item"
+                                                                        md-auto-select ng-repeat="item in anexos">
+                                                                        <td md-cell>{{item.fileName}}</td>
+                                                                        <td md-cell>{{item.createdAt |
+                                                                            date:'dd/MM/yy'}}</td>
+                                                                        <td md-cell>{{item.fileType}}</td>
+                                                                        <td md-cell>{{item.size/1024/1024 | limitTo:
+                                                                            4}} MB</td>
+
+                                                                        <td md-cell ng-if="!detalhes">
+                                                                            <a href="" ng-if="!detalhes" ng-click="removeAnexo(item.id)">
+                                                                                <md-tooltip md-direction="top">Excluir</md-tooltip>
+                                                                                <i class="fa fa-trash-o fa-lg"></i>
+                                                                            </a>
+                                                                        </td>
+                                                                    </tr>
+                                                                </tbody>
+                                                            </table>
+
+                                                </article>
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+
+                                <div ng-if="detalhes" layout layout-sm="column">
+                                    <table md-table md-progress="promise">
+                                        <thead md-head>
+                                            <tr md-row>
+                                                <th md-column>
+                                                    <span>Criado em:</span>
+                                                </th>
+                                                <th md-column>
+                                                    <span>Atualizado em:</span>
+                                                </th>
+                                                <th md-column>
+                                                    <span>Criado por:</span>
+                                                </th>
+                                                <th md-column>
+                                                    <span>Atualizado por:</span>
+                                                </th>
+                                            </tr>
+                                        </thead>
+                                        <tbody md-body>
+                                            <tr md-row>
+                                                <td md-cell>{{falta.criadoEm | date:'dd/MM/yy - HH:mm'}}</td>
+                                                <td md-cell>{{falta.alteradoEm | date:'dd/MM/yy -
+                                                    HH:mm'}}</td>
+                                                <td md-cell>{{falta.criadoPor}}</td>
+                                                <td md-cell>{{falta.alteradoPor}}</td>
+
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-12 text-center">
+                                        <button ng-if="!detalhes" ng-disabled="faltaForm.$invalid" type="submit"
+                                            ui-wave class="btn btn-primary btn-w-md">Salvar</button>
+                                        <p class="btn btn-default btn-w-md" ui-wave data-ng-click="goBack()">Voltar</p>
+                                        <p class="btn btn-default btn-w-md" ui-wave ng-click="limparCampos()">Limpar</p>
+                                    </div>
+                                </div>
+                            </div>
+                            </md-content>
+                            </md-tab>
+                            </md-tabs>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

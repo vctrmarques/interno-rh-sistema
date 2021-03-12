@@ -1,0 +1,71 @@
+<md-dialog>
+    <form ng-cloak>
+        <md-toolbar>
+            <div style="background-color: #01722c" class="md-toolbar-tools">
+                <h2>Visualizar horarios da Agenda Médica</h2>
+                <span flex></span>
+                <a ng-click="cancel()">
+                    <i class="fa fa-close"></i>
+                </a>
+            </div>
+        </md-toolbar>
+
+        <md-dialog-content>
+            <div class="page">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <div class="panel-title">Agenda</div>
+                    </div>
+                    <div class="panel-body">
+                        <div class="row" style="max-height: 500px; overflow: auto;">
+
+                            <div class="divider divider-lg divider-solid" style="margin: 15px;">
+                            </div>
+
+                            <div class="col-md-1"></div>
+                            <div
+                                ng-repeat="agendaMedica in list.dataModal | limitTo: queryModal.limit : (queryModal.page -1) * queryModal.limit">
+                                <div class="col-md-2 text-center"
+                                    style="border-right: #e2edeb dashed 1px; border-left: #e2edeb dashed 1px;">
+                                    <p style="font-weight: bold;">
+                                        {{agendaMedica.diaSemana | uppercase}}</p>
+                                    <p>{{agendaMedica.data | date:'dd/MM/yyyy'}}</p>
+                                    <div class="divider divider-dashed"></div>
+                                    <span
+                                        ng-repeat="agendaMedicaData in agendaMedica.agendaMedicaData">
+                                        <div>
+                                            <md-checkbox ng-disabled="detalhes"
+                                                ng-model="agendaMedicaData.checkHorario">
+                                                <span
+                                                    style="font-size: 16px;">{{agendaMedicaData.hora}}</span>
+                                            </md-checkbox>
+                                        </div>
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="col-md-1"></div>
+                        </div>
+                        <div class="divider"></div>
+                        <md-table-pagination ng-show="list.dataModal.length > 0"
+                            md-label="{page: 'Página:', rowsPerPage: 'Registros por página:', of: 'de'}"
+                            md-limit="queryModal.limit" md-limit-options="limitOptionsModal"
+                            md-page="queryModal.page" md-total="{{list.dataModal.length}}" md-page-select>
+                        </md-table-pagination>
+                    </div>
+                </div>
+
+            </div>
+        </md-dialog-content>
+        <md-dialog-actions layout="row">
+            <div style="padding: 15px;">
+                <md-button md-no-ink class="md-primary" ng-click="imprimir()">
+                    <i class="fa fa-print"></i>
+                    Imprimir
+                </md-button>
+                <md-button ng-click="cancel()">
+                    Cancelar
+                </md-button>
+            </div>
+        </md-dialog-actions>
+    </form>
+</md-dialog>

@@ -1,0 +1,265 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<txg:Texgit xmlns:txg="http://jrimum.org/texgit"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://jrimum.org/texgit TexgitSchema.xsd"
+	version="1.0-academic">
+
+	<FlatFile>
+		<layout>
+			<name>Arquivo-dirf-2020</name>
+			<version>Version 01</version>
+			<description>
+				Layout declaração imposto de renda 2020
+
+				Arquivo texto
+				Meio de Registro Transmissão de Dados
+				Organização Sequencial
+
+				LAYOUT PADRÃO
+
+				DIRF – Declaração do imposto sobre a renda retido na fonte
+				RESPO – Responsável pelo preenchimento
+				DECPJ – Declarante pessoa jurídica
+				IDREC – Identificação do código de receita
+				BPFDEC – Beneficiário pessoa física do declarante
+					RTRT – Rendimentos Tributáveis – Rendimento Tributável
+					RTPO – Rendimentos Tributáveis – Dedução – Previdência Oficial
+					RTDP – Rendimentos Tributáveis – Dedução – Dependentes
+					RTIRF – Rendimentos Tributáveis – Imposto sobre a Renda Retido na Fonte
+					INFPA – Informações do beneficiário da pensão alimentícia
+						RTPA – Rendimentos Tributáveis – Dedução – Pensão Alimentícia
+			</description>
+		</layout>
+		<GroupOfRecords>
+			<Record name="DIRF" description="Registro de identificação da declaração" >
+				<GroupOfFields>
+					<IdType name="identificadorRegistro" length="4" value="Dirf" position="1"/>
+					<Field name="Pipe" length="1" value="|" />
+					<Field name="anoReferencia" length="4" type="INTEGER"/>
+					<Field name="Pipe" length="1" value="|" />
+					<Field name="anoCalendario" length="4" type="INTEGER"/>
+					<Field name="Pipe" length="1" value="|" />
+					<Field name="retificadora" length="1" type="CHARACTER"/>
+					<Field name="Pipe" length="1" value="|" />
+					<Field name="numeroRecibo" length="12" blankAccepted="true"/>
+					<Field name="Pipe" length="1" value="|" />
+					<Field name="estruturaLeiaute" length="7" type="STRING" value="AT65HD8"/>
+					<Field name="Pipe" length="1" value="|" />
+				</GroupOfFields>
+			</Record>
+			<Record name="RESPO" description="Responsável pelo preenchimento" >
+				<GroupOfFields>
+					<IdType name="identificadorRegistro" length="5" value="RESPO" position="1"/>
+					<Field name="Pipe" length="1" value="|" />
+					<Field name="cpf" length="11" type="INTEGER"/>
+					<Field name="Pipe" length="1" value="|" />
+					<Field name="nome" length="60" type="STRING" padding="WHITE_SPACE_RIGHT"/>
+					<Field name="Pipe" length="1" value="|" />
+					<Field name="ddd" length="2" type="INTEGER"/>
+					<Field name="Pipe" length="1"  value="|" />
+					<Field name="telefone" length="9" type="INTEGER"/>
+					<Field name="Pipe" length="1" value="|" />
+					<Field name="ramal" length="6" type="INTEGER" blankAccepted="true"/>
+					<Field name="Pipe" length="1" value="|" />
+					<Field name="fax" length="9" type="INTEGER" blankAccepted="true"/>
+					<Field name="Pipe" length="1" value="|" />
+					<Field name="correioEletronico" length="50" type="STRING" blankAccepted="true"/>
+					<Field name="Pipe" length="1" value="|" />
+				</GroupOfFields>
+			</Record>
+			<Record name="DECPJ" description="Declarante pessoa jurídica" >
+				<GroupOfFields>
+					<IdType name="identificadorRegistro" length="5" value="DECPJ" position="1"/>
+					<Field name="Pipe" length="1" value="|" />
+					<Field name="cnpj" length="14" type="INTEGER"/>
+					<Field name="Pipe" length="1" value="|" />
+					<Field name="nome" length="150" type="STRING" padding="WHITE_SPACE_RIGHT"/>
+					<Field name="Pipe" length="1" value="|" />
+					<Field name="naturezaDeclarante" length="1" type="INTEGER"/>
+					<Field name="Pipe" length="1"  value="|" />
+					<Field name="cpfResponsavel" length="11" type="INTEGER"/>
+					<Field name="Pipe" length="1" value="|" />
+					<Field name="indicadorSocio" length="1" type="CHARACTER" value="N"/>
+					<Field name="Pipe" length="1" value="|" />
+					<Field name="indicadorDepositarioCreditoDJ" length="1" type="CHARACTER" value="N"/>
+					<Field name="Pipe" length="1" value="|" />
+					<Field name="indicadorClubeInvestimento" length="1" type="CHARACTER" value="N"/>
+					<Field name="Pipe" length="1" value="|" />
+					<Field name="indicadorRendimentosPagos" length="1" type="CHARACTER" value="N"/>
+					<Field name="Pipe" length="1" value="|" />
+					<Field name="indicadorPlanoPrivadoAssistenciaSaude" length="1" type="CHARACTER" value="N"/>
+					<Field name="Pipe" length="1" value="|" />
+					<Field name="indicadorUniaoDetentoraCapital" length="1" type="CHARACTER" value="N"/>
+					<Field name="Pipe" length="1" value="|" />
+					<Field name="indicadorFundacaoPublica" length="1" type="CHARACTER" value="N"/>
+					<Field name="Pipe" length="1" value="|" />
+					<Field name="indicadorSituacaoEspecialDeclaracao" length="1" type="CHARACTER" value="N"/>
+					<Field name="Pipe" length="1" value="|" />
+					<Field name="dataEvento" length="8" type="DATE" blankAccepted="true"/>
+					<Field name="Pipe" length="1" value="|" />
+				</GroupOfFields>
+			</Record>
+			<Record name="IDREC" description="Identificação do código de receita" >
+				<GroupOfFields>
+					<IdType name="identificadorRegistro" length="5" value="IDREC" position="1"/>
+					<Field name="Pipe" length="1" value="|" />
+					<Field name="codigoReceita" length="4" type="INTEGER" value="0561" padding="ZERO_LEFT"/>
+					<Field name="Pipe" length="1" value="|" />
+				</GroupOfFields>
+			</Record>
+			<Record name="BPFDEC" repeatable="true" description="Beneficiário pessoa física do declarante">
+				<GroupOfFields>
+					<IdType name="identificadorRegistro" length="6" value="BPFDEC" position="1"/>
+					<Field name="Pipe" length="1" value="|" />
+					<Field name="cpf" length="11" type="INTEGER"/>
+					<Field name="Pipe" length="1" value="|" />
+					<Field name="nome" length="60" type="STRING" padding="WHITE_SPACE_RIGHT"/>
+					<Field name="Pipe" length="1" value="|" />
+					<Field name="dataLaudoMolestiaGrave" length="8" type="DATE" blankAccepted="true"/>
+					<Field name="Pipe" length="1"  value="|" />
+					<Field name="indicadorAlimentando" length="1" type="CHARACTER"/>
+					<Field name="Pipe" length="1" value="|" />
+					<Field name="indicadorPrevidenciaComplementar" length="1" type="CHARACTER"/>
+					<Field name="Pipe" length="1" value="|" />
+				</GroupOfFields>
+				<GroupOfInnerRecords>
+					<Record name="RTRT" repeatable="true" description="Rendimento Tributável">
+						<GroupOfFields>
+							<IdType name="identificadorRegistro" length="4" value="RTRT" position="1"/>
+							<Field name="Pipe" length="1" value="|" />
+							<Field name="janeiro" length="13" type="INTEGER" padding="ZERO_LEFT" blankAccepted="true"/>
+							<Field name="Pipe" length="1" value="|" />
+							<Field name="fevereiro" length="13" type="INTEGER" padding="ZERO_LEFT" blankAccepted="true"/>
+							<Field name="Pipe" length="1" value="|" />
+							<Field name="marco" length="13" type="INTEGER" padding="ZERO_LEFT" blankAccepted="true"/>
+							<Field name="Pipe" length="1" value="|" />
+							<Field name="abril" length="13" type="INTEGER" padding="ZERO_LEFT" blankAccepted="true"/>
+							<Field name="Pipe" length="1" value="|" />
+							<Field name="maio" length="13" type="INTEGER" padding="ZERO_LEFT" blankAccepted="true"/>
+							<Field name="Pipe" length="1" value="|" />
+							<Field name="junho" length="13" type="INTEGER" padding="ZERO_LEFT" blankAccepted="true"/>
+							<Field name="Pipe" length="1" value="|" />
+							<Field name="julho" length="13" type="INTEGER" padding="ZERO_LEFT" blankAccepted="true"/>
+							<Field name="Pipe" length="1" value="|" />
+							<Field name="agosto" length="13" type="INTEGER" padding="ZERO_LEFT" blankAccepted="true"/>
+							<Field name="Pipe" length="1" value="|" />
+							<Field name="setembro" length="13" type="INTEGER" padding="ZERO_LEFT" blankAccepted="true"/>
+							<Field name="Pipe" length="1" value="|" />
+							<Field name="outubro" length="13" type="INTEGER" padding="ZERO_LEFT" blankAccepted="true"/>
+							<Field name="Pipe" length="1" value="|" />
+							<Field name="novembro" length="13" type="INTEGER" padding="ZERO_LEFT" blankAccepted="true"/>
+							<Field name="Pipe" length="1" value="|" />
+							<Field name="dezembro" length="13" type="INTEGER" padding="ZERO_LEFT" blankAccepted="true"/>
+							<Field name="Pipe" length="1" value="|" />
+							<Field name="decimo" length="13" type="INTEGER" padding="ZERO_LEFT" blankAccepted="true"/>
+							<Field name="Pipe" length="1" value="|" />
+						</GroupOfFields>
+					</Record>
+					<Record name="RTPO" repeatable="true" description="Dedução – Previdência Oficial">
+						<GroupOfFields>
+							<IdType name="identificadorRegistro" length="4" value="RTPO" position="1"/>
+							<Field name="Pipe" length="1" value="|" />
+							<Field name="janeiro" length="13" type="INTEGER" padding="ZERO_LEFT" blankAccepted="true"/>
+							<Field name="Pipe" length="1" value="|" />
+							<Field name="fevereiro" length="13" type="INTEGER" padding="ZERO_LEFT" blankAccepted="true"/>
+							<Field name="Pipe" length="1" value="|" />
+							<Field name="marco" length="13" type="INTEGER" padding="ZERO_LEFT" blankAccepted="true"/>
+							<Field name="Pipe" length="1" value="|" />
+							<Field name="abril" length="13" type="INTEGER" padding="ZERO_LEFT" blankAccepted="true"/>
+							<Field name="Pipe" length="1" value="|" />
+							<Field name="maio" length="13" type="INTEGER" padding="ZERO_LEFT" blankAccepted="true"/>
+							<Field name="Pipe" length="1" value="|" />
+							<Field name="junho" length="13" type="INTEGER" padding="ZERO_LEFT" blankAccepted="true"/>
+							<Field name="Pipe" length="1" value="|" />
+							<Field name="julho" length="13" type="INTEGER" padding="ZERO_LEFT" blankAccepted="true"/>
+							<Field name="Pipe" length="1" value="|" />
+							<Field name="agosto" length="13" type="INTEGER" padding="ZERO_LEFT" blankAccepted="true"/>
+							<Field name="Pipe" length="1" value="|" />
+							<Field name="setembro" length="13" type="INTEGER" padding="ZERO_LEFT" blankAccepted="true"/>
+							<Field name="Pipe" length="1" value="|" />
+							<Field name="outubro" length="13" type="INTEGER" padding="ZERO_LEFT" blankAccepted="true"/>
+							<Field name="Pipe" length="1" value="|" />
+							<Field name="novembro" length="13" type="INTEGER" padding="ZERO_LEFT" blankAccepted="true"/>
+							<Field name="Pipe" length="1" value="|" />
+							<Field name="dezembro" length="13" type="INTEGER" padding="ZERO_LEFT" blankAccepted="true"/>
+							<Field name="Pipe" length="1" value="|" />
+							<Field name="decimo" length="13" type="INTEGER" padding="ZERO_LEFT" blankAccepted="true"/>
+							<Field name="Pipe" length="1" value="|" />
+						</GroupOfFields>
+					</Record>
+					<Record name="RTDP" repeatable="true" description="Dedução – Dependentes">
+						<GroupOfFields>
+							<IdType name="identificadorRegistro" length="4" value="RTDP" position="1"/>
+							<Field name="Pipe" length="1" value="|" />
+							<Field name="janeiro" length="13" type="INTEGER" padding="ZERO_LEFT" blankAccepted="true"/>
+							<Field name="Pipe" length="1" value="|" />
+							<Field name="fevereiro" length="13" type="INTEGER" padding="ZERO_LEFT" blankAccepted="true"/>
+							<Field name="Pipe" length="1" value="|" />
+							<Field name="marco" length="13" type="INTEGER" padding="ZERO_LEFT" blankAccepted="true"/>
+							<Field name="Pipe" length="1" value="|" />
+							<Field name="abril" length="13" type="INTEGER" padding="ZERO_LEFT" blankAccepted="true"/>
+							<Field name="Pipe" length="1" value="|" />
+							<Field name="maio" length="13" type="INTEGER" padding="ZERO_LEFT" blankAccepted="true"/>
+							<Field name="Pipe" length="1" value="|" />
+							<Field name="junho" length="13" type="INTEGER" padding="ZERO_LEFT" blankAccepted="true"/>
+							<Field name="Pipe" length="1" value="|" />
+							<Field name="julho" length="13" type="INTEGER" padding="ZERO_LEFT" blankAccepted="true"/>
+							<Field name="Pipe" length="1" value="|" />
+							<Field name="agosto" length="13" type="INTEGER" padding="ZERO_LEFT" blankAccepted="true"/>
+							<Field name="Pipe" length="1" value="|" />
+							<Field name="setembro" length="13" type="INTEGER" padding="ZERO_LEFT" blankAccepted="true"/>
+							<Field name="Pipe" length="1" value="|" />
+							<Field name="outubro" length="13" type="INTEGER" padding="ZERO_LEFT" blankAccepted="true"/>
+							<Field name="Pipe" length="1" value="|" />
+							<Field name="novembro" length="13" type="INTEGER" padding="ZERO_LEFT" blankAccepted="true"/>
+							<Field name="Pipe" length="1" value="|" />
+							<Field name="dezembro" length="13" type="INTEGER" padding="ZERO_LEFT" blankAccepted="true"/>
+							<Field name="Pipe" length="1" value="|" />
+							<Field name="decimo" length="13" type="INTEGER" padding="ZERO_LEFT" blankAccepted="true"/>
+							<Field name="Pipe" length="1" value="|" />
+						</GroupOfFields>
+					</Record>
+					<Record name="RTIRF" repeatable="true" description="Imposto sobre a Renda Retido na Fonte">
+						<GroupOfFields>
+							<IdType name="identificadorRegistro" length="5" value="RTIRF" position="1"/>
+							<Field name="Pipe" length="1" value="|" />
+							<Field name="janeiro" length="13" type="INTEGER" padding="ZERO_LEFT" blankAccepted="true"/>
+							<Field name="Pipe" length="1" value="|" />
+							<Field name="fevereiro" length="13" type="INTEGER" padding="ZERO_LEFT" blankAccepted="true"/>
+							<Field name="Pipe" length="1" value="|" />
+							<Field name="marco" length="13" type="INTEGER" padding="ZERO_LEFT" blankAccepted="true"/>
+							<Field name="Pipe" length="1" value="|" />
+							<Field name="abril" length="13" type="INTEGER" padding="ZERO_LEFT" blankAccepted="true"/>
+							<Field name="Pipe" length="1" value="|" />
+							<Field name="maio" length="13" type="INTEGER" padding="ZERO_LEFT" blankAccepted="true"/>
+							<Field name="Pipe" length="1" value="|" />
+							<Field name="junho" length="13" type="INTEGER" padding="ZERO_LEFT" blankAccepted="true"/>
+							<Field name="Pipe" length="1" value="|" />
+							<Field name="julho" length="13" type="INTEGER" padding="ZERO_LEFT" blankAccepted="true"/>
+							<Field name="Pipe" length="1" value="|" />
+							<Field name="agosto" length="13" type="INTEGER" padding="ZERO_LEFT" blankAccepted="true"/>
+							<Field name="Pipe" length="1" value="|" />
+							<Field name="setembro" length="13" type="INTEGER" padding="ZERO_LEFT" blankAccepted="true"/>
+							<Field name="Pipe" length="1" value="|" />
+							<Field name="outubro" length="13" type="INTEGER" padding="ZERO_LEFT" blankAccepted="true"/>
+							<Field name="Pipe" length="1" value="|" />
+							<Field name="novembro" length="13" type="INTEGER" padding="ZERO_LEFT" blankAccepted="true"/>
+							<Field name="Pipe" length="1" value="|" />
+							<Field name="dezembro" length="13" type="INTEGER" padding="ZERO_LEFT" blankAccepted="true"/>
+							<Field name="Pipe" length="1" value="|" />
+							<Field name="decimo" length="13" type="INTEGER" padding="ZERO_LEFT" blankAccepted="true"/>
+							<Field name="Pipe" length="1" value="|" />
+						</GroupOfFields>
+					</Record>
+				</GroupOfInnerRecords>
+				
+			</Record>
+			<Record name="FIMDirf">
+				<GroupOfFields>
+					<IdType name="IdentificadorRegistro" length="7" type="STRING" value="FIMDirf" position="1"/>
+					<Field name="Pipe" length="1" value="|" />
+				</GroupOfFields>
+			</Record>
+		</GroupOfRecords>
+	</FlatFile>
+</txg:Texgit>

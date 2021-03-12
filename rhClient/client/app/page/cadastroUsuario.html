@@ -1,0 +1,65 @@
+<md-dialog style="min-width:25%;max-height:500px;">
+    <form ng-cloak>
+        <md-toolbar>
+            <div style="background-color: #01722c" class="md-toolbar-tools">
+                <h2>Cadastro de Usuario de Senha 1/3</h2>
+                <span flex></span>
+                <a ng-click="cancel()">
+                    <i class="fa fa-close"></i>
+                </a>
+            </div>
+        </md-toolbar>
+
+        <md-dialog-content>
+            <div class="page">
+                <form name="material_login_form" class="md-form-login form-validation"
+                    data-ng-submit="submitForm()">
+                    <div class="card-content">
+                        <section class="logo text-center">
+                            <h2>
+                                <a href="">
+                                    <img ng-src="{{logoSrc}}"
+                                        class="imgLogin">
+                                </a>
+                                <br>
+                                {{main.brand}}
+                            </h2>
+                        </section>
+                            <div class="form-group">
+                                <div layout layout-sm="column">
+                                    <md-input-container flex>
+                                        <label>Matricula</label>
+                                        <input ng-model="usuario.matricula" name="matricula"
+                                            ng-required="true" ng-pattern="/^[0-9]*$/">
+                                        <div ng-messages="material_login_form.matricula.$error" multiple role="alert">
+                                            <div ng-message="required">Campo de preenchimento obrigatório.</div>
+                                            <div ng-message="pattern">Este campo só permite números</div>
+                                        </div>
+                                    </md-input-container>
+                                    <md-input-container flex>
+                                        <label>CPF</label>
+                                        <input name="cpf" ng-required="true"
+                                            type="text" ng-model="usuario.cpf" ui-br-cpf-mask>
+                                        <div ng-messages="material_login_form.cpf.$error" multiple role="alert">
+                                            <div ng-message="cpf">O Cpf informado é inválido.</div>
+                                            <div ng-message="required">Campo de preenchimento obrigatório.</div>
+                                        </div>
+                                    </md-input-container>
+                                </div>
+                            </div>
+                    </div>
+                </form>
+            </div>
+        </md-dialog-content>
+        <md-dialog-actions layout="row">
+            <div style="padding: 15px;">
+                <md-button md-no-ink class="md-primary" ng-click="salvar()">
+                    Próximo Passo
+                </md-button>
+                <md-button ng-click="cancel()">
+                    voltar
+                </md-button>
+            </div>
+        </md-dialog-actions>
+    </form>
+</md-dialog>

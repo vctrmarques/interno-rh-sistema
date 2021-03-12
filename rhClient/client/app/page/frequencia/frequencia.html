@@ -1,0 +1,120 @@
+<div class="page" ng-controller="frequenciaCtrl">
+    <div class="row ui-section">
+        <div class="col-lg-12 clearfix">
+            <h2 class="section-header" style="float: left;">Frequências</h2>
+            <div style="float: right">
+                <md-button class="md-fab md-accent" ng-href="#!/frequencia/formulario">
+                    <md-tooltip md-direction="bottom">Nova Frequência</md-tooltip>
+                    <span class="fa fa-plus"></span>
+                </md-button>
+                <span class="space"></span>
+            </div>
+        </div>
+        <div class="col-md-12">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <article class="article">
+                        <md-card class="no-margin-h">
+                            <div layout="column">
+                                <div layout-padding>
+                                    <div class="row">
+                                        <div layout class="col-md-8" layout-sm="column">
+                                            <md-input-container flex>
+                                                <label>Funcionário</label>
+                                                <input ng-model="nomeFuncionarioBusca"
+                                                    ng-change="searchFuncionario(nomeFuncionarioBusca)"
+                                                    placeholder="Buscar por funcionário..."
+                                                    ng-keypress="($event.keyCode === 13) && loadList()">
+                                            </md-input-container>
+                                        </div>
+                                        <div layout class="col-md-3" layout-sm="column">
+                                            <md-input-container flex>
+                                                <label>Ano</label>
+                                                <input ng-model="ano" type="number"
+                                                    ng-change="searchFuncionarioByAno(ano)" placeholder="Buscar por ano"
+                                                    ng-keypress="($event.keyCode === 13) && loadList()">
+                                            </md-input-container>
+                                        </div>
+                                        <md-button class="md-icon-button" ng-click="limpaFiltro()">
+                                            <md-tooltip md-direction="top">Limpar Filtros</md-tooltip>
+                                            <md-icon>autorenew</md-icon>
+                                        </md-button>
+                                        <md-button class="md-icon-button" ng-click="loadList()">
+                                            <md-tooltip md-direction="top">Atualizar</md-tooltip>
+                                            <md-icon>refresh</md-icon>
+                                        </md-button>
+                                    </div>
+                                </div>
+                            </div>
+                            <md-table-container>
+                                <div ng-repeat="item in list.data">
+                                    <div class="accordion" id="{{'accordion-frequencia'+item.id}}"
+                                        ng-click="accordion(item.id)">
+                                        {{item.nome}}
+                                    </div>
+                                    <div class="accordion-content">
+                                        <md-table-container>
+                                            <table md-table ng-model="selected" md-progress="promise">
+                                                <thead ng-if="!options.decapitate" md-head md-order="query.order"
+                                                    md-on-reorder="loadList">
+                                                    <tr md-row>
+                                                        <th md-column md-order-by="nome">
+                                                            <span>Mes</span>
+                                                        </th>
+                                                        <th md-column md-order-by="nome">
+                                                            <span>Ano</span>
+                                                        </th>
+                                                        <!-- <th md-column md-order-by="nome">
+                                                            <span>Carga Horária</span>
+                                                        </th> -->
+                                                        <th md-column md-order-by="nome">
+                                                            <span>Hora Exercida</span>
+                                                        </th>
+                                                        <th md-column md-order-by="nome">
+                                                            <span>Hora Extra</span>
+                                                        </th>
+                                                        <th md-column>
+                                                            <span>Ações</span>
+                                                        </th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody md-body>
+                                                    <tr md-row md-select="frequencia" md-select-id="frequencia"
+                                                        md-auto-select ng-repeat="frequencia in item.frequencias">
+                                                        <td md-cell>{{frequencia.mes.label}}</td>
+                                                        <td md-cell>{{frequencia.ano}}</td>
+                                                        <!-- <td md-cell>Ver carga</td> -->
+                                                        <td md-cell>{{frequencia.horasExercidas}}</td>
+                                                        <td md-cell>{{frequencia.horasExtrasExercidas}}</td>
+                                                        <td md-cell>
+                                                            <a href=""
+                                                                ui-sref="frequenciaDetalhes({ id: item.id, ano:frequencia.ano, mes:frequencia.mes.value, detalhes: true })">
+                                                                <md-tooltip md-direction="top">Detalhes Cadastrais
+                                                                </md-tooltip>
+                                                                <i class="fa fa-search fa-lg"></i>
+                                                            </a>
+                                                            <a ng-if="botoesGestao"
+                                                                ui-sref="frequenciaEdit({ id: item.id, ano:frequencia.ano, mes:frequencia.mes.value  })">
+                                                                <md-tooltip md-direction="top">Editar</md-tooltip>
+                                                                <i class="fa fa-pencil fa-lg"></i>
+                                                            </a>
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </md-table-container>
+                                    </div>
+                                </div>
+                            </md-table-container>
+                            <md-table-pagination
+                                md-label="{page: 'Página:', rowsPerPage: 'Registros por página:', of: 'de'}"
+                                md-limit="query.limit" md-limit-options="limitOptions" md-page="query.page"
+                                md-total="{{list.count}}" md-on-paginate="loadList" md-page-select>
+                            </md-table-pagination>
+                        </md-card>
+                    </article>
+
+                </div>
+            </div>
+        </div>
+    </div>

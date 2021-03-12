@@ -1,0 +1,2214 @@
+<div class="page" ng-controller="certidaoTempoContribuicaoExServidorFormCtrl">
+	<div class="row ui-section">
+		<div class="col-lg-8 clearfix">
+			<h2 class="section-header">
+				{{!detalhes ? 'Certidão de Tempo de Contribuição - Ex-Servidor' : 'Detalhes da Certidão de Tempo de Contribuição - Ex-Servidor'}}
+			</h2>
+		</div>
+		<div class="col-md-12">
+			<div class="panel panel-default">
+				<div class="panel-body">
+					<article class="article">
+						<form ng-disabled="detalhes" name="certidaoForm">
+							<div style="text-align: center;" class="alert alert-danger" ng-if="salvarComoRascunho">
+								<span>RASCUNHO</span>
+							</div>
+							<div class="row" ng-show="numeroCertidao">
+								<div layout layout-sm="column" class="pull-right" ng-show="numeroRetificacao">
+									<div class="well well-sm" style="margin-right: 20px;">
+										<h4 style="margin-right: 10px;margin-left: 10px;">Número da Retificação:
+											{{numeroRetificacao}}</h4>
+									</div>
+								</div>
+
+								<div layout layout-sm="column" class="pull-right" ng-show="numeroCertidao">
+									<div class="well well-sm" style="margin-right: 20px;">
+										<h4 style="margin-right: 10px;margin-left: 10px;">Número da Certidão:
+											{{numeroCertidao}}</h4>
+									</div>
+								</div>
+							</div>
+							<div class="row">
+								<div layout="column" ng-cloak class="md-inline-form inputdemoBasicUsage">
+									<div layout-padding>
+										<md-tabs md-dynamic-height md-border-bottom>
+											<md-tab label="Certidão">
+												<md-content class="md-padding">
+													<div class="panel panel-default">
+														<div class="panel-heading clearfix">
+															<div class="pull-left">Dados Funcionais</div>
+															<div class="pull-right">
+																<button type="button" class="btn btn-primary btn-xs"
+																	ng-click="editarFuncionario()"
+																	ng-disabled="detalhes || !funcionario">Editar dados
+																	do Funcionário</button>
+															</div>
+														</div>
+														<div class="panel-body">
+															<div class="row">
+																<div layout layout-sm="column" class="col-md-4">
+																	<md-autocomplete ng-disabled="detalhes" flex
+																		ng-required="true" md-no-cache="noCache"
+																		md-floating-label="Funcionário"
+																		md-selected-item="funcionario"
+																		md-search-text="searchFuncionario"
+																		md-items="item in querySearchFuncionario(searchFuncionario, searchMatricula, searchCPF, searchPis)"
+																		md-item-text="item.nome" md-delay="1000"
+																		md-min-length="3"
+																		md-selected-item-change="funcionarioSelecionado()">
+																		<md-item-template> <span
+																				md-highlight-text="searchFuncionario"
+																				md-highlight-flags="^i">{{item.nome}}</span>
+																		</md-item-template>
+																		<md-not-found> Item "{{searchFuncionario}}" não
+																			encontrado. </md-not-found>
+																	</md-autocomplete>
+																	<div ng-messages="funcionario.$error">
+																		<div ng-message="required">Campo de
+																			preenchimento obrigatório.</div>
+																	</div>
+																</div>
+																<div layout layout-sm="column" class="col-md-4">
+																	<md-autocomplete ng-disabled="detalhes" flex
+																		ng-required="true" md-no-cache="noCache"
+																		md-floating-label="Matrícula"
+																		md-selected-item="funcionario"
+																		md-search-text="searchMatricula"
+																		md-items="item in querySearchFuncionario(searchFuncionario, searchMatricula, searchCPF, searchPis)"
+																		md-item-text="item.matricula" md-delay="1000"
+																		md-min-length="1"
+																		md-selected-item-change="funcionarioSelecionado()">
+																		<md-item-template> <span
+																				md-highlight-text="searchMatricula"
+																				md-highlight-flags="^i">{{item.matricula}}
+																				- {{item.nome}}</span>
+																		</md-item-template>
+																		<md-not-found> Item "{{searchMatricula}}" não
+																			encontrado. </md-not-found>
+																	</md-autocomplete>
+																	<div ng-messages="funcionario.$error">
+																		<div ng-message="required">Campo de
+																			preenchimento obrigatório.</div>
+																	</div>
+																</div>
+																<div layout layout-sm="column" class="col-md-4">
+																	<md-input-container flex> <input
+																			ng-model="sexoFuncionario"
+																			ng-disabled="true" placeholder="Sexo">
+																	</md-input-container>
+																</div>
+															</div>
+															<div class="row">
+																<div layout layout-sm="column" class="col-md-2">
+																	<md-input-container flex> <input
+																			ng-model="rgFuncionario" ng-disabled="true"
+																			placeholder="RG"> </md-input-container>
+																</div>
+																<div layout layout-sm="column" class="col-md-2">
+																	<md-autocomplete ng-disabled="detalhes" flex
+																		ng-required="true" md-no-cache="noCache"
+																		md-floating-label="CPF"
+																		md-selected-item="funcionario"
+																		md-search-text="searchCPF"
+																		md-items="item in querySearchFuncionario(searchFuncionario, searchMatricula, searchCPF, searchPis)"
+																		md-item-text="item.cpf" md-delay="1000"
+																		md-min-length="1"
+																		md-selected-item-change="funcionarioSelecionado()">
+																		<md-item-template> <span
+																				md-highlight-text="searchCPF"
+																				md-highlight-flags="^i">{{item.cpf}}
+																				- {{item.nome}}</span>
+																		</md-item-template>
+																		<md-not-found> Item "{{searchCPF}}" não
+																			encontrado. </md-not-found>
+																	</md-autocomplete>
+																	<div ng-messages="funcionario.$error">
+																		<div ng-message="required">Campo de
+																			preenchimento obrigatório.</div>
+																	</div>
+																</div>
+																<div layout layout-sm="column" class="col-md-4">
+																	<md-autocomplete ng-disabled="detalhes" flex
+																		ng-required="true" md-no-cache="noCache"
+																		md-floating-label="Pis / Pasep"
+																		md-selected-item="funcionario"
+																		md-search-text="searchPis"
+																		md-items="item in querySearchFuncionario(searchFuncionario, searchMatricula, searchCPF, searchPis)"
+																		md-item-text="item.pisPasep" md-delay="1000"
+																		md-min-length="1"
+																		md-selected-item-change="funcionarioSelecionado()">
+																		<md-item-template> <span
+																				md-highlight-text="searchPis"
+																				md-highlight-flags="^i">{{item.pisPasep}}
+																				- {{item.nome}}</span>
+																		</md-item-template>
+																		<md-not-found> Item "{{searchPis}}" não
+																			encontrado. </md-not-found>
+																	</md-autocomplete>
+																	<div ng-messages="funcionario.$error">
+																		<div ng-message="required">Campo de
+																			preenchimento obrigatório.</div>
+																	</div>
+																</div>
+																<div layout layout-sm="column" class="col-md-4">
+																	<md-input-container flex> <label>Data de
+																			Nascimento</label>
+																		<md-icon
+																			class="material-icons icon-momentpicker"
+																			ng-class="md-datepicker-calendar-icon"
+																			aria-label="md-calendar">date_range
+																		</md-icon> <input name="dtNascimentoFuncionario"
+																			moment-picker="scope.dtNascimentoFuncionario"
+																			placeholder="Selecione a data"
+																			ng-model="dtNascimentoFuncionario"
+																			format="DD/MM/YYYY" locale="pt-br"
+																			start-view="month"
+																			ng-model-options="{ updateOn: 'blur' }"
+																			ng-disabled="true">
+																	</md-input-container>
+																</div>
+															</div>
+															<div class="row">
+																<div layout layout-sm="column" class="col-md-4">
+																	<md-input-container flex> <input
+																			ng-model="situacaoFuncionalFuncionario.descricao"
+																			ng-disabled="true"
+																			placeholder="Situação Funcional">
+																	</md-input-container>
+																</div>
+																<div layout layout-sm="column" class="col-md-4">
+																	<md-input-container flex> <input
+																			ng-model="empresaFilialFuncionario"
+																			ng-disabled="true"
+																			placeholder="Empresa / Filial">
+																	</md-input-container>
+																</div>
+																<div layout layout-sm="column" class="col-md-4">
+																	<md-input-container flex> <input
+																			ng-model="orgaoFuncionario.descricao"
+																			ng-disabled="true"
+																			placeholder="Órgão da Lotação">
+																	</md-input-container>
+																</div>
+															</div>
+															<div class="row">
+																<div layout layout-sm="column" class="col-md-12">
+																	<md-input-container flex> <input
+																			ng-model="filiacaoFuncionario"
+																			ng-disabled="true" placeholder="Filiação">
+																	</md-input-container>
+																</div>
+															</div>
+															<div class="row">
+																<div layout layout-sm="column" class="col-md-4">
+																	<md-input-container flex> <input
+																			ng-model="enderecoFuncionario"
+																			ng-disabled="true" placeholder="Endereço">
+																	</md-input-container>
+																</div>
+																<div layout layout-sm="column" class="col-md-4">
+																	<md-input-container flex> <label>Data de
+																			Admissão</label>
+																		<md-icon
+																			class="material-icons icon-momentpicker"
+																			ng-class="md-datepicker-calendar-icon"
+																			aria-label="md-calendar">date_range
+																		</md-icon> <input name="dtAdmissaoFuncionario"
+																			moment-picker="scope.ctc.dtAdmissaoFuncionario"
+																			placeholder="Selecione a data"
+																			ng-model="dtAdmissaoFuncionario"
+																			format="DD/MM/YYYY" locale="pt-br"
+																			start-view="month"
+																			ng-model-options="{ updateOn: 'blur' }"
+																			ng-disabled="true">
+																	</md-input-container>
+																</div>
+																<div layout layout-sm="column" class="col-md-4">
+																	<md-input-container flex> <label>Data da
+																			Exoneração</label>
+																		<md-icon
+																			class="material-icons icon-momentpicker"
+																			ng-class="md-datepicker-calendar-icon"
+																			aria-label="md-calendar">date_range
+																		</md-icon> <input name="dtExoneracaoFuncionario"
+																			moment-picker="scope.ctc.dataExoneracao"
+																			placeholder="Selecione a data"
+																			ng-model="ctc.dataExoneracao"
+																			format="DD/MM/YYYY" locale="pt-br"
+																			start-view="month"
+																			ng-model-options="{ updateOn: 'blur' }"
+																			ng-disabled="true">
+																	</md-input-container>
+																</div>
+															</div>
+														</div>
+													</div>
+													<div class="row">
+														<div class="col-md-6">
+															<div class="panel panel-default">
+																<div class="panel-heading">Cargos Exercidos</div>
+																<div class="panel-body">
+																	<div class="row" ng-show="!detalhes">
+																		<div layout layout-sm="column"
+																			class="col-md-10">
+																			<md-input-container flex> <input
+																					ng-model="cargoExercido"
+																					ng-disabled="false"
+																					placeholder="Cargo Exercido">
+																			</md-input-container>
+																		</div>
+																		<div class="col-md-2">
+																			<md-input-container class="md-block">
+																				<button ng-click="adicionarCargo()"
+																					type="button"
+																					class="btn btn-primary btn-sm">
+																					<i class="fa fa-plus"></i>
+																				</button>
+																				</md-intput-container>
+																		</div>
+																	</div>
+																	<div class="row" ng-if="ctc.cargos.length > 0">
+																		<div class="col-md-12">
+																			<md-table-container>
+																				<table md-table
+																					style="border: 1px solid #CCC;">
+																					<thead md-head>
+																						<tr md-row>
+																							<th md-column>
+																								<span>Cargo</span></th>
+																							<th md-column
+																								ng-show="!detalhes">
+																								<span>Ações</span></th>
+																						</tr>
+																					</thead>
+																					<tbody md-body>
+																						<tr md-row md-select="item"
+																							md-select-id="item"
+																							md-auto-select
+																							ng-repeat="c in ctc.cargos | orderBy : 'id'">
+																							<td md-cell>
+																								{{c.descricaoCargo}}
+																							</td>
+																							<td md-cell><a
+																									ng-if="!podeExcluir && !detalhes"
+																									ng-click="removerCargo($index)">
+																									<md-tooltip
+																										md-direction="top">
+																										Excluir
+																									</md-tooltip> <i
+																										class="fa fa-trash-o fa-lg"></i>
+																								</a></td>
+																						</tr>
+																					</tbody>
+																				</table>
+																			</md-table-container>
+																		</div>
+																	</div>
+																</div>
+															</div>
+														</div>
+
+														<div class="col-md-6">
+															<div class="panel panel-default">
+																<div class="panel-heading">Órgãos da Lotação</div>
+																<div class="panel-body">
+																	<div class="row" ng-show="!detalhes">
+																		<div layout layout-sm="column"
+																			class="col-md-10">
+																			<md-input-container flex> <input
+																					ng-model="orgaoLotacao"
+																					ng-disabled="false"
+																					placeholder="Órgão da Lotação">
+																			</md-input-container>
+																		</div>
+																		<div class="col-md-2">
+																			<md-input-container class="md-block">
+																				<button
+																					ng-click="adicionarOrgaoLotacao()"
+																					type="button"
+																					class="btn btn-primary btn-sm">
+																					<i class="fa fa-plus"></i>
+																				</button>
+																				</md-intput-container>
+																		</div>
+																	</div>
+																	<div class="row"
+																		ng-if="ctc.orgaosLotacao.length > 0">
+																		<div class="col-md-12">
+																			<md-table-container>
+																				<table md-table ng-model="selected"
+																					md-progress="promise"
+																					style="border: 1px solid #CCC;">
+																					<thead md-head
+																						md-on-reorder="loadList">
+																						<tr md-row>
+																							<th md-column>
+																								<span>Órgão</span></th>
+																							<th md-column
+																								ng-show="!detalhes">
+																								<span>Ações</span></th>
+																						</tr>
+																					</thead>
+																					<tbody md-body>
+																						<tr md-row md-select="item"
+																							md-select-id="item"
+																							md-auto-select
+																							ng-repeat="c in ctc.orgaosLotacao | orderBy : 'id'">
+																							<td md-cell>
+																								{{c.descricaoOrgaoLotacao}}
+																							</td>
+																							<td md-cell><a
+																									ng-if="!podeExcluir && !detalhes"
+																									ng-click="removerOrgaoLotacao($index)">
+																									<md-tooltip
+																										md-direction="top">
+																										Excluir
+																									</md-tooltip> <i
+																										class="fa fa-trash-o fa-lg"></i>
+																								</a></td>
+																						</tr>
+																					</tbody>
+																				</table>
+																			</md-table-container>
+																		</div>
+																	</div>
+																</div>
+															</div>
+														</div>
+													</div>
+													<div class="panel panel-default">
+														<div class="panel-heading">Períodos de contribuição</div>
+														<div class="panel-body">
+															<div class="row" ng-show="!detalhes">
+																<div layout class="col-md-3" layout-sm="column">
+																	<md-input-container flex> <label>Período
+																			Inicial</label>
+																		<md-icon
+																			class="material-icons icon-momentpicker"
+																			ng-class="md-datepicker-calendar-icon"
+																			aria-label="md-calendar">date_range
+																		</md-icon> <input name="periodoInicio"
+																			moment-picker="cesp.periodoInicio"
+																			placeholder="Selecione a data"
+																			max-date="cesp.periodoFinal"
+																			ng-model="cesp.periodoInicio"
+																			format="DD/MM/YYYY" locale="pt-br"
+																			start-view="month"
+																			ng-model-options="{ updateOn: 'blur' }"
+																			ng-disabled="detalhes">
+																	</md-input-container>
+																</div>
+																<div layout class="col-md-3" layout-sm="column">
+																	<md-input-container flex> <label>Período
+																			Final</label>
+																		<md-icon
+																			class="material-icons icon-momentpicker"
+																			ng-class="md-datepicker-calendar-icon"
+																			aria-label="md-calendar">date_range
+																		</md-icon> <input
+																			moment-picker="cesp.periodoFinal"
+																			placeholder="Selecione a data"
+																			min-date="cesp.periodoInicio"
+																			ng-model="cesp.periodoFinal"
+																			format="DD/MM/YYYY" locale="pt-br"
+																			start-view="month"
+																			ng-model-options="{ updateOn: 'blur' }"
+																			ng-disabled="detalhes">
+																	</md-input-container>
+																</div>
+																<div layout layout-sm="column" class="col-md-4">
+																	<md-input-container flex> <input
+																			ng-model="cesp.aproveitamento"
+																			ng-disabled="false"
+																			placeholder="Aproveitamento">
+																	</md-input-container>
+																</div>
+																<div class="col-md-2">
+																	<md-input-container class="md-block">
+																		<button
+																			ng-disabled="(cesp.periodoInicio > cesp.periodoFinal)"
+																			ng-click="adicionarDetalhamentoPeriodoContribuido()"
+																			type="button" ui-wave
+																			class="btn btn-primary btn-w-md">
+																			Adicionar</button>
+																		</md-intput-container>
+																</div>
+															</div>
+															<div class="row">
+																<div class="col-md-12 text-center">
+																	<md-table-container>
+																		<table md-table ng-model="selected"
+																			ng-if="ctc.periodos.length > 0"
+																			md-progress="promise"
+																			style="margin-top: 20px; border: 1px solid #CCC; margin-bottom: 10px;">
+																			<thead md-head md-on-reorder="loadList">
+																				<tr md-row>
+																					<th md-column><span>Período
+																							(Início)</span></th>
+																					<th md-column><span>Período
+																							(Fim)</span></th>
+																					<th md-column>
+																						<span>Aproveitamento</span></th>
+																					<th md-column ng-show="!detalhes">
+																						<span>Ações</span></th>
+																				</tr>
+																			</thead>
+																			<tbody md-body>
+																				<tr md-row md-select="item"
+																					md-select-id="item" md-auto-select
+																					ng-repeat="cesp in ctc.periodos | orderBy : 'periodoInicio'">
+																					<td md-cell>
+																						{{convertDate(cesp.periodoInicio, false)}}
+																					</td>
+																					<td md-cell>
+																						{{convertDate(cesp.periodoFinal, false)}}
+																					</td>
+																					<td md-cell>{{cesp.aproveitamento}}
+																					</td>
+																					<td md-cell><a
+																							ng-if="!podeExcluir && !detalhes"
+																							ng-click="removerDetalhamentoPeriodoContribuido($index)">
+																							<md-tooltip
+																								md-direction="top">
+																								Excluir</md-tooltip> <i
+																								class="fa fa-trash-o fa-lg"></i>
+																						</a></td>
+																				</tr>
+																			</tbody>
+																		</table>
+																	</md-table-container>
+																</div>
+															</div>
+														</div>
+													</div>
+
+													<div class="panel panel-default">
+														<div class="panel-heading">Frequências</div>
+														<div class="panel-body">
+															<div class="row" ng-show="!detalhes">
+																<div layout class="col-md-2" layout-sm="column">
+																	<md-input-container flex> <label>Ano</label>
+																		<md-select ng-disabled="detalhes"
+																			ng-model="frequencia.ano" name="frequencia">
+																			<md-option
+																				ng-repeat="obj in getListaAnosFrequencia()"
+																				value="{{obj}}"> {{obj}} </md-option>
+																		</md-select>
+																	</md-input-container>
+																</div>
+																<div layout class="col-md-2" layout-sm="column">
+																	<md-input-container flex> <input
+																			ng-model="frequencia.tempoBruto"
+																			name="tempoBruto"
+																			ng-disabled="!frequencia.ano"
+																			placeholder="Tempo Bruto" type="text"
+																			min="0" max="366" ui-number-mask="0">
+																	</md-input-container>
+
+																</div>
+																<div layout class="col-md-2" layout-sm="column">
+																	<md-input-container flex> <input
+																			ng-model="frequencia.faltas"
+																			ng-disabled="!frequencia.tempoBruto"
+																			placeholder="Faltas" type="text" min="0"
+																			max="366" ui-number-mask="0">
+																	</md-input-container>
+																</div>
+																<div layout class="col-md-3" layout-sm="column">
+																	<md-input-container flex> <input
+																			ng-model="frequencia.licencas"
+																			ng-disabled="!frequencia.tempoBruto"
+																			placeholder="Licenças" type="text" min="0"
+																			max="366" ui-number-mask="0">
+																	</md-input-container>
+																</div>
+																<div layout class="col-md-3" layout-sm="column">
+																	<md-input-container flex> <input
+																			ng-model="frequencia.licencasSemVenc"
+																			ng-disabled="!frequencia.tempoBruto"
+																			placeholder="Lic. sem vencimento"
+																			type="text" min="0" max="366"
+																			ui-number-mask="0"> </md-input-container>
+																</div>
+																<div layout class="col-md-2" layout-sm="column">
+																	<md-input-container flex> <input
+																			ng-model="frequencia.suspensoes"
+																			ng-disabled="!frequencia.tempoBruto"
+																			placeholder="Suspensões" type="text" min="0"
+																			max="366" ui-number-mask="0">
+																	</md-input-container>
+																</div>
+																<div layout class="col-md-2" layout-sm="column">
+																	<md-input-container flex> <input
+																			ng-model="frequencia.disponibilidade"
+																			ng-disabled="!frequencia.tempoBruto"
+																			placeholder="Disponibilidade" type="text"
+																			min="0" max="366" ui-number-mask="0">
+																	</md-input-container>
+																</div>
+																<div layout class="col-md-2" layout-sm="column">
+																	<md-input-container flex> <input
+																			ng-model="frequencia.outros"
+																			ng-disabled="!frequencia.tempoBruto"
+																			placeholder="Outros" type="text" min="0"
+																			max="366" ui-number-mask="0">
+																	</md-input-container>
+																</div>
+																<div layout class="col-md-2" layout-sm="column">
+																	<md-input-container flex> <input
+																			ng-value="getTempoLiquidoFrequencia(frequencia)"
+																			ng-model="frequencia.tempoLiquido"
+																			ng-disabled="true"
+																			placeholder="Tempo Líquido">
+																	</md-input-container>
+																</div>
+																<div class="col-md-2">
+																	<md-input-container class="md-block">
+																		<button ng-click="adicionarFrequencia()"
+																			type="button" ui-wave
+																			class="btn btn-primary btn-w-md">Adicionar</button>
+																		</md-intput-container>
+																</div>
+															</div>
+															<div class="row" ng-if="ctc.frequencias.length > 0">
+																<div class="col-md-12 text-center">
+																	<table md-table ng-model="selected"
+																		md-progress="promise"
+																		style="margin-top: 20px; border: 1px solid #CCC; margin-bottom: 10px;">
+																		<thead md-head md-on-reorder="loadList">
+																			<tr md-row>
+																				<th md-column><span>Ano</span></th>
+																				<th md-column><span>T. Bruto </span>
+																					<md-tooltip md-direction="top">Tempo
+																						Bruto (dias)</md-tooltip> <i
+																						class="fa fa-info-circle fa-lg"></i>
+																				</th>
+																				<th md-column><span>Faltas </span>
+																					<md-tooltip md-direction="top">
+																						Faltas (dias)</md-tooltip> <i
+																						class="fa fa-info-circle fa-lg"></i>
+																				</th>
+																				<th md-column><span>Lic. </span>
+																					<md-tooltip md-direction="top">
+																						Licenças (dias)</md-tooltip> <i
+																						class="fa fa-info-circle fa-lg"></i>
+																				</th>
+																				<th md-column><span>Lic. S.V. </span>
+																					<md-tooltip md-direction="top">
+																						Licenças sem vencimento (dias)
+																					</md-tooltip> <i
+																						class="fa fa-info-circle fa-lg"></i>
+																				</th>
+																				<th md-column><span>Susp. </span>
+																					<md-tooltip md-direction="top">
+																						Suspensões (dias)</md-tooltip>
+																					<i
+																						class="fa fa-info-circle fa-lg"></i>
+																				</th>
+																				<th md-column><span>Disp. </span>
+																					<md-tooltip md-direction="top">
+																						Disponibilidade (dias)
+																					</md-tooltip> <i
+																						class="fa fa-info-circle fa-lg"></i>
+																				</th>
+																				<th md-column><span>Outros </span>
+																					<md-tooltip md-direction="top">
+																						Outros (dias)</md-tooltip> <i
+																						class="fa fa-info-circle fa-lg"></i>
+																				</th>
+																				<th md-column><span>T. Líq. </span>
+																					<md-tooltip md-direction="top">Tempo
+																						Líquido (dias)</md-tooltip> <i
+																						class="fa fa-info-circle fa-lg"></i>
+																				</th>
+																				<th md-column ng-show="!detalhes">
+																					<span>Ações</span></th>
+																			</tr>
+																		</thead>
+																		<tbody md-body>
+																			<tr md-row md-select="item"
+																				md-select-id="item" md-auto-select
+																				ng-repeat="freq in ctc.frequencias | orderBy : 'ano'">
+																				<td md-cell class="center">{{freq.ano}}
+																				</td>
+																				<td md-cell class="center">
+																					{{freq.tempoBruto}}</td>
+																				<td md-cell>{{freq.faltas}}</td>
+																				<td md-cell>{{freq.licencas}}</td>
+																				<td md-cell>{{freq.licencasSemVenc}}
+																				</td>
+																				<td md-cell>{{freq.suspensoes}}</td>
+																				<td md-cell>{{freq.disponibilidade}}
+																				</td>
+																				<td md-cell>{{freq.outros}}</td>
+																				<td md-cell>{{freq.tempoLiquido}}</td>
+																				<td md-cell><a
+																						ng-if="!podeExcluir && !detalhes"
+																						ng-click="removerFrequencia($index)">
+																						<md-tooltip md-direction="top">
+																							Excluir</md-tooltip> <i
+																							class="fa fa-trash-o fa-lg"></i>
+																					</a></td>
+																			</tr>
+																		</tbody>
+																	</table>
+																</div>
+															</div>
+														</div>
+													</div>
+
+													<div class="panel panel-default">
+														<div class="panel-heading">Assinaturas</div>
+														<div class="panel-body">
+															<div class="row" ng-show="!detalhes">
+																<div layout layout-sm="column" class="col-md-6">
+																	<md-autocomplete ng-disabled="detalhes" flex
+																		ng-required="false" md-no-cache="noCache"
+																		md-floating-label="Funcionário"
+																		md-selected-item="assinatura"
+																		md-search-text="searchAssinatura"
+																		md-items="item in querySearchAssinatura(searchAssinatura)"
+																		md-item-text="item.nome" md-delay="1000"
+																		md-min-length="3"
+																		md-selected-item-change="assinaturaSelecionada()">
+																		<md-item-template> <span
+																				md-highlight-text="searchAssinatura"
+																				md-highlight-flags="^i">{{item.nome}}</span>
+																		</md-item-template>
+																		<md-not-found> Item "{{searchAssinatura}}"
+																			não encontrado. </md-not-found>
+																	</md-autocomplete>
+																</div>
+																<div layout layout-sm="column" class="col-md-4">
+																	<md-input-container flex> <label>Função</label>
+																		<md-select ng-disabled="detalhes"
+																			ng-model="tipoFuncao" name="tipoFuncao">
+																			<md-option
+																				ng-repeat="tipoFuncao in list.tiposFuncao"
+																				value="{{tipoFuncao.label}}">
+																				{{tipoFuncao.label}} </md-option>
+																		</md-select>
+																	</md-input-container>
+																</div>
+																<div layout layout-sm="column" class="col-md-2">
+																	<md-input-container class="md-block"> <a
+																			ng-click="adicionarAssinaturaDadosFuncionais()"
+																			ui-wave
+																			class="btn btn-primary btn-w-md">Adicionar</a>
+																		</md-intput-container>
+																</div>
+															</div>
+															<div class="row">
+																<div class="col-md-12 text-center">
+																	<md-table-container>
+																		<table md-table ng-model="selected"
+																			ng-if="(ctc.assinaturas | filter: filtrarAbaCertidao).length > 0"
+																			md-progress="promise"
+																			style="margin-top: 20px; border: 1px solid #CCC; margin-bottom: 10px;">
+																			<thead md-head md-on-reorder="loadList">
+																				<tr md-row>
+																					<th md-column>
+																						<span>Funcionário</span></th>
+																					<th md-column><span>Função</span>
+																					</th>
+																					<th md-column><span>Matrícula</span>
+																					</th>
+																					<th md-column ng-show="!detalhes">
+																						<span>Ações</span></th>
+																				</tr>
+																			</thead>
+																			<tbody md-body>
+																				<tr md-row md-select="item"
+																					md-select-id="item" md-auto-select
+																					ng-repeat="item in ctc.assinaturas | filter: filtrarAbaCertidao">
+																					<td md-cell>
+																						{{item.funcionario.nome}}</td>
+																					<td md-cell>
+																						{{item.funcaoAssinaturaCertidao}}
+																					</td>
+																					<td md-cell>
+																						{{item.funcionario.matricula}}
+																					</td>
+																					<td md-cell><a
+																							ng-if="!podeExcluir && !detalhes"
+																							ng-click="removerAssinatura(item)">
+																							<md-tooltip
+																								md-direction="top">
+																								Excluir</md-tooltip> <i
+																								class="fa fa-trash-o fa-lg"></i>
+																						</a></td>
+																				</tr>
+																			</tbody>
+																		</table>
+																	</md-table-container>
+																</div>
+															</div>
+														</div>
+													</div>
+												</md-content>
+											</md-tab>
+											<md-tab label="Detalhamento da Frequência"
+												ng-disabled="ctc.frequencias.length == 0">
+												<md-content class="md-padding">
+													<div class="row">
+														<div class="col-md-12">
+															<h4 style="margin-bottom: 20px">Frequência - Discriminação
+																das deduções do tempo bruto</h4>
+															<div ng-class="(total.faltas - somaFaltas() == 0) ? 'panel panel-default' : 'panel panel-danger'"
+																ng-show="validaDetalhamento.faltas">
+																<div class="panel-heading clearfix">
+																	<div class="pull-left">Faltas</div>
+																	<div class="pull-right">
+																		<div><span style="font-size: 11px">Total:
+																				<b>{{total.faltas}}</b> | Informado:
+																				<b>{{somaFaltas()}}</b></span></div>
+																	</div>
+																</div>
+																<div class="panel-body">
+																	<div class="row" ng-show="!detalhes">
+																		<div layout class="col-md-2" layout-sm="column">
+																			<md-input-container flex> <label>Período
+																					Inicial</label>
+																				<md-icon
+																					class="material-icons icon-momentpicker"
+																					ng-class="md-datepicker-calendar-icon"
+																					aria-label="md-calendar">date_range
+																				</md-icon> <input
+																					moment-picker="ff.periodoInicial"
+																					placeholder="Selecione a data"
+																					max-date="ff.periodoFinal"
+																					ng-model="ff.periodoInicial"
+																					format="DD/MM/YYYY" locale="pt-br"
+																					start-view="month"
+																					ng-model-options="{ updateOn: 'blur' }"
+																					ng-disabled="detalhes">
+																			</md-input-container>
+																		</div>
+																		<div layout class="col-md-2" layout-sm="column">
+																			<md-input-container flex> <label>Período
+																					Final</label>
+																				<md-icon
+																					class="material-icons icon-momentpicker"
+																					ng-class="md-datepicker-calendar-icon"
+																					aria-label="md-calendar">date_range
+																				</md-icon> <input
+																					moment-picker="ff.periodoFinal"
+																					placeholder="Selecione a data"
+																					min-date="ff.periodoInicial"
+																					ng-model="ff.periodoFinal"
+																					format="DD/MM/YYYY" locale="pt-br"
+																					start-view="month"
+																					ng-model-options="{ updateOn: 'blur' }"
+																					ng-disabled="detalhes">
+																			</md-input-container>
+																		</div>
+																		<div layout layout-sm="column" class="col-md-3">
+																			<md-input-container flex> <input
+																					ng-model="ff.dias"
+																					ng-disabled="true"
+																					placeholder="Tempo em Dias"
+																					ng-value="calularPeriodoDias(ff.periodoInicial, ff.periodoFinal)">
+																			</md-input-container>
+																		</div>
+																		<div layout layout-sm="column" class="col-md-3">
+																			<md-input-container flex> <input
+																					ng-model="ff.identificacao"
+																					ng-disabled="false"
+																					placeholder="Identificação da Ocorrência">
+																			</md-input-container>
+																		</div>
+																		<div class="col-md-1">
+																			<md-input-container class="md-block">
+																				<button
+																					ng-click="adicionarDetalhamentoFrequenciaFaltas()"
+																					type="button"
+																					class="btn btn-primary btn-sm">
+																					<i class="fa fa-plus fa-md"></i>
+																				</button>
+																				</md-intput-container>
+																		</div>
+																	</div>
+																	<div class="row">
+																		<div class="col-md-12 text-center">
+																			<md-table-container>
+																				<table md-table ng-model="selected"
+																					ng-if="(ctc.detalhamentosFrequencia | filter: filtrarDetalhamentoFalta).length > 0"
+																					md-progress="promise"
+																					style="margin-top: 20px; border: 1px solid #CCC; margin-bottom: 10px;">
+																					<thead md-head
+																						md-on-reorder="loadList">
+																						<tr md-row>
+																							<th md-column><span>Período
+																									(Início)</span></th>
+																							<th md-column><span>Período
+																									(Fim)</span></th>
+																							<th md-column><span>Tempo em
+																									Dias</span></th>
+																							<th md-column>
+																								<span>Identificação da
+																									Ocorrência</span>
+																							</th>
+																							<th md-column
+																								ng-show="!detalhes">
+																								<span>Ações</span></th>
+																						</tr>
+																					</thead>
+																					<tbody md-body>
+																						<tr md-row md-select="item"
+																							md-select-id="item"
+																							md-auto-select
+																							ng-repeat="item in ctc.detalhamentosFrequencia | filter: filtrarDetalhamentoFalta">
+																							<td md-cell>
+																								{{convertDate(item.periodoInicio, false)}}
+																							</td>
+																							<td md-cell>
+																								{{convertDate(item.periodoFinal, false)}}
+																							</td>
+																							<td md-cell>{{item.tempo}}
+																							</td>
+																							<td md-cell>
+																								{{item.descricao}}</td>
+																							<td md-cell><a
+																									ng-if="!podeExcluir && !detalhes"
+																									ng-click="removerDetalhamento(item)">
+																									<md-tooltip
+																										md-direction="top">
+																										Excluir
+																									</md-tooltip> <i
+																										class="fa fa-trash-o fa-lg"></i>
+																								</a></td>
+																						</tr>
+																					</tbody>
+																				</table>
+																			</md-table-container>
+																		</div>
+																	</div>
+																</div>
+															</div>
+															<div ng-class="(total.licencas - somaLicencas() == 0) ? 'panel panel-default' : 'panel panel-danger'"
+																ng-show="validaDetalhamento.licencas">
+																<div class="panel-heading clearfix">
+																	<div class="pull-left">Licenças sem deduções</div>
+																	<div class="pull-right">
+																		<div><span style="font-size: 11px">Total:
+																				<b>{{total.licencas}}</b> | Informado:
+																				<b>{{somaLicencas()}}</b></span></div>
+																	</div>
+																</div>
+																<div class="panel-body">
+																	<div class="row" ng-show="!detalhes">
+																		<div layout class="col-md-2" layout-sm="column">
+																			<md-input-container flex> <label>Período
+																					Inicial</label>
+																				<md-icon
+																					class="material-icons icon-momentpicker"
+																					ng-class="md-datepicker-calendar-icon"
+																					aria-label="md-calendar">date_range
+																				</md-icon> <input
+																					moment-picker="lsd.periodoInicial"
+																					placeholder="Selecione a data"
+																					max-date="lsd.periodoFinal"
+																					ng-model="lsd.periodoInicial"
+																					format="DD/MM/YYYY" locale="pt-br"
+																					start-view="month"
+																					ng-model-options="{ updateOn: 'blur' }"
+																					ng-disabled="detalhes">
+																			</md-input-container>
+																		</div>
+																		<div layout class="col-md-2" layout-sm="column">
+																			<md-input-container flex> <label>Período
+																					Final</label>
+																				<md-icon
+																					class="material-icons icon-momentpicker"
+																					ng-class="md-datepicker-calendar-icon"
+																					aria-label="md-calendar">date_range
+																				</md-icon> <input
+																					moment-picker="lsd.periodoFinal"
+																					placeholder="Selecione a data"
+																					min-date="lsd.periodoInicial"
+																					ng-model="lsd.periodoFinal"
+																					format="DD/MM/YYYY" locale="pt-br"
+																					start-view="month"
+																					ng-model-options="{ updateOn: 'blur' }"
+																					ng-disabled="detalhes">
+																			</md-input-container>
+																		</div>
+																		<div layout layout-sm="column" class="col-md-3">
+																			<md-input-container flex> <input
+																					ng-model="lsd.dias"
+																					ng-disabled="true"
+																					placeholder="Tempo em Dias"
+																					ng-value="calularPeriodoDias(lsd.periodoInicial, lsd.periodoFinal)">
+																			</md-input-container>
+																		</div>
+																		<div layout layout-sm="column" class="col-md-3">
+																			<md-input-container flex> <input
+																					ng-model="lsd.identificacao"
+																					ng-disabled="false"
+																					placeholder="Identificação da Ocorrência">
+																			</md-input-container>
+																		</div>
+																		<div class="col-md-1">
+																			<md-input-container class="md-block">
+																				<button
+																					ng-click="adicionarDetalhamentoFrequenciaLicensaSemDeducao()"
+																					type="button"
+																					class="btn btn-primary btn-sm">
+																					<i class="fa fa-plus fa-md"></i>
+																				</button>
+																				</md-intput-container>
+																		</div>
+																	</div>
+																	<div class="row">
+																		<div class="col-md-12 text-center">
+																			<md-table-container>
+																				<table md-table ng-model="selected"
+																					ng-if="(ctc.detalhamentosFrequencia | filter: filtrarDetalhamentoLicencaSemDeducao).length > 0"
+																					md-progress="promise"
+																					style="margin-top: 20px; border: 1px solid #CCC; margin-bottom: 10px;">
+																					<thead md-head
+																						md-on-reorder="loadList">
+																						<tr md-row>
+																							<th md-column><span>Período
+																									(Início)</span></th>
+																							<th md-column><span>Período
+																									(Fim)</span></th>
+																							<th md-column><span>Tempo em
+																									Dias</span></th>
+																							<th md-column>
+																								<span>Identificação da
+																									Ocorrência</span>
+																							</th>
+																							<th md-column
+																								ng-show="!detalhes">
+																								<span>Ações</span></th>
+																						</tr>
+																					</thead>
+																					<tbody md-body>
+																						<tr md-row md-select="item"
+																							md-select-id="item"
+																							md-auto-select
+																							ng-repeat="item in ctc.detalhamentosFrequencia | filter: filtrarDetalhamentoLicencaSemDeducao">
+																							<td md-cell>
+																								{{convertDate(item.periodoInicio, false)}}
+																							</td>
+																							<td md-cell>
+																								{{convertDate(item.periodoFinal, false)}}
+																							</td>
+																							<td md-cell>{{item.tempo}}
+																							</td>
+																							<td md-cell>
+																								{{item.descricao}}</td>
+																							<td md-cell><a
+																									ng-if="!podeExcluir && !detalhes"
+																									ng-click="removerDetalhamento(item)">
+																									<md-tooltip
+																										md-direction="top">
+																										Excluir
+																									</md-tooltip>
+																									<i
+																										class="fa fa-trash-o fa-lg"></i>
+																								</a></td>
+																						</tr>
+																					</tbody>
+																				</table>
+																			</md-table-container>
+																		</div>
+																	</div>
+																</div>
+															</div>
+															<div ng-class="(total.licencasSemVenc - somaLicencasSemVenc() == 0) ? 'panel panel-default' : 'panel panel-danger'"
+																ng-show="validaDetalhamento.licencasSemVenc">
+																<div class="panel-heading clearfix">
+																	<div class="pull-left">Licenças sem Vencimento</div>
+																	<div class="pull-right">
+																		<div><span style="font-size: 11px">Total:
+																				<b>{{total.licencasSemVenc}}</b> |
+																				Informado:
+																				<b>{{somaLicencasSemVenc()}}</b></span>
+																		</div>
+																	</div>
+																</div>
+																<div class="panel-body">
+																	<div class="row" ng-show="!detalhes">
+																		<div layout class="col-md-2" layout-sm="column">
+																			<md-input-container flex> <label>Período
+																					Inicial</label>
+																				<md-icon
+																					class="material-icons icon-momentpicker"
+																					ng-class="md-datepicker-calendar-icon"
+																					aria-label="md-calendar">date_range
+																				</md-icon> <input
+																					moment-picker="lsv.periodoInicial"
+																					placeholder="Selecione a data"
+																					max-date="lsv.periodoFinal"
+																					ng-model="lsv.periodoInicial"
+																					format="DD/MM/YYYY" locale="pt-br"
+																					start-view="month"
+																					ng-model-options="{ updateOn: 'blur' }"
+																					ng-disabled="detalhes">
+																			</md-input-container>
+																		</div>
+																		<div layout class="col-md-2" layout-sm="column">
+																			<md-input-container flex> <label>Período
+																					Final</label>
+																				<md-icon
+																					class="material-icons icon-momentpicker"
+																					ng-class="md-datepicker-calendar-icon"
+																					aria-label="md-calendar">date_range
+																				</md-icon> <input
+																					moment-picker="lsv.periodoFinal"
+																					placeholder="Selecione a data"
+																					min-date="lsv.periodoInicial"
+																					ng-model="lsv.periodoFinal"
+																					format="DD/MM/YYYY" locale="pt-br"
+																					start-view="month"
+																					ng-model-options="{ updateOn: 'blur' }"
+																					ng-disabled="detalhes">
+																			</md-input-container>
+																		</div>
+																		<div layout layout-sm="column" class="col-md-3">
+																			<md-input-container flex> <input
+																					ng-model="lsv.dias"
+																					ng-disabled="true"
+																					placeholder="Tempo em Dias"
+																					ng-value="calularPeriodoDias(lsv.periodoInicial, lsv.periodoFinal)">
+																			</md-input-container>
+																		</div>
+																		<div layout layout-sm="column" class="col-md-3">
+																			<md-input-container flex> <input
+																					ng-model="lsv.identificacao"
+																					ng-disabled="false"
+																					placeholder="Identificação da Ocorrência">
+																			</md-input-container>
+																		</div>
+																		<div class="col-md-1">
+																			<md-input-container class="md-block">
+																				<button
+																					ng-click="adicionarDetalhamentoFrequenciaLicencas()"
+																					type="button"
+																					class="btn btn-primary btn-sm">
+																					<i class="fa fa-plus fa-md"></i>
+																				</button>
+																				</md-intput-container>
+																		</div>
+																	</div>
+																	<div class="row">
+																		<div class="col-md-12 text-center">
+																			<md-table-container>
+																				<table md-table ng-model="selected"
+																					ng-if="(ctc.detalhamentosFrequencia | filter: filtrarDetalhamentoLincenca).length > 0"
+																					md-progress="promise"
+																					style="margin-top: 20px; border: 1px solid #CCC; margin-bottom: 10px;">
+																					<thead md-head
+																						md-on-reorder="loadList">
+																						<tr md-row>
+																							<th md-column><span>Período
+																									(Início)</span></th>
+																							<th md-column><span>Período
+																									(Fim)</span></th>
+																							<th md-column><span>Tempo em
+																									Dias</span></th>
+																							<th md-column>
+																								<span>Identificação da
+																									Ocorrência</span>
+																							</th>
+																							<th md-column
+																								ng-show="!detalhes">
+																								<span>Ações</span></th>
+																						</tr>
+																					</thead>
+																					<tbody md-body>
+																						<tr md-row md-select="item"
+																							md-select-id="item"
+																							md-auto-select
+																							ng-repeat="item in ctc.detalhamentosFrequencia | filter: filtrarDetalhamentoLincenca">
+																							<td md-cell>
+																								{{convertDate(item.periodoInicio, false)}}
+																							</td>
+																							<td md-cell>
+																								{{convertDate(item.periodoFinal, false)}}
+																							</td>
+																							<td md-cell>{{item.tempo}}
+																							</td>
+																							<td md-cell>
+																								{{item.descricao}}</td>
+																							<td md-cell><a
+																									ng-if="!podeExcluir && !detalhes"
+																									ng-click="removerDetalhamento(item)">
+																									<md-tooltip
+																										md-direction="top">
+																										Excluir
+																									</md-tooltip> <i
+																										class="fa fa-trash-o fa-lg"></i>
+																								</a></td>
+																						</tr>
+																					</tbody>
+																				</table>
+																			</md-table-container>
+																		</div>
+																	</div>
+																</div>
+															</div>
+															<div ng-class="(total.suspensoes - somaSuspensoes() == 0) ? 'panel panel-default' : 'panel panel-danger'"
+																ng-show="validaDetalhamento.suspensoes">
+																<div class="panel-heading clearfix">
+																	<div class="pull-left">Suspensões</div>
+																	<div class="pull-right">
+																		<div><span style="font-size: 11px">Total:
+																				<b>{{total.suspensoes}}</b> | Informado:
+																				<b>{{somaSuspensoes()}}</b></span></div>
+																	</div>
+																</div>
+																<div class="panel-body">
+																	<div class="row" ng-show="!detalhes">
+																		<div layout class="col-md-2" layout-sm="column">
+																			<md-input-container flex> <label>Período
+																					Inicial</label>
+																				<md-icon
+																					class="material-icons icon-momentpicker"
+																					ng-class="md-datepicker-calendar-icon"
+																					aria-label="md-calendar">date_range
+																				</md-icon> <input
+																					moment-picker="sus.periodoInicial"
+																					placeholder="Selecione a data"
+																					max-date="sus.periodoFinal"
+																					ng-model="sus.periodoInicial"
+																					format="DD/MM/YYYY" locale="pt-br"
+																					start-view="month"
+																					ng-model-options="{ updateOn: 'blur' }"
+																					ng-disabled="detalhes">
+																			</md-input-container>
+																		</div>
+																		<div layout class="col-md-2" layout-sm="column">
+																			<md-input-container flex> <label>Período
+																					Final</label>
+																				<md-icon
+																					class="material-icons icon-momentpicker"
+																					ng-class="md-datepicker-calendar-icon"
+																					aria-label="md-calendar">date_range
+																				</md-icon> <input
+																					moment-picker="sus.periodoFinal"
+																					placeholder="Selecione a data"
+																					min-date="sus.periodoInicial"
+																					ng-model="sus.periodoFinal"
+																					format="DD/MM/YYYY" locale="pt-br"
+																					start-view="month"
+																					ng-model-options="{ updateOn: 'blur' }"
+																					ng-disabled="detalhes">
+																			</md-input-container>
+																		</div>
+																		<div layout layout-sm="column" class="col-md-3">
+																			<md-input-container flex> <input
+																					ng-model="sus.dias"
+																					ng-disabled="true"
+																					placeholder="Tempo em Dias"
+																					ng-value="calularPeriodoDias(sus.periodoInicial, sus.periodoFinal)">
+																			</md-input-container>
+																		</div>
+																		<div layout layout-sm="column" class="col-md-3">
+																			<md-input-container flex> <input
+																					ng-model="sus.identificacao"
+																					ng-disabled="false"
+																					placeholder="Identificação da Ocorrência">
+																			</md-input-container>
+																		</div>
+																		<div class="col-md-1">
+																			<md-input-container class="md-block">
+																				<button
+																					ng-click="adicionarDetalhamentoSuspensao()"
+																					type="button"
+																					class="btn btn-primary btn-sm">
+																					<i class="fa fa-plus fa-md"></i>
+																				</button>
+																				</md-intput-container>
+																		</div>
+																	</div>
+																	<div class="row">
+																		<div class="col-md-12 text-center">
+																			<md-table-container>
+																				<table md-table ng-model="selected"
+																					ng-if="(ctc.detalhamentosFrequencia | filter: filtrarDetalhamentoSuspensao).length > 0"
+																					md-progress="promise"
+																					style="margin-top: 20px; border: 1px solid #CCC; margin-bottom: 10px;">
+																					<thead md-head
+																						md-on-reorder="loadList">
+																						<tr md-row>
+																							<th md-column><span>Período
+																									(Início)</span></th>
+																							<th md-column><span>Período
+																									(Fim)</span></th>
+																							<th md-column><span>Tempo em
+																									Dias</span></th>
+																							<th md-column>
+																								<span>Identificação da
+																									Ocorrência</span>
+																							</th>
+																							<th md-column
+																								ng-show="!detalhes">
+																								<span>Ações</span></th>
+																						</tr>
+																					</thead>
+																					<tbody md-body>
+																						<tr md-row md-select="item"
+																							md-select-id="item"
+																							md-auto-select
+																							ng-repeat="item in ctc.detalhamentosFrequencia | filter: filtrarDetalhamentoSuspensao">
+																							<td md-cell>
+																								{{convertDate(item.periodoInicio , false)}}
+																							</td>
+																							<td md-cell>
+																								{{convertDate(item.periodoFinal, false)}}
+																							</td>
+																							<td md-cell>{{item.tempo}}
+																							</td>
+																							<td md-cell>
+																								{{item.descricao}}</td>
+																							<td md-cell><a
+																									ng-if="!podeExcluir && !detalhes"
+																									ng-click="removerDetalhamento(item)">
+																									<md-tooltip
+																										md-direction="top">
+																										Excluir
+																									</md-tooltip> <i
+																										class="fa fa-trash-o fa-lg"></i>
+																								</a></td>
+																						</tr>
+																					</tbody>
+																				</table>
+																			</md-table-container>
+																		</div>
+																	</div>
+																</div>
+															</div>
+															<div ng-class="(total.disponibilidade - somaDisponibilidade() == 0) ? 'panel panel-default' : 'panel panel-danger'"
+																ng-show="validaDetalhamento.disponibilidade">
+																<div class="panel-heading clearfix">
+																	<div class="pull-left">Disponibilidade</div>
+																	<div class="pull-right">
+																		<div><span style="font-size: 11px">Total:
+																				<b>{{total.disponibilidade}}</b> |
+																				Informado:
+																				<b>{{somaDisponibilidade()}}</b></span>
+																		</div>
+																	</div>
+																</div>
+																<div class="panel-body">
+																	<div class="row" ng-show="!detalhes">
+																		<div layout class="col-md-2" layout-sm="column">
+																			<md-input-container flex> <label>Período
+																					Inicial</label>
+																				<md-icon
+																					class="material-icons icon-momentpicker"
+																					ng-class="md-datepicker-calendar-icon"
+																					aria-label="md-calendar">date_range
+																				</md-icon> <input
+																					moment-picker="disp.periodoInicial"
+																					placeholder="Selecione a data"
+																					max-date="disp.periodoFinal"
+																					ng-model="disp.periodoInicial"
+																					format="DD/MM/YYYY" locale="pt-br"
+																					start-view="month"
+																					ng-model-options="{ updateOn: 'blur' }"
+																					ng-disabled="detalhes">
+																			</md-input-container>
+																		</div>
+																		<div layout class="col-md-2" layout-sm="column">
+																			<md-input-container flex> <label>Período
+																					Final</label>
+																				<md-icon
+																					class="material-icons icon-momentpicker"
+																					ng-class="md-datepicker-calendar-icon"
+																					aria-label="md-calendar">date_range
+																				</md-icon> <input
+																					moment-picker="disp.periodoFinal"
+																					placeholder="Selecione a data"
+																					min-date="disp.periodoInicial"
+																					ng-model="disp.periodoFinal"
+																					format="DD/MM/YYYY" locale="pt-br"
+																					start-view="month"
+																					ng-model-options="{ updateOn: 'blur' }"
+																					ng-disabled="detalhes">
+																			</md-input-container>
+																		</div>
+																		<div layout layout-sm="column" class="col-md-3">
+																			<md-input-container flex> <input
+																					ng-model="disp.dias"
+																					ng-disabled="true"
+																					placeholder="Tempo em Dias"
+																					ng-value="calularPeriodoDias(disp.periodoInicial, disp.periodoFinal)">
+																			</md-input-container>
+																		</div>
+																		<div layout layout-sm="column" class="col-md-3">
+																			<md-input-container flex> <input
+																					ng-model="disp.identificacao"
+																					ng-disabled="false"
+																					placeholder="Identificação da Ocorrência">
+																			</md-input-container>
+																		</div>
+																		<div class="col-md-1">
+																			<md-input-container class="md-block">
+																				<button
+																					ng-click="adicionarDetalhamentoFrequenciaDisponibilidade()"
+																					type="button"
+																					class="btn btn-primary btn-sm">
+																					<i class="fa fa-plus fa-md"></i>
+																				</button>
+																				</md-intput-container>
+																		</div>
+																	</div>
+																	<div class="row">
+																		<div class="col-md-12 text-center">
+																			<md-table-container>
+																				<table md-table ng-model="selected"
+																					ng-if="(ctc.detalhamentosFrequencia | filter: filtrarDetalhamentoDisponibilidade).length > 0"
+																					md-progress="promise"
+																					style="margin-top: 20px; border: 1px solid #CCC; margin-bottom: 10px;">
+																					<thead md-head
+																						md-on-reorder="loadList">
+																						<tr md-row>
+																							<th md-column><span>Período
+																									(Início)</span></th>
+																							<th md-column><span>Período
+																									(Fim)</span></th>
+																							<th md-column><span>Tempo em
+																									Dias</span></th>
+																							<th md-column>
+																								<span>Identificação da
+																									Ocorrência</span>
+																							</th>
+																							<th md-column
+																								ng-show="!detalhes">
+																								<span>Ações</span></th>
+																						</tr>
+																					</thead>
+																					<tbody md-body>
+																						<tr md-row md-select="item"
+																							md-select-id="item"
+																							md-auto-select
+																							ng-repeat="item in ctc.detalhamentosFrequencia | filter: filtrarDetalhamentoDisponibilidade">
+																							<td md-cell>
+																								{{convertDate(item.periodoInicio, false)}}
+																							</td>
+																							<td md-cell>
+																								{{convertDate(item.periodoFinal, false)}}
+																							</td>
+																							<td md-cell>{{item.tempo}}
+																							</td>
+																							<td md-cell>
+																								{{item.descricao}}</td>
+																							<td md-cell><a
+																									ng-if="!podeExcluir && !detalhes"
+																									ng-click="removerDetalhamento(item)">
+																									<md-tooltip
+																										md-direction="top">
+																										Excluir
+																									</md-tooltip> <i
+																										class="fa fa-trash-o fa-lg"></i>
+																								</a></td>
+																						</tr>
+																					</tbody>
+																				</table>
+																			</md-table-container>
+																		</div>
+																	</div>
+																</div>
+															</div>
+															<div class="panel panel-default"
+																ng-show="validaDetalhamento.outros">
+																<div class="panel-heading clearfix">
+																	<div class="pull-left">Outros</div>
+																	<div class="pull-right">
+																		<div><span style="font-size: 11px">Total:
+																				<b>{{total.outros}}</b> | Informado:
+																				<b>{{somaOutros()}}</b></span></div>
+																	</div>
+																</div>
+																<div class="panel-body">
+																	<div class="row" ng-show="!detalhes">
+																		<div layout class="col-md-2" layout-sm="column">
+																			<md-input-container flex> <label>Período
+																					Inicial</label>
+																				<md-icon
+																					class="material-icons icon-momentpicker"
+																					ng-class="md-datepicker-calendar-icon"
+																					aria-label="md-calendar">date_range
+																				</md-icon> <input
+																					moment-picker="outro.periodoInicial"
+																					placeholder="Selecione a data"
+																					max-date="outro.periodoFinal"
+																					ng-model="outro.periodoInicial"
+																					format="DD/MM/YYYY" locale="pt-br"
+																					start-view="month"
+																					ng-model-options="{ updateOn: 'blur' }"
+																					ng-disabled="detalhes">
+																			</md-input-container>
+																		</div>
+																		<div layout class="col-md-2" layout-sm="column">
+																			<md-input-container flex> <label>Período
+																					Final</label>
+																				<md-icon
+																					class="material-icons icon-momentpicker"
+																					ng-class="md-datepicker-calendar-icon"
+																					aria-label="md-calendar">date_range
+																				</md-icon> <input
+																					moment-picker="outro.periodoFinal"
+																					placeholder="Selecione a data"
+																					min-date="outro.periodoInicial"
+																					ng-model="outro.periodoFinal"
+																					format="DD/MM/YYYY" locale="pt-br"
+																					start-view="month"
+																					ng-model-options="{ updateOn: 'blur' }"
+																					ng-disabled="detalhes">
+																			</md-input-container>
+																		</div>
+																		<div layout layout-sm="column" class="col-md-3">
+																			<md-input-container flex> <input
+																					ng-model="outro.dias"
+																					ng-disabled="true"
+																					placeholder="Tempo em Dias"
+																					ng-value="calularPeriodoDias(outro.periodoInicial, outro.periodoFinal)">
+																			</md-input-container>
+																		</div>
+																		<div layout layout-sm="column" class="col-md-3">
+																			<md-input-container flex> <input
+																					ng-model="outro.identificacao"
+																					ng-disabled="false"
+																					placeholder="Identificação da Ocorrência">
+																			</md-input-container>
+																		</div>
+																		<div class="col-md-1">
+																			<md-input-container class="md-block">
+																				<button
+																					ng-click="adicionarDetalhamentoFrequenciaOutros()"
+																					type="button"
+																					class="btn btn-primary btn-sm">
+																					<i class="fa fa-plus fa-md"></i>
+																				</button>
+																				</md-intput-container>
+																		</div>
+																	</div>
+																	<div class="row">
+																		<div class="col-md-12 text-center">
+																			<md-table-container>
+																				<table md-table ng-model="selected"
+																					ng-if="(ctc.detalhamentosFrequencia | filter: filtrarDetalhamentoOutros).length > 0"
+																					md-progress="promise"
+																					style="margin-top: 20px; border: 1px solid #CCC; margin-bottom: 10px;">
+																					<thead md-head
+																						md-on-reorder="loadList">
+																						<tr md-row>
+																							<th md-column><span>Período
+																									(Início)</span></th>
+																							<th md-column><span>Período
+																									(Fim)</span></th>
+																							<th md-column><span>Tempo em
+																									Dias</span></th>
+																							<th md-column>
+																								<span>Identificação da
+																									Ocorrência</span>
+																							</th>
+																							<th md-column
+																								ng-show="!detalhes">
+																								<span>Ações</span></th>
+																						</tr>
+																					</thead>
+																					<tbody md-body>
+																						<tr md-row md-select="item"
+																							md-select-id="item"
+																							md-auto-select
+																							ng-repeat="item in ctc.detalhamentosFrequencia | filter: filtrarDetalhamentoOutros">
+																							<td md-cell>
+																								{{convertDate(item.periodoInicio, false)}}
+																							</td>
+																							<td md-cell>
+																								{{convertDate(item.periodoFinal, false)}}
+																							</td>
+																							<td md-cell>{{item.tempo}}
+																							</td>
+																							<td md-cell>
+																								{{item.descricao}}</td>
+																							<td md-cell><a
+																									ng-if="!podeExcluir && !detalhes"
+																									ng-click="removerDetalhamento(item)">
+																									<md-tooltip
+																										md-direction="top">
+																										Excluir
+																									</md-tooltip> <i
+																										class="fa fa-trash-o fa-lg"></i>
+																								</a></td>
+																						</tr>
+																					</tbody>
+																				</table>
+																			</md-table-container>
+																		</div>
+																	</div>
+																</div>
+															</div>
+															<div class="panel panel-default">
+																<div class="panel-heading">Tempo Especial Incluído</div>
+																<div class="panel-body">
+																	<div class="row" ng-show="!detalhes">
+																		<div layout class="col-md-2" layout-sm="column">
+																			<md-input-container flex> <label>Período
+																					Inicial</label>
+																				<md-icon
+																					class="material-icons icon-momentpicker"
+																					ng-class="md-datepicker-calendar-icon"
+																					aria-label="md-calendar">date_range
+																				</md-icon> <input
+																					moment-picker="tei.periodoInicial"
+																					placeholder="Selecione a data"
+																					max-date="tei.periodoFinal"
+																					ng-model="tei.periodoInicial"
+																					format="DD/MM/YYYY" locale="pt-br"
+																					start-view="month"
+																					ng-model-options="{ updateOn: 'blur' }"
+																					ng-disabled="detalhes">
+																			</md-input-container>
+																		</div>
+																		<div layout class="col-md-2" layout-sm="column">
+																			<md-input-container flex> <label>Período
+																					Final</label>
+																				<md-icon
+																					class="material-icons icon-momentpicker"
+																					ng-class="md-datepicker-calendar-icon"
+																					aria-label="md-calendar">date_range
+																				</md-icon> <input
+																					moment-picker="tei.periodoFinal"
+																					placeholder="Selecione a data"
+																					min-date="tei.periodoInicial"
+																					ng-model="tei.periodoFinal"
+																					format="DD/MM/YYYY" locale="pt-br"
+																					start-view="month"
+																					ng-model-options="{ updateOn: 'blur' }"
+																					ng-disabled="detalhes">
+																			</md-input-container>
+																		</div>
+																		<div layout layout-sm="column" class="col-md-2">
+																			<md-input-container flex> <label>Tempo
+																					Especial</label>
+																				<md-select ng-disabled="detalhes"
+																					ng-model="tei.tipoTempoEspecial"
+																					name="tipoTempoEspecial"
+																					ng-change="handleGrau(tei.tipoTempoEspecial.value)">
+																					<md-option
+																						ng-repeat="tipoTempoEspecial in list.tiposTempoEspecial"
+																						ng-value="{{tipoTempoEspecial}}">
+																						{{tipoTempoEspecial.label}}
+																					</md-option>
+																				</md-select>
+																			</md-input-container>
+																		</div>
+																		<div layout layout-sm="column" class="col-md-2">
+																			<md-input-container flex>
+																				<label>Grau</label>
+																				<md-select
+																					ng-disabled="(detalhes || bloqueiaCampoGrau)"
+																					ng-model="tei.grau" name="grau">
+																					<md-option
+																						ng-repeat="grau in lista.graus"
+																						value="{{grau.label}}">
+																						{{grau.label}} </md-option>
+																				</md-select>
+																			</md-input-container>
+																		</div>
+																		<div layout layout-sm="column" class="col-md-2">
+																			<md-input-container flex> <input
+																					ng-model="tei.dias"
+																					ng-disabled="true"
+																					placeholder="Tempo em Dias"
+																					ng-value="calularPeriodoDias(tei.periodoInicial, tei.periodoFinal)">
+																			</md-input-container>
+																		</div>
+																		<div class="col-md-1">
+																			<md-input-container class="md-block">
+																				<button
+																					ng-click="adicionarDetalhamentoFrequenciaTempoEspecial()"
+																					type="button"
+																					class="btn btn-primary btn-sm">
+																					<i class="fa fa-plus fa-md"></i>
+																				</button>
+																				</md-intput-container>
+																		</div>
+																	</div>
+																	<div class="row">
+																		<div class="col-md-12 text-center">
+																			<md-table-container>
+																				<table md-table ng-model="selected"
+																					ng-if="ctc.tempoEspecial.length > 0"
+																					md-progress="promise"
+																					style="margin-top: 20px; border: 1px solid #CCC; margin-bottom: 10px;">
+																					<thead md-head
+																						md-on-reorder="loadList">
+																						<tr md-row>
+																							<th md-column><span>Período
+																									(Início)</span></th>
+																							<th md-column><span>Período
+																									(Fim)</span></th>
+																							<th md-column><span>Tempo
+																									Especial</span></th>
+																							<th md-column>
+																								<span>Grau</span></th>
+																							<th md-column><span>Tempo em
+																									Dias</span></th>
+																							<th md-column
+																								ng-show="!detalhes">
+																								<span>Ações</span></th>
+																						</tr>
+																					</thead>
+																					<tbody md-body>
+																						<tr md-row md-select="item"
+																							md-select-id="item"
+																							md-auto-select
+																							ng-repeat="item in ctc.tempoEspecial">
+																							<td md-cell>
+																								{{convertDate(item.periodoInicial, false)}}
+																							</td>
+																							<td md-cell>
+																								{{convertDate(item.periodoFinal, false)}}
+																							</td>
+																							<td md-cell>
+																								{{item.tipoTempo}}</td>
+																							<td md-cell>
+																								{{item.grauDeficiencia}}
+																							</td>
+																							<td md-cell>{{item.tempo}}
+																							</td>
+																							<td md-cell><a
+																									ng-if="!podeExcluir && !detalhes"
+																									ng-click="removerDetalhamentoFrequenciaTempoEspecial(item)">
+																									<md-tooltip
+																										md-direction="top">
+																										Excluir
+																									</md-tooltip> <i
+																										class="fa fa-trash-o fa-lg"></i>
+																								</a></td>
+																						</tr>
+																					</tbody>
+																				</table>
+																			</md-table-container>
+																		</div>
+																	</div>
+																</div>
+															</div>
+															<div class="panel panel-default">
+																<div class="panel-heading">Assinaturas</div>
+																<div class="panel-body">
+																	<div class="row" ng-show="!detalhes">
+																		<div layout layout-sm="column" class="col-md-4">
+																			<md-autocomplete ng-disabled="detalhes" flex
+																				ng-required="false"
+																				md-no-cache="noCache"
+																				md-floating-label="Funcionário"
+																				md-selected-item="assinatura"
+																				md-search-text="searchAssinatura"
+																				md-items="item in querySearchAssinatura(searchAssinatura)"
+																				md-item-text="item.nome" md-delay="1000"
+																				md-min-length="3"
+																				md-selected-item-change="assinaturaSelecionada()">
+																				<md-item-template> <span
+																						md-highlight-text="searchAssinatura"
+																						md-highlight-flags="^i">{{item.nome}}</span>
+																				</md-item-template>
+																				<md-not-found> Item
+																					"{{searchAssinatura}}"
+																					não encontrado. </md-not-found>
+																			</md-autocomplete>
+																		</div>
+																		<div layout layout-sm="column" class="col-md-4">
+																			<md-input-container flex>
+																				<label>Função</label>
+																				<md-select ng-disabled="detalhes"
+																					ng-model="tipoFuncao"
+																					name="tipoFuncao">
+																					<md-option
+																						ng-repeat="tipoFuncao in list.tiposFuncao"
+																						value="{{tipoFuncao.label}}">
+																						{{tipoFuncao.label}}
+																					</md-option>
+																				</md-select>
+																			</md-input-container>
+																		</div>
+																		<div layout layout-sm="column" class="col-md-4">
+																			<div class="col-md-1">
+																				<md-input-container class="md-block"> <a
+																						ng-click="adicionarAssinaturaFrequencia()"
+																						ui-wave
+																						class="btn btn-primary btn-w-md">Adicionar</a>
+																					</md-intput-container>
+																			</div>
+																		</div>
+																	</div>
+																	<div class="row">
+																		<div class="col-md-12 text-center">
+																			<md-table-container>
+																				<table md-table ng-model="selected"
+																					ng-if="(ctc.assinaturas | filter: filtrarAbaFrequencia).length > 0"
+																					md-progress="promise"
+																					style="margin-top: 20px; border: 1px solid #CCC; margin-bottom: 10px;">
+																					<thead md-head
+																						md-on-reorder="loadList">
+																						<tr md-row>
+																							<th md-column>
+																								<span>Funcionário</span>
+																							</th>
+																							<th md-column>
+																								<span>Função</span></th>
+																							<th md-column>
+																								<span>Matrícula</span>
+																							</th>
+																							<th md-column
+																								ng-show="!detalhes">
+																								<span>Ações</span></th>
+																						</tr>
+																					</thead>
+																					<tbody md-body>
+																						<tr md-row md-select="item"
+																							md-select-id="item"
+																							md-auto-select
+																							ng-repeat="item in ctc.assinaturas | filter: filtrarAbaFrequencia">
+																							<td md-cell>
+																								{{item.funcionario.nome}}
+																							</td>
+																							<td md-cell>
+																								{{item.funcaoAssinaturaCertidao}}
+																							</td>
+																							<td md-cell>
+																								{{item.funcionario.matricula}}
+																							</td>
+																							<td md-cell><a
+																									ng-if="!podeExcluir && !detalhes"
+																									ng-click="removerAssinatura(item)">
+																									<md-tooltip
+																										md-direction="top">
+																										Excluir
+																									</md-tooltip> <i
+																										class="fa fa-trash-o fa-lg"></i>
+																								</a></td>
+																						</tr>
+																					</tbody>
+																				</table>
+																			</md-table-container>
+																		</div>
+																	</div>
+																</div>
+															</div>
+
+														</div>
+													</div>
+												</md-content>
+											</md-tab>
+											<md-tab label="Relação das Remunerações"
+												ng-disabled="relacaoRemuneracoes.linhas.length == 0">
+												<md-content class="md-padding">
+													<div class="row">
+														<div class="col-md-12">
+															<div class="panel panel-default">
+																<div class="panel-heading">Relação das Remunerações de
+																	Contribuições</div>
+																<div class="panel-body">
+																	<div class="row">
+																		<div class="col-md-12 text-center">
+																			<md-tabs md-dynamic-height md-border-bottom>
+																				<md-tab
+																					label="Página - {{indexTab + 1}}"
+																					ng-repeat="(indexTab, tabValues) in relacaoRemuneracoes.linhas | limitTo : calculaLimite(relacaoRemuneracoes.linhas.length)">
+																					<md-table-container>
+																						<table md-table
+																							ng-model="selected"
+																							md-progress="promise">
+																							<tbody md-body>
+																								<tr md-row
+																									md-select="item"
+																									md-select-id="item"
+																									md-auto-select
+																									ng-repeat="(index, values) in relacaoRemuneracoes.colunas track by index">
+																									<td md-cell
+																										style="font-weight: bold;"
+																										width="100">
+																										{{values}}</td>
+																									<td md-cell
+																										width="60"
+																										ng-repeat="item in relacaoRemuneracoes.linhas | limitTo : 5 : indexTab * 5 | orderBy: 'ano' track by $index">
+																										<span
+																											style="font-weight: bold"
+																											ng-if="getMapKeyByIndex(item, index) == 'ano'">{{item[getMapKeyByIndex(item, index)]}}</span>
+																										<input
+																											ng-if="getMapKeyByIndex(item, index) != 'ano'"
+																											ng-model="item[getMapKeyByIndex(item, index)]"
+																											ng-disabled="(item[getMapKeyByIndex(item, index)] == null || detalhes) ? true : false"
+																											style="width: 50px"
+																											type="text"
+																											min="0"
+																											ui-number-mask>
+																									</td>
+																								</tr>
+																							</tbody>
+																						</table>
+																					</md-table-container>
+																				</md-tab>
+																			</md-tabs>
+																		</div>
+																	</div>
+																</div>
+															</div>
+															<div class="panel panel-default">
+																<div class="panel-heading">Assinaturas</div>
+																<div class="panel-body">
+																	<div class="row" ng-show="!detalhes">
+																		<div layout layout-sm="column" class="col-md-4">
+																			<md-autocomplete ng-disabled="detalhes" flex
+																				ng-required="false"
+																				md-no-cache="noCache"
+																				md-floating-label="Funcionário"
+																				md-selected-item="assinatura"
+																				md-search-text="searchAssinatura"
+																				md-items="item in querySearchAssinatura(searchAssinatura)"
+																				md-item-text="item.nome" md-delay="1000"
+																				md-min-length="3"
+																				md-selected-item-change="assinaturaSelecionada()">
+																				<md-item-template> <span
+																						md-highlight-text="searchAssinatura"
+																						md-highlight-flags="^i">{{item.nome}}</span>
+																				</md-item-template>
+																				<md-not-found> Item
+																					"{{searchAssinatura}}"
+																					não encontrado. </md-not-found>
+																			</md-autocomplete>
+																		</div>
+																		<div layout layout-sm="column" class="col-md-4">
+																			<md-input-container flex>
+																				<label>Função</label>
+																				<md-select ng-disabled="detalhes"
+																					ng-model="tipoFuncao"
+																					name="tipoFuncao">
+																					<md-option
+																						ng-repeat="tipoFuncao in list.tiposFuncao"
+																						value="{{tipoFuncao.label}}">
+																						{{tipoFuncao.label}}
+																					</md-option>
+																				</md-select>
+																			</md-input-container>
+																		</div>
+																		<div layout layout-sm="column" class="col-md-4">
+																			<div class="col-md-1">
+																				<md-input-container class="md-block">
+																					<button
+																						ng-click="adicionarAssinaturaRelacaoRemuneracao()"
+																						type="button"
+																						class="btn btn-primary btn-sm">
+																						<i class="fa fa-plus fa-md"></i>
+																					</button>
+																					</md-intput-container>
+																			</div>
+																		</div>
+																	</div>
+																	<div class="row">
+																		<div class="col-md-12 text-center">
+																			<md-table-container>
+																				<table md-table ng-model="selected"
+																					ng-if="(ctc.assinaturas | filter: filtrarAbaRelacao).length > 0"
+																					md-progress="promise"
+																					style="margin-top: 20px; border: 1px solid #CCC; margin-bottom: 10px;">
+																					<thead md-head
+																						md-on-reorder="loadList">
+																						<tr md-row>
+																							<th md-column>
+																								<span>Funcionário</span>
+																							</th>
+																							<th md-column>
+																								<span>Função</span></th>
+																							<th md-column>
+																								<span>Matrícula</span>
+																							</th>
+																							<th md-column
+																								ng-show="!detalhes">
+																								<span>Ações</span></th>
+																						</tr>
+																					</thead>
+																					<tbody md-body>
+																						<tr md-row md-select="item"
+																							md-select-id="item"
+																							md-auto-select
+																							ng-repeat="item in ctc.assinaturas | filter: filtrarAbaRelacao">
+																							<td md-cell>
+																								{{item.funcionario.nome}}
+																							</td>
+																							<td md-cell>
+																								{{item.funcaoAssinaturaCertidao}}
+																							</td>
+																							<td md-cell>
+																								{{item.funcionario.matricula}}
+																							</td>
+																							<td md-cell><a
+																									ng-if="!podeExcluir && !detalhes"
+																									ng-click="removerAssinatura(item)">
+																									<md-tooltip
+																										md-direction="top">
+																										Excluir
+																									</md-tooltip> <i
+																										class="fa fa-trash-o fa-lg"></i>
+																								</a></td>
+																						</tr>
+																					</tbody>
+																				</table>
+																			</md-table-container>
+																		</div>
+																	</div>
+																</div>
+															</div>
+														</div>
+													</div>
+												</md-content>
+											</md-tab>
+											<md-tab label="Anexos">
+												<md-content class="md-padding">
+													<div class="row">
+														<div class="col-md-12">
+															<div class="panel panel-default">
+																<div class="panel-heading">Anexar documento</div>
+																<div class="panel-body">
+																	<div class="row">
+
+																		<div layout layout-sm="column" class="col-md-12"
+																			ng-show="!detalhes">
+																			<md-input-container flex> <input
+																					aria-label="anexo" type="file"
+																					ng-required="false" nv-file-select
+																					uploader="uploader" accept=".pdf"
+																					multiple /> </md-input-container>
+																		</div>
+
+																		<table class="table"
+																			ng-if="(uploader.queue.length > 0 || detalhes) ? true : false">
+																			<thead>
+																				<tr>
+																					<th width="50%">Descrição</th>
+																					<th ng-show="uploader.isHTML5">
+																						Tamanho</th>
+																					<th ng-show="uploader.isHTML5">
+																						Progresso</th>
+																					<th>Situação</th>
+																					<th>Ações</th>
+																				</tr>
+																			</thead>
+																			<tbody>
+																				<tr ng-repeat="item in uploader.queue">
+																					<td><strong>{{ item.file.name }}</strong>
+																					</td>
+																					<td ng-show="uploader.isHTML5"
+																						nowrap>
+																						{{ item.file.size/1024/1024|number:2 }}
+																						MB</td>
+																					<td ng-show="uploader.isHTML5">
+																						<div class="progress"
+																							style="margin-bottom: 0;">
+																							<div class="progress-bar"
+																								role="progressbar"
+																								ng-style="{ 'width': item.progress + '%' }">
+																							</div>
+																						</div>
+																					</td>
+																					<td class="text-center"><span
+																							ng-show="item.isSuccess">
+																							<md-tooltip
+																								md-direction="top">
+																								Sucesso</md-tooltip><i
+																								class="fa fa-check"></i>
+																						</span> <span
+																							ng-show="item.isCancel">
+																							<md-tooltip
+																								md-direction="top">
+																								Cancelado</md-tooltip><i
+																								class="fa fa-ban"></i>
+																						</span> <span
+																							ng-show="item.isError">
+																							<md-tooltip
+																								md-direction="top">Erro
+																							</md-tooltip><i
+																								class="fa fa-exclamation-triangle"></i></i>
+																						</span></td>
+																					<td nowrap>
+																						<button type="button"
+																							class="btn btn-success btn-xs"
+																							ng-click="item.upload()"
+																							ng-disabled="item.isReady || item.isUploading || item.isSuccess">
+																							<md-tooltip
+																								md-direction="top">
+																								Upload</md-tooltip>
+																							<i
+																								class="fa fa-upload fa-lg"></i>
+																						</button>
+																						<button type="button"
+																							class="btn btn-warning btn-xs"
+																							ng-click="item.cancel()"
+																							ng-disabled="!item.isUploading">
+																							<md-tooltip
+																								md-direction="top">
+																								Cancelar upload
+																							</md-tooltip>
+																							<i
+																								class="fa fa-ban fa-lg"></i>
+																						</button>
+																						<button type="button"
+																							class="btn btn-danger btn-xs"
+																							ng-click="item.remove()"
+																							ng-disabled="item.isReady"
+																							title="remover">
+																							<md-tooltip
+																								md-direction="top">
+																								Remover</md-tooltip>
+																							<i
+																								class="fa fa-trash fa-lg"></i>
+																						</button>
+																					</td>
+																				</tr>
+																			</tbody>
+																		</table>
+
+																		<table class="table"
+																			ng-if="lista.anexos.length > 0">
+																			<thead>
+																				<tr>
+																					<th>Descrição</th>
+																					<th>Tamanho</th>
+																					<th>Ações</th>
+																				</tr>
+																			</thead>
+																			<tbody>
+																				<tr ng-repeat="item in lista.anexos">
+																					<td><strong>{{ item.description }}</strong>
+																					</td>
+																					<td>{{ item.size/1024/1024|number:2 }}
+																						MB</td>
+																					<td nowrap><a
+																							href="{{item.fileDownloadUri}}"
+																							target="_blank"
+																							class="btn btn-success btn-xs">
+																							<md-tooltip
+																								md-direction="top">
+																								Download</md-tooltip> <i
+																								class="fa fa-download fa-lg"></i>
+																						</a>
+																						<button type="button"
+																							class="btn btn-danger btn-xs"
+																							ng-click="removerAnexo(item)">
+																							<md-tooltip
+																								md-direction="top">
+																								Remover</md-tooltip>
+																							<i
+																								class="fa fa-trash fa-lg"></i>
+																						</button></td>
+																				</tr>
+																			</tbody>
+																		</table>
+
+																	</div>
+
+																</div>
+															</div>
+														</div>
+													</div>
+												</md-content>
+											</md-tab>
+											<md-tab label="Histórico de certidões" ng-if="detalhes">
+												<md-content class="md-padding">
+													<div class="row">
+														<div class="col-md-12">
+															<div class="panel panel-default">
+																<div class="panel-heading">Lista</div>
+																<div class="panel-body">
+																	<div class="row">
+																		<div class="col-md-12 text-center">
+
+																			<table md-table ng-model="selected"
+																				ng-if="historico.length > 0"
+																				md-progress="promise"
+																				style="margin-top: 20px; border: 1px solid #CCC; margin-bottom: 10px;">
+																				<thead md-head>
+																					<tr md-row>
+																						<th md-column><span>Data do
+																								cadastro</span></th>
+																						<th md-column><span>Criado
+																								por</span></th>
+																						<th md-column>
+																							<span>Status</span></th>
+																						<th md-column><span>Tipo</span>
+																						</th>
+																						<th md-column><span>Ações</span>
+																						</th>
+																					</tr>
+																				</thead>
+																				<tbody md-body>
+																					<tr md-row md-select="item"
+																						md-select-id="item"
+																						md-auto-select
+																						ng-repeat="item in historico | orderBy : 'criadoEm'">
+																						<td md-cell>
+																							{{item.criadoEm | date: 'dd/MM/yyyy HH:mm'}}
+																						</td>
+																						<td md-cell>{{item.criadoPor}}
+																						</td>
+																						<td md-cell>{{item.status}}</td>
+																						<td md-cell>
+																							{{item.numeroRetificacao ? 'RETIFICAÇÃO' : 'CERTIDÃO'}}
+																						</td>
+																						<td md-cell
+																							ng-controller="certidaoTempoContribuicaoExServidorCtrl">
+																							<a href=""
+																								ng-click="showConfirmImprimir($event,item.certidaoExSegurado.id,true)">
+																								<md-tooltip
+																									md-direction="top">
+																									Imprimir Certidão
+																								</md-tooltip>
+																								<i
+																									class="fa fa-print fa-lg"></i>
+																							</a>
+																						</td>
+																					</tr>
+																				</tbody>
+																			</table>
+
+																		</div>
+																	</div>
+																</div>
+															</div>
+														</div>
+													</div>
+												</md-content>
+											</md-tab>
+
+										</md-tabs>
+									</div>
+									<div class="row text-center">
+										<div class="col-md-12 text-center"
+											ng-show="(!detalhes && !naoRascunho) ? true : false">
+											<div layout layout-sm="column" class="col-md-4"></div>
+											<div layout layout-sm="column" class="col-md-4">
+												<md-input-container flex>
+													<md-switch ng-model="salvarComoRascunho" style="margin-left: 50px;"
+														aria-label="Salvar como rascunho"> Salvar como rascunho
+													</md-switch>
+												</md-input-container>
+											</div>
+											<div layout layout-sm="column" class="col-md-4"></div>
+										</div>
+										<button ng-show="!detalhes" ng-click="save()" ui-wave
+											class="btn btn-primary btn-w-md">
+											<md-tooltip ng-if="salvarComoRascunho" md-direction="top">Salvar como
+												rascunho</md-tooltip>
+											<md-tooltip ng-if="!salvarComoRascunho" md-direction="top">Preencha todos os
+												campos obrigatórios.</md-tooltip>
+											Salvar
+										</button>
+										<p class="btn btn-default btn-w-md" ui-wave data-ng-click="goBack()">Voltar</p>
+									</div>
+								</div>
+							</div>
+						</form>
+					</article>
+				</div>
+			</div>
+		</div>
+	</div>

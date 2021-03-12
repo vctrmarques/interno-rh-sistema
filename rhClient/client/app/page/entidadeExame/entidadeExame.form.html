@@ -1,0 +1,202 @@
+<div class="page" ng-controller="entidadeExameFormCtrl">
+    <div class="row ui-section">
+        <div class="col-lg-8 clearfix">
+            <h2 class="section-header">{{!detalhes ? 'Formulário de Entidades de Exames' : 'Detalhes de Entidades de
+                Exames'}}</h2>
+        </div>
+        <div class="col-md-12">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <div class="row">
+                        <div class="col-lg-8 col-lg-offset-2">
+                            <form ng-disabled="detalhes" name="entidadeExameForm" ng-submit="save()">
+                                <div layout="column" ng-cloak class="md-inline-form inputdemoBasicUsage">
+                                    <div layout-padding>
+
+                                        <h2 class="md-title">Dados principais</h2>
+                                        <div layout="column" ng-cloak>
+                                            <md-autocomplete ng-disabled="detalhes" md-no-cache="entidadeExameForm.noCache"
+                                                md-selected-item="entidadeExame.tomadorServico" md-search-text="entidadeExameForm.searchBuscaTomadorServico"
+                                                md-items="item in querySearchTomadorServico(entidadeExameForm.searchBuscaTomadorServico)"
+                                                md-item-text="item.razaoSocial" md-delay="100" md-min-length="3"
+                                                md-floating-label="Nome da Entidade de Exames" md-require-match>
+                                                <md-item-template>
+                                                    <span md-highlight-text="entidadeExameForm.searchBuscaTomadorServico"
+                                                        md-highlight-flags="^i">
+                                                        {{item.razaoSocial}}</span>
+                                                </md-item-template>
+                                                <md-not-found>
+                                                    Item
+                                                    "{{entidadeExameForm.searchBuscaTomadorServico}}"
+                                                    não
+                                                    encontrado.
+                                                </md-not-found>
+                                            </md-autocomplete>
+                                        </div>
+
+                                        <div layout layout-sm="column">
+                                            <md-input-container flex>
+                                                <label>CNPJ</label>
+                                                <input ng-disabled="true" ui-br-cnpj-mask ng-model="entidadeExame.tomadorServico.cnpj">
+                                            </md-input-container>
+                                            <md-input-container flex>
+                                                <label>Tipo</label>
+                                                <md-select required placeholder="Selecione a tipo" name="tipo" ng-model="entidadeExame.tipo">
+                                                    <md-option ng-value="tipo.value" ng-repeat="tipo in entidadeExameTipos">{{tipo.label}}</md-option>
+                                                </md-select>
+                                                <div ng-messages="entidadeExameForm.tipo.$error" role="alert" multiple
+                                                    ng-if='entidadeExameForm.tipo.$touched'>
+                                                    <div ng-message="required">Campo de preenchimento
+                                                        obrigatório.</div>
+                                                </div>
+                                            </md-input-container>
+                                        </div>
+
+                                        <h2 class="md-title">Exames</h2>
+                                        <div class="padding: 8px">
+                                            <md-chips readonly="detalhes" ng-model="entidadeExame.exames"
+                                                md-autocomplete-snap md-transform-chip="transformChip($chip)"
+                                                md-require-match="true">
+                                                <md-autocomplete md-selected-item="selectedItem" md-search-text="searchText"
+                                                    md-items="item in querySearchExame(searchText)" md-item-text="item.descricao"
+                                                    placeholder="Busque um exame">
+                                                    <span md-highlight-text="searchText">{{item.descricao}}</span>
+                                                </md-autocomplete>
+                                                <md-chip-template>
+                                                    <span>
+                                                        <strong>{{$chip.descricao}}</strong>
+                                                    </span>
+                                                </md-chip-template>
+                                            </md-chips>
+                                        </div>
+
+                                        <h2 class="md-title" style="margin-top: 50px;">Endereço</h2>
+
+                                        <div class="row">
+                                            <div class="col-md-3">
+                                                <md-input-container class="md-block">
+                                                    <label>CEP</label>
+                                                    <input ng-disabled="detalhes" ng-model="entidadeExame.endereco.cep"
+                                                        name="cep" ui-br-cep-mask>
+                                                    <div ng-messages="entidadeExameForm.cep.$error" role="alert"
+                                                        multiple>
+                                                        <div ng-message="cep">CEP Inválido.</div>
+                                                    </div>
+                                                </md-input-container>
+                                            </div>
+                                            <div class="col-md-7">
+                                                <md-input-container class="md-block">
+                                                    <label>Logradouro</label>
+                                                    <input ng-disabled="detalhes" ng-model="entidadeExame.endereco.logradouro"
+                                                        name="logradouro">
+                                                </md-input-container>
+                                            </div>
+                                            <div class="col-md-2">
+                                                <md-input-container class="md-block">
+                                                    <label>Número</label>
+                                                    <input ng-disabled="detalhes" ng-model="entidadeExame.endereco.numero"
+                                                        name="numero">
+                                                </md-input-container>
+                                            </div>
+                                        </div>
+
+                                        <div layout layout-sm="column">
+                                            <md-input-container flex>
+                                                <label>Complemento</label>
+                                                <input ng-disabled="detalhes" ng-model="entidadeExame.endereco.complemento"
+                                                    name="complento">
+                                            </md-input-container>
+                                        </div>
+
+                                        <div class="row">
+                                            <div class="col-md-4">
+                                                <md-input-container class="md-block">
+                                                    <label>Estado</label>
+                                                    <md-select ng-disabled="detalhes" name="uf" ng-model="entidadeExame.endereco.ufId"
+                                                        ng-change="getMunicipiosByUf()">
+                                                        <md-option ng-value=null><em>-- Selecione --</em></md-option>
+                                                        <md-option ng-repeat="uf in list.uf" value="{{uf.id}}">
+                                                            {{uf.sigla}} - {{uf.estado}}
+                                                        </md-option>
+                                                    </md-select>
+                                                </md-input-container>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <md-input-container class="md-block">
+                                                    <label>Município</label>
+                                                    <md-select ng-disabled="detalhes || !entidadeExame.endereco.ufId"
+                                                        name="municipio" ng-model="entidadeExame.endereco.municipioId">
+                                                        <md-option ng-value=null><em>-- Selecione --</em></md-option>
+                                                        <md-option ng-repeat="municipio in list.municipio" value="{{municipio.id}}">
+                                                            {{municipio.regiaoFiscal}}
+                                                        </md-option>
+                                                    </md-select>
+                                                </md-input-container>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <md-input-container class="md-block">
+                                                    <label>Bairro</label>
+                                                    <input ng-disabled="detalhes" ng-model="entidadeExame.endereco.bairro"
+                                                        name="bairro">
+                                                </md-input-container>
+                                            </div>
+                                        </div>
+
+                                        <div layout layout-sm="column">
+                                            <md-input-container flex>
+                                                <label>Telefone</label>
+                                                <input ng-disabled="detalhes" ng-model="entidadeExame.telefone" name="telefone"
+                                                    ui-br-phone-number-mask>
+                                                <div ng-messages="entidadeExameForm.telefone.$error" multiple ng-if='entidadeExameForm.telefone.$dirty'>
+                                                    <div ng-message="brPhoneNumber">Informe um número de telefone
+                                                        válido.</div>
+                                                </div>
+                                            </md-input-container>
+                                        </div>
+                                    </div>
+
+                                    <div ng-if="detalhes" layout layout-sm="column">
+                                        <table md-table md-progress="promise">
+                                            <thead md-head>
+                                                <tr md-row>
+                                                    <th md-column>
+                                                        <span>Criado em:</span>
+                                                    </th>
+                                                    <th md-column>
+                                                        <span>Atualizado em:</span>
+                                                    </th>
+                                                    <th md-column>
+                                                        <span>Criado por:</span>
+                                                    </th>
+                                                    <th md-column>
+                                                        <span>Atualizado por:</span>
+                                                    </th>
+                                                </tr>
+                                            </thead>
+                                            <tbody md-body>
+                                                <tr md-row>
+                                                    <td md-cell>{{entidadeExame.criadoEm | date:'dd/MM/yy - HH:mm'}}</td>
+                                                    <td md-cell>{{entidadeExame.alteradoEm | date:'dd/MM/yy - HH:mm'}}</td>
+                                                    <td md-cell>{{entidadeExame.criadoPor}}</td>
+                                                    <td md-cell>{{entidadeExame.alteradoPor}}</td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="col-md-12 text-center">
+                                            <button ng-if="!detalhes" ng-disabled="entidadeExameNocivoForm.$invalid"
+                                                type="submit" ui-wave class="btn btn-primary btn-w-md">Salvar</button>
+                                            <p class="btn btn-default btn-w-md" ui-wave data-ng-click="goBack()">Voltar</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

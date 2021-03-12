@@ -1,0 +1,129 @@
+<section class="page container-fluid with-maxwidth chapter" ng-controller="arrecadacaoIndiceCtrl">
+
+    <div class="row ui-section">
+        <div class="col-lg-9 clearfix">
+            <h2 class="section-header">Arrecadação - Índices</h2>
+        </div>
+        <div class="col-lg-3 clearfix" style="padding-top: 10px;">
+            <div class="pull-right">
+                <md-button class="md-fab md-primary" ng-href="" ng-click="showRelatorio()">
+                    <md-tooltip md-direction="bottom">Relatório</md-tooltip>
+                    <span class="fa fa-file-pdf-o"></span>
+                </md-button>
+                <md-button class="md-fab md-accent" ng-href="#!/arrecadacaoIndice/formulario">
+                    <md-tooltip md-direction="bottom">Nova Índice</md-tooltip>
+                    <span class="fa fa-plus"></span>
+                </md-button>
+            </div>
+        </div>
+        <div class="col-md-12">
+            <article class="article">
+
+                <md-card class="no-margin-h">
+                    <div layout="column">
+                        <div layout-padding>
+                            <div layout layout-sm="column">
+                                <md-autocomplete flex
+                                    md-no-cache="noCache" md-floating-label="Ano"
+                                    md-selected-item="anoTxt"
+                                    md-search-text="searchAno" md-clear-button="true"
+                                    md-items="item in querySearchAno(searchAno)"
+                                    md-item-text="item.ano" md-delay="1000"
+                                    md-min-length="2"
+                                    md-selected-item-change="anoSelecionado()">
+                                    <md-item-template> 
+                                        <span md-highlight-text="searchAno"
+                                            md-highlight-flags="^i">{{item.ano}}</span>
+                                    </md-item-template>
+                                    <md-not-found> Item "{{searchAno}}" não encontrado. </md-not-found>
+                                </md-autocomplete>
+                                <md-autocomplete flex
+                                    md-no-cache="noCache" md-floating-label="Índice"
+                                    md-selected-item="indiceTxt"
+                                    md-search-text="searchIndice" md-clear-button="true"
+                                    md-items="item in querySearchIndice(searchIndice)"
+                                    md-item-text="item.indice" md-delay="1000"
+                                    md-min-length="3"
+                                    md-selected-item-change="indiceSelecionado()">
+                                    <md-item-template> 
+                                        <span md-highlight-text="searchIndice"
+                                            md-highlight-flags="^i">{{item.indice}}</span>
+                                    </md-item-template>
+                                    <md-not-found> Item "{{searchIndice}}" não encontrado. </md-not-found>
+                                </md-autocomplete>
+                                <md-input-container flex style="max-width: 200px;">
+                                    <md-select ng-model="selectedPeriodicidade" placeholder="Busca por Periodicidade"
+                                        data-md-container-class="selectdemoSelectHeader" multiple
+                                        ng-keypress="($event.keyCode === 13) && loadList()">
+                                        <md-select-header class="demo-select-header">
+                                        </md-select-header>
+                                        <md-optgroup label="listFiliais">
+                                            <md-option ng-value="item" ng-repeat="item in list.periodicidade">
+                                                {{item.label}}
+                                            </md-option>
+                                        </md-optgroup>
+                                    </md-select>
+                                </md-input-container>
+                                <md-button class="md-icon-button" ng-click="limpaFiltro()">
+                                    <md-tooltip md-direction="top">Limpar Filtros</md-tooltip>
+                                    <md-icon>autorenew</md-icon>
+                                </md-button>
+                                <md-button class="md-icon-button" ng-click="loadList()">
+                                    <md-tooltip md-direction="top">Atualizar</md-tooltip>
+                                    <md-icon>refresh</md-icon>
+                                </md-button>
+                            </div>
+                        </div>
+                    </div>
+                    <md-table-container>
+                        <div ng-repeat="item in listData track by $index">
+                            <div ng-class="getAccordionClass($index)" id="{{'accordion-indices'+$index}}" ng-click="accordion($index)">
+                                {{item.ano}}
+                            </div>
+                            <div class="accordion-content">
+                                <md-table-container>
+                                    <table md-table ng-model="selected" md-progress="promise">
+                                        <thead ng-if="!options.decapitate" md-head md-order="query.order" md-on-reorder="loadList">
+                                            <tr md-row>
+                                                <th md-column style="width: 600px;">
+                                                    <span>Índice</span>
+                                                </th>
+                                                <th md-column>
+                                                    <span>Periodicidade</span>
+                                                </th>
+                                                <th md-column>Ações</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody md-body>
+                                            <tr md-row md-auto-select ng-repeat="e in item.indices">
+                                                <td md-cell>{{e.label}}</td>
+                                                <td md-cell>{{e.periodicidade}}</td>
+                                                <td>
+                                                    <a href="" ui-sref="indicesFormularioDetalhes({ id: e.id, detalhes: true })">
+                                                        <md-tooltip md-direction="top">Detalhes Cadastrais</md-tooltip>
+                                                        <i class="fa fa-search fa-lg"></i>
+                                                    </a>
+                                                    <a ui-sref="arrecadacaoIndiceFormularioEdit({ id: e.id })">
+                                                        <md-tooltip md-direction="top">Editar</md-tooltip>
+                                                        <i class="fa fa-pencil fa-lg"></i>
+                                                    </a>
+                                                    <a href="" ng-click="showConfirm($event,e.id)">
+                                                        <md-tooltip md-direction="top">Excluir</md-tooltip>
+                                                        <i class="fa fa-trash-o fa-lg"></i>
+                                                    </a>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </md-table-container>
+                            </div>
+                        </div>
+                    </md-table-container>
+                    <md-table-pagination md-label="{page: 'Página:', rowsPerPage: 'Registros por página:', of: 'de'}"
+                        md-limit="query.limit" md-limit-options="limitOptions" md-page="query.page"
+                        md-total="{{list.count}}" md-on-paginate="loadList" md-page-select></md-table-pagination>
+                </md-card>
+            </article>
+        </div>
+    </div>
+</section>

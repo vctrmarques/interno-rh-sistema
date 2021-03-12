@@ -1,0 +1,25 @@
+--Flávio Silva
+--Criação de papeis para Legislação
+
+IF EXISTS(SELECT * FROM menu WHERE nome = 'Legislação')
+BEGIN
+DECLARE
+    @menuId AS VARCHAR(1000)
+
+	SELECT @menuId = CAST(id AS VARCHAR(1000)) FROM menu WHERE nome = 'Legislação'
+	
+	IF NOT EXISTS(SELECT * FROM papel WHERE nome = 'ROLE_LEGISLACAO_CADASTRAR')
+		INSERT INTO papel (nome, id_menu) VALUES ('ROLE_LEGISLACAO_CADASTRAR', @menuId)
+		
+	IF NOT EXISTS(SELECT * FROM papel WHERE nome = 'ROLE_LEGISLACAO_ATUALIZAR')
+		INSERT INTO papel (nome, id_menu) VALUES ('ROLE_LEGISLACAO_ATUALIZAR', @menuId)
+		
+	IF NOT EXISTS(SELECT * FROM papel WHERE nome = 'ROLE_LEGISLACAO_EXCLUIR')
+		INSERT INTO papel (nome, id_menu) VALUES ('ROLE_LEGISLACAO_EXCLUIR', @menuId)
+		
+	IF NOT EXISTS(SELECT * FROM papel WHERE nome = 'ROLE_LEGISLACAO_VISUALIZAR')
+		INSERT INTO papel (nome, id_menu) VALUES ('ROLE_LEGISLACAO_VISUALIZAR', @menuId)
+		
+		
+END
+

@@ -1,0 +1,120 @@
+<div class="page" ng-controller="aliquotaCtrl">
+    <div class="row ui-section">
+        <div class="col-lg-12 clearfix">
+            <h2 class="section-header" style="float: left;">Alíquotas</h2>
+            <div style="float: right">
+            </md-button>
+            <md-button class="md-fab md-accent" ng-href="#!/aliquota/formulario">
+                <md-tooltip md-direction="bottom">Nova Alíquota</md-tooltip>
+                <span class="fa fa-plus"></span>
+            </md-button>
+            <span class="space"></span>
+        </div>
+    </div>
+    <div class="col-md-12">
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <article class="article">
+                    <md-card class="no-margin-h">
+                        <md-table-container>
+                            <div ng-repeat="item in list.data">
+                                <div class="col-md-12">
+                                    <md-input-container flex>
+                                        <label>Ano {{item.faixa}}</label>
+                                        <md-select  ng-disabled="detalhes" name="situacao" ng-model="obj.ano">
+                                            <md-option ng-click="buscar(item.faixa, ano)" value="{{ano}}" ng-repeat="ano in item.anos">
+                                                {{ano}}
+                                            </md-option>
+                                        </md-select>
+                                    </md-input-container>
+                                </div>
+                                <div class="accordion col-lg-12" id="{{'accordion-aliquota'+item.faixa}}" ng-click="accordion(item.faixa)">
+                                    {{item.faixa +' - '+ item.ano}}
+
+                                    <a ng-if="exclusaoPermit && buttonPermit[filial.id]" href="" class="icon" ng-click="showConfirm($event,filial.id)">
+                                        <md-tooltip md-direction="top">Excluir</md-tooltip>
+                                        <i class="fa fa-trash-o fa-sm"></i>
+                                    </a>
+                                    <a href="" class="icon" ui-sref="aliquotaEdit({ faixa: item.faixa, editar: true })">
+                                        <md-tooltip md-direction="top">Editar</md-tooltip>
+                                        <i class="fa fa-pencil fa-sm"></i>
+                                    </a>
+                                    <a class="icon" ui-sref="aliquotaDetalhes({ faixa: item.faixa, detalhes: true })">
+                                        <md-tooltip md-direction="top">Detalhes Cadastrais</md-tooltip>
+                                        <i class="fa fa-search fa-sm"></i>
+                                    </a>
+                                </div>
+                                <div class="accordion-content">
+                                    <md-table-container>
+                                        <table md-table ng-model="selected" md-progress="promise">
+                                            <thead ng-if="!options.decapitate" md-head md-order="query.order" md-on-reorder="loadList">
+                                                <tr md-row>
+                                                    <th md-column md-order-by="id">
+                                                        <span>Código</span>
+                                                    </th>
+                                                    <th md-column md-order-by="valorInicial">
+                                                        <span>Valor Inicial</span>
+                                                    </th>
+                                                    <th md-column md-order-by="valorFinal">
+                                                        <span>Valor Final</span>
+                                                    </th>
+                                                    <th md-column md-order-by="aliquota">
+                                                        <span>Alíquota</span>
+                                                    </th>
+                                                    <th ng-if="item.faixa == 'IRRF'" md-column md-order-by="deducao">
+                                                        <span>Dedução</span>
+                                                    </th>
+                                                </tr>
+                                            </thead>
+                                            <tbody md-body>
+                                                <tr md-row md-select="aliquota" md-select-id="aliquota" md-auto-select ng-repeat="aliquota in item.aliquotas">
+                                                    <td width="10%" md-cell>{{aliquota.id}}</td>
+                                                    <td md-cell>{{aliquota.valorInicial}}</td>
+                                                    <td md-cell>{{aliquota.valorFinal}}</td>
+                                                    <td md-cell>{{aliquota.aliquota}}</td>
+                                                    <td ng-if="item.faixa == 'IRRF'" md-cell>{{aliquota.deducao}}</td>
+                                                    <!-- <td md-cell ng-if="item.faixa == 'IRRF'">
+                                                            <a href="" ui-sref="aliquotaDetalhesIrrf({ id: aliquota.id, detalhes: true })">
+                                                                <md-tooltip md-direction="top">Detalhes Cadastrais</md-tooltip>
+                                                                <i class="fa fa-search fa-lg"></i>
+                                                            </a>
+                                                            <a ui-sref="aliquotaEditIrrf({ id: aliquota.id })">
+                                                                <md-tooltip md-direction="top">Editar</md-tooltip>
+                                                                <i class="fa fa-pencil fa-lg"></i>
+                                                            </a>
+                                                            <a  ng-click="showConfirm($event,aliquota.id)">
+                                                                <md-tooltip md-direction="top">Excluir</md-tooltip>
+                                                                <i class="fa fa-trash-o fa-lg"></i>
+                                                            </a>
+                                                        </td>
+                                                        <td md-cell ng-if="item.faixa == 'INSS'">
+                                                            <a href="" ui-sref="aliquotaDetalhesInss({ id: aliquota.id, detalhes: true })">
+                                                                <md-tooltip md-direction="top">Detalhes Cadastrais</md-tooltip>
+                                                                <i class="fa fa-search fa-lg"></i>
+                                                            </a>
+                                                            <a ui-sref="aliquotaEditInss({ id: aliquota.id })">
+                                                                <md-tooltip md-direction="top">Editar</md-tooltip>
+                                                                <i class="fa fa-pencil fa-lg"></i>
+                                                            </a>
+                                                            <a  ng-click="showConfirm($event,aliquota.id)">
+                                                                <md-tooltip md-direction="top">Excluir</md-tooltip>
+                                                                <i class="fa fa-trash-o fa-lg"></i>
+                                                            </a>
+                                                        </td> -->
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </md-table-container>
+                                </div>
+                            </div>
+                        </md-table-container>
+                        <md-table-pagination md-label="{page: 'Página:', rowsPerPage: 'Registros por página:', of: 'de'}" md-limit="query.limit"
+                            md-limit-options="limitOptions" md-page="query.page" md-total="{{list.count}}" md-on-paginate="loadList"
+                            md-page-select></md-table-pagination>
+                    </md-card>
+                </article>
+
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,101 @@
+<div class="page" ng-controller="definicaoOrganicoCtrl">
+    <div class="row ui-section">
+        <div class="col-lg-12 clearfix">
+            <h2 class="section-header" style="float: left;">Definição do Orgânico</h2>
+        </div>
+        <div class="col-md-12">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <article class="article">
+                        <md-card class="no-margin-h">
+                            <div layout="column">
+                                <div layout-padding>
+                                    <div layout layout-sm="column">
+                                        <md-input-container flex>
+                                            <label>Filial</label>
+                                            <input ng-model="filialBusca" placeholder="Buscar por filial..."
+                                                ng-keypress="($event.keyCode === 13) && loadList()">
+                                        </md-input-container>
+                                        <md-button class="md-icon-button" ng-click="limpaFiltro()">
+                                            <md-tooltip md-direction="top">Limpar Filtros</md-tooltip>
+                                            <md-icon>autorenew</md-icon>
+                                        </md-button>
+                                        <md-button class="md-icon-button" ng-click="loadList()">
+                                            <md-tooltip md-direction="top">Atualizar</md-tooltip>
+                                            <md-icon>refresh</md-icon>
+                                        </md-button>
+                                    </div>
+                                </div>
+                            </div>
+                            <md-table-container>
+                                <table md-table ng-model="selected" md-progress="promise">
+                                    <thead ng-if="!options.decapitate" md-head md-order="query.order"
+                                        md-on-reorder="loadList">
+                                        <tr md-row>
+                                            <th md-column>
+                                                <span>Filial</span>
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                    </tbody>
+                                </table>
+                                <div ng-repeat="filial in list.data">
+                                    <div class="accordion" ng-click="accordion()">{{filial.nomeFilial}}
+                                        <a ng-if="exclusaoPermit && buttonPermit[filial.id]" href="" class="icon"
+                                            ng-click="showConfirm($event,filial.id)">
+                                            <md-tooltip md-direction="top">Excluir</md-tooltip>
+                                            <i class="fa fa-trash-o fa-sm"></i>
+                                        </a>
+                                        <a ng-if="buttonPermit[filial.id]" href="" class="icon"
+                                            ui-sref="definicaoOrganicoFormularioEdit({ empresaFilialId: filial.id, editar: true })">
+                                            <md-tooltip md-direction="top">Editar</md-tooltip>
+                                            <i class="fa fa-pencil fa-sm"></i>
+                                        </a>
+                                        <a ng-if="buttonPermit[filial.id]" href="" class="icon"
+                                            ui-sref="definicaoOrganicoFormularioDetalhes({ empresaFilialId: filial.id, detalhes: true })">
+                                            <md-tooltip md-direction="top">Detalhes Cadastrais</md-tooltip>
+                                            <i class="fa fa-search fa-sm"></i>
+                                        </a>
+                                        <a ng-if="!filial.definicaoOrganicoId" href="" class="icon"
+                                            ui-sref="definicaoOrganicoFormularioId({ id: filial.id})">
+                                            <md-tooltip md-direction="top">Adicionar</md-tooltip>
+                                            <i class="fa fa-plus fa-sm"></i>
+                                        </a>
+                                    </div>
+                                    <div class="accordion-content">
+                                        <p>
+                                            <md-table-container>
+                                                <table md-table md-progress="promise" style="margin-top: 20px">
+                                                    <thead md-head>
+                                                        <tr md-row>
+                                                            <th md-column>
+                                                                <span>Lotação</span>
+                                                            </th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody md-body>
+                                                        <tr md-row md-select="item" md-select-id="item" md-auto-select
+                                                            ng-repeat="lotacao in filial.lotacoes">
+                                                            <td md-cell>{{lotacao.descricao}}</td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </md-table-container>
+                                        </p>
+                                    </div>
+                                </div>
+
+                </div>
+                </md-table-container>
+                <md-table-pagination md-label="{page: 'Página:', rowsPerPage: 'Registros por página:', of: 'de'}"
+                    md-limit="query.limit" md-limit-options="limitOptions" md-page="query.page"
+                    md-total="{{list.count}}" md-on-paginate="loadList" md-page-select></md-table-pagination>
+                </md-card>
+                </article>
+
+            </div>
+        </div>
+    </div>
+</div>
+</div>

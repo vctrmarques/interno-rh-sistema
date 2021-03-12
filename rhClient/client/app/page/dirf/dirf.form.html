@@ -1,0 +1,299 @@
+<div class="page" ng-controller="dirfFormCtrl">
+    <div class="row ui-section">
+        <div class="col-lg-8 clearfix">
+            <h2 class="section-header">{{!detalhes ? 'Formulário da DIRF' : 'Detalhes da DIRF'}}</h2>
+        </div>
+        <div class="col-md-12">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div layout="column" ng-cloak class="md-inline-form inputdemoBasicUsage">
+                                <form ng-disabled="detalhes" name="dirfForm">
+                                        <md-tabs md-dynamic-height md-border-bottom>
+                                            <md-tab label="Cadastro DIRF">
+                                                <md-content class="md-padding">
+                                                    <div class="panel panel-default">
+                                                        <div class="panel-heading"><div class="panel-title">Dados declaração</div></div>
+                                                        <div class="panel-body">
+                                                            <div class="row">
+                                                                <div layout layout-sm="column" class="col-md-2">
+                                                                    <md-input-container flex> 
+                                                                        <label>Ano base</label>
+                                                                        <input ng-model="dirf.anoBase" name="anoBase" ui-number-mask="0" min="1900" max="limiteAnoBase" ui-hide-group-sep maxlength="4" required ng-disabled="detalhes">  
+                                                                        <div ng-messages="dirfForm.anoBase.$error">
+                                                                            <div ng-message="required">Campo de preenchimento obrigatório.</div>
+                                                                            <div ng-message="max">Ano base não pode ser maior que {{limiteAnoBase}}</div>
+                                                                        </div>
+                                                                    </md-input-container>
+                                                                </div>
+                                                                <div layout layout-sm="column" class="col-md-2">
+                                                                    <md-input-container flex> 
+                                                                        <md-radio-group ng-model="dirf.tipoDeclaracao">
+                                                                            <md-radio-button ng-repeat="item in lista.tipoDeclaracao" ng-value="item.value" aria-label="{{item.label}}" style="display: block !important;" ng-disabled="checkTipoDeclaracao()">
+                                                                              {{ item.label }}
+                                                                            </md-radio-button>
+                                                                          </md-radio-group>
+                                                                    </md-input-container>
+                                                                </div>
+                                                                <div layout layout-sm="column" class="col-md-6">
+                                                                    <md-input-container flex> 
+                                                                        <label>Nº Declaração retificadora</label>
+                                                                        <input ng-model="dirf.numeroDeclaracao" ng-disabled="bloquearNumero || detalhes" ui-number-mask="0" ui-hide-group-sep maxlength="12">
+                                                                    </md-input-container>
+                                                                </div>
+                                                            </div>
+    
+                                                        </div>
+                                                    </div>
+                                                    <div class="panel panel-default">
+                                                        <div class="panel-heading"><div class="panel-title">Lista de filiais</div></div>
+                                                        <div class="panel-body">
+                                                            <div ng-show="list.count == 0">Nenhuma filial encontrada!</div>
+                                                            <md-table-container ng-show="list.count > 0">
+                                                                <table md-table md-progress="promise">
+                                                                    <thead ng-if="!options.decapitate" md-head md-order="query.order"
+                                                                        md-on-reorder="loadList">
+                                                                        <tr md-row>
+                                                                            <th md-column>
+                                                                                <span>Código</span>
+                                                                            </th>
+                                                                            <th md-column>
+                                                                                <span>Sigla</span>
+                                                                            </th>
+                                                                            <th md-column>
+                                                                                <span>Nome</span>
+                                                                            </th>
+                                                                            <th md-column>
+                                                                                <span>Ação</span>
+                                                                            </th>
+                                                                        </tr>
+                                                                    </thead>
+                                                                    <tbody md-body>
+                                                                        <tr md-row ng-repeat="item in list.data" ng-style="checkEstilo(item)">
+                                                                            <td md-cell>{{item.codigo}}</td>
+                                                                            <td md-cell>{{item.sigla}}</td>
+                                                                            <td md-cell>{{item.nome}}</td>
+                                                                            <td md-cell>
+                                                                                <a href="" ng-show="checkSelect()" ng-click="selectFilial(item)" class="btn btn-primary btn-sm">
+                                                                                    Selecionar
+                                                                                </a>
+                                                                                <a href="" ng-show="checkDeSelectFilial(item)" ng-click="deSelectFilial()" class="btn btn-default btn-sm">
+                                                                                    Desmarcar
+                                                                                </a>
+                                                                            </td>
+                                                                        </tr>
+                                                                    </tbody>
+                                                                </table>
+                                                            </md-table-container>
+                                                            <md-table-pagination ng-show="list.count > 10"
+                                                                md-label="{page: 'Página:', rowsPerPage: 'Registros por página:', of: 'de'}"
+                                                                md-limit="query.limit" md-limit-options="limitOptions" md-page="query.page"
+                                                                md-total="{{list.count}}" md-on-paginate="loadList" md-page-select>
+                                                            </md-table-pagination>
+                                                        </div>
+                                                    </div>
+                                                    <div class="panel panel-default">
+                                                        <div class="panel-heading">
+                                                            <div class="panel-title">Informações do responsável (Receita Federal) 
+                                                                <a href="" ng-click="showInfoResponsavel($event)">
+                                                                    <md-tooltip md-direction="top">Clique para mais informações</md-tooltip> 
+                                                                    <i class="fa fa-info-circle fa-lg"></i>
+                                                                </a>
+                                                            </div>
+                                                        </div>
+                                                        <div class="panel-body">
+                                                            <div class="row">
+                                                                <div layout layout-sm="column" class="col-md-4" ng-show="!detalhes">
+                                                                    <md-autocomplete flex md-no-cache="noCache" md-floating-label="CPF" md-selected-item="responsavel" md-search-text="search" md-clear-button="true"
+                                                                            md-items="item in querySearchResponsavel(search)" md-item-text="responsavel.cpf" md-delay="500" md-min-length="11" md-selected-item-change="responsavelSelecionado()">
+                                                                        <md-item-template> <span md-highlight-text="search" md-highlight-flags="^i">{{item.nome}}</span> </md-item-template> 
+                                                                    </md-autocomplete>
+                                                                </div>
+                                                                <div layout layout-sm="column" class="col-md-4" ng-show="detalhes">
+                                                                    <md-input-container flex> 
+                                                                        <label>CPF</label>
+                                                                        <input ng-model="dirf.responsavelReceita.cpf" name="cpf" ui-br-cpf-mask ng-disabled="detalhes"> 
+                                                                    </md-input-container>
+                                                                </div>
+                                                                <div layout layout-sm="column" class="col-md-8">
+                                                                    <md-input-container flex> 
+                                                                        <label>Nome</label>
+                                                                        <input ng-model="dirf.responsavelReceita.nome" name="nome" required ng-disabled="detalhes"> 
+                                                                        <div ng-messages="dirfForm.nome.$error">
+                                                                            <div ng-message="required">Campo de preenchimento obrigatório.</div>
+                                                                        </div>
+                                                                    </md-input-container>
+                                                                </div>
+                                                            </div>
+                                                            <div class="row">
+                                                                <div layout layout-sm="column" class="col-md-1">
+                                                                    <md-input-container flex> 
+                                                                        <label>DDD</label>
+                                                                        <input ng-model="dirf.responsavelReceita.ddd" name="ddd" required ui-number-mask="0" ui-hide-group-sep maxlength="3" ng-disabled="detalhes"> 
+                                                                        <div ng-messages="dirfForm.ddd.$error">
+                                                                            <div ng-message="required">Campo de preenchimento obrigatório.</div>
+                                                                        </div>
+                                                                    </md-input-container>
+                                                                </div>
+                                                                <div layout layout-sm="column" class="col-md-3">
+                                                                    <md-input-container flex> 
+                                                                        <label>Número Telefone</label>
+                                                                        <input ng-model="dirf.responsavelReceita.numeroTelefone" name="numeroTelefone" required ui-br-phone-number-mask="simple" maxlength="10" ng-disabled="detalhes"> 
+                                                                        <div ng-messages="dirfForm.numeroTelefone.$error">
+                                                                            <div ng-message="required">Campo de preenchimento obrigatório.</div>
+                                                                        </div>
+                                                                    </md-input-container>
+                                                                </div>
+                                                                <div layout layout-sm="column" class="col-md-2">
+                                                                    <md-input-container flex> 
+                                                                        <label>Ramal</label>
+                                                                        <input ng-model="dirf.responsavelReceita.ramal" ng-disabled="detalhes"> 
+                                                                    </md-input-container>
+                                                                </div>
+                                                                <div layout layout-sm="column" class="col-md-6">
+                                                                    <md-input-container flex> 
+                                                                        <label>E-mail</label>
+                                                                        <input ng-model="dirf.responsavelReceita.email" ng-disabled="detalhes"> 
+                                                                    </md-input-container>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="panel panel-default">
+                                                        <div class="panel-body">
+                                                            <div layout layout-sm="column">
+
+                                                                <md-input-container flex>
+                                                                    <label>Natureza do declarante</label>
+                                                                    <md-select name="naturezaDeclarante" ng-disabled="detalhes"
+                                                                    ng-model="dirf.naturezaDeclarante">
+                                                                    <md-option ng-repeat="item in lista.naturezaDeclarante"
+                                                                    value="{{item.value}}">
+                                                                    {{item.value}} - {{ item.label }}
+                                                                </md-option>
+                                                            </md-select>
+                                                        </md-input-container>
+                                                        </div>
+                                                        </div>
+                                                    </div>
+                                                </md-content>
+                                            </md-tab>
+                                            <md-tab label="Informe de rendimentos" ng-disabled="checkDirf()">
+                                                <md-content class="md-padding">
+                                                    <div class="panel panel-default">
+                                                        <div class="panel-body">
+                                                            <div class="row">
+                                                                <div layout layout-sm="column" class="col-md-2">
+                                                                    <md-input-container flex> 
+                                                                        <label>Ano base</label>
+                                                                        <input ng-model="dirf.anoBase" ng-disabled="true">  
+                                                                    </md-input-container>
+                                                                </div>
+                                                                <div layout layout-sm="column" class="col-md-6">
+                                                                    <md-input-container flex> 
+                                                                        <input ng-model="nomeCpf" placeholder="Informe o nome ou cpf">
+                                                                    </md-input-container>
+                                                                </div>
+                                                                <md-button class="md-icon-button" ng-click="beneficiarioLimpaFiltro()">
+                                                                    <md-tooltip md-direction="top">Limpar Filtros</md-tooltip>
+                                                                    <md-icon>autorenew</md-icon>
+                                                                </md-button>
+                                                                <md-button class="md-icon-button" ng-click="beneficiarioLoadList()">
+                                                                    <md-tooltip md-direction="top">Atualizar</md-tooltip>
+                                                                    <md-icon>refresh</md-icon>
+                                                                </md-button>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="panel panel-default">
+                                                        <div class="panel-heading"><div class="panel-title">Lista de Funcionários/Pensionistas</div></div>
+                                                        <div class="panel-body">
+                                                            <div ng-show="beneficiario.list.count == 0">Nenhum funcionário encontrado!</div>
+                                                            <md-table-container ng-show="beneficiario.list.count > 0">
+                                                                <table md-table md-progress="beneficiarioPromise">
+                                                                    <thead ng-if="!options.decapitate" md-head
+                                                                        md-on-reorder="beneficiarioLoadList">
+                                                                        <tr md-row>
+                                                                            <th md-column>
+                                                                                <span>CPF</span>
+                                                                            </th>
+                                                                            <th md-column>
+                                                                                <span>Nome</span>
+                                                                            </th>
+                                                                            <th md-column>
+                                                                                <span>Ação</span>
+                                                                            </th>
+                                                                        </tr>
+                                                                    </thead>
+                                                                    <tbody md-body>
+                                                                        <tr md-row ng-repeat="item in beneficiario.list.data">
+                                                                            <td md-cell>{{item.cpf}}</td>
+                                                                            <td md-cell>{{item.nome}}</td>
+                                                                            <td md-cell>
+                                                                                <a href="" ng-click="gerarRelatorioFuncionario(dirf.id, item.id)">
+                                                                                    <md-tooltip md-direction="top">Gerar informe de rendimentos</md-tooltip> 
+                                                                                    <i class="fa fa-file-o fa-lg"></i>
+                                                                                </a>
+                                                                            </td>
+                                                                        </tr>
+                                                                    </tbody>
+                                                                </table>
+                                                            </md-table-container>
+                                                            <md-table-pagination ng-show="beneficiario.list.count > 10"
+                                                                md-label="{page: 'Página:', rowsPerPage: 'Registros por página:', of: 'de'}"
+                                                                md-limit="beneficiario.query.limit" md-limit-options="beneficiario.limitOptions" md-page="beneficiario.query.page"
+                                                                md-total="{{beneficiario.list.count}}" md-on-paginate="beneficiarioLoadList" md-page-select>
+                                                            </md-table-pagination>
+
+                                                        </div>
+                                                    </div>
+                                                </md-content>
+                                            </md-tab>
+                                        </md-tabs>
+
+                                    <div ng-if="detalhes" layout layout-sm="column">
+                                        <table md-table md-progress="promise">
+                                            <thead md-head>
+                                                <tr md-row>
+                                                    <th md-column>
+                                                        <span>Criado em:</span>
+                                                    </th>
+                                                    <th md-column>
+                                                        <span>Atualizado em:</span>
+                                                    </th>
+                                                    <th md-column>
+                                                        <span>Criado por:</span>
+                                                    </th>
+                                                    <th md-column>
+                                                        <span>Atualizado por:</span>
+                                                    </th>
+                                                </tr>
+                                            </thead>
+                                            <tbody md-body>
+                                                <tr md-row>
+                                                    <td md-cell>{{dirf.criadoEm | date:'dd/MM/yy - HH:mm'}}</td>
+                                                    <td md-cell>{{dirf.alteradoEm | date:'dd/MM/yy - HH:mm'}}</td>
+                                                    <td md-cell>{{dirf.criadoPor}}</td>
+                                                    <td md-cell>{{dirf.alteradoPor}}</td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+
+                                    <div class="row">
+                                            <div class="col-md-12 text-center">
+                                                <button ng-if="!detalhes" ng-disabled="dirfForm.$invalid" ng-click="save()" ui-wave class="btn btn-primary btn-w-md">Salvar</button>
+                                                <p class="btn btn-default btn-w-md" ui-wave data-ng-click="goBack()">Voltar</p>
+                                            </div>
+                                        </div>
+                                    </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

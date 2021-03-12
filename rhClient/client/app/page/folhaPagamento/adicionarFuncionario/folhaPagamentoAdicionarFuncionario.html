@@ -1,0 +1,195 @@
+<div class="page" ng-controller="folhaPagamentoAdicionarFuncionarioCtrl">
+	<div class="row ui-section">
+		<div class="col-lg-12 clearfix">
+			<h2 class="section-header" style="float: left;">Adicionar Funcionário a Folha de Pagamento</h2>
+			<div style="float: right">
+				<span class="space"></span>
+			</div>
+		</div>
+		<div class="col-md-12">
+			<div class="panel panel-default">
+				<div class="panel-body">
+					<article class="article">
+						<div class="row">
+							<div layout="column" ng-cloak class="md-inline-form inputdemoBasicUsage">
+								<div layout-padding class="col-md-12">
+									<form id="folha-pag" ng-disabled="detalhes" name="folhaPagamentoForm"
+										ng-submit="save()">
+										<div class="panel panel-default">
+											<div class="panel-body">
+												<div class="center row">
+													<h4>Adicionando Funcionário a {{folha.tipoProcessamento.descricao}}
+													</h4>
+												</div>
+											</div>
+										</div>
+										<div class="row">
+											<div class="col-md-12">
+												<div class="panel panel-default col-md-12">
+													<div class="panel-body">
+														<article class="article">
+															<md-card class="no-margin-h">
+																<div layout="column">
+																	<div layout-padding>
+																		<div class="row">
+																			<div layout class="col-md-3"
+																				layout-sm="column">
+																				<md-input-container flex> <input
+																						ng-model="nomeFuncionario"
+																						placeholder="Buscar por nome do funcionário...">
+																				</md-input-container>
+																			</div>
+																			<div class="col-md-3" layout-sm="column"
+																				layout>
+																				<md-input-container flex>
+																					<md-select ng-disabled="detalhes"
+																						name="tipoFolha"
+																						ng-model="lotacaoId"
+																						ng-change="getFuncionarios()"
+																						placeholder="Lotação">
+																						<md-option ng-value=null>
+																							<em>-- Selecione --</em>
+																						</md-option>
+																						<md-option
+																							ng-repeat="lotacao in lotacoes"
+																							ng-value="lotacao.id">
+																							{{lotacao.descricao}}
+																						</md-option>
+																					</md-select>
+																				</md-input-container>
+																			</div>
+																			<div class="col-md-2" layout-sm="column"
+																				layout>
+																				<md-input-container flex>
+																					<label>Data Adimissão</label>
+																					<md-icon
+																						class="material-icons icon-momentpicker"
+																						ng-class="md-datepicker-calendar-icon"
+																						aria-label="md-calendar">
+																						date_range</md-icon>
+																					<input
+																						change="tratarData(dataAdmissaoFiltro)"
+																						autocomplete="off"
+																						name="periodoProcessamentoInicio"
+																						moment-picker="dataAdmissaoFiltro"
+																						placeholder="Selecione a data"
+																						ng-model="dataAdmissaoFiltro"
+																						format="DD/MM/YYYY"
+																						locale="pt-br"
+																						start-view="month"
+																						ng-model-options="{ updateOn: 'blur' }"
+																						ng-disabled="detalhes">
+																				</md-input-container>
+																			</div>
+																			<div layout class="col-md-1"
+																				layout-sm="column">
+																				<md-button class="md-icon-button"
+																					ng-click="getFuncionarios()"
+																					style="margin: 20%">
+																					<md-tooltip>Atualizar</md-tooltip>
+																					<md-icon>refresh</md-icon>
+																				</md-button>
+																			</div>
+																			<div layout class="col-md-1">
+																				<md-button class="md-icon-button"
+																					ng-click="limpaFiltro()"
+																					style="margin: 20%">
+																					<md-tooltip md-direction="top">
+																						Limpar Filtros</md-tooltip>
+																					<md-icon>autorenew</md-icon>
+																				</md-button>
+																			</div>
+																			<div layout class="col-md-2"
+																				layout-sm="column">
+																				<button ng-disabled="selected.length==0"
+																					ng-click="showAdicionarFuncionario()"
+																					style="width: 100%" ui-wave
+																					class="btn-form btn btn-info btn-w-md ">Adicionar</button>
+																			</div>
+																		</div>
+																		<md-table-container>
+																			<table md-table ng-model="selected"
+																				md-progress="promise">
+																				<thead ng-if="!options.decapitate"
+																					md-head md-order="query.order"
+																					md-on-reorder="getFuncionarios">
+																					<tr md-row>
+																						<th md-column>
+																							<md-checkbox
+																								aria-label="Select All"
+																								ng-checked="isChecked()"
+																								md-indeterminate="isIndeterminate()"
+																								ng-click="toggleAll()">
+																							</md-checkbox>
+																						</th>
+																						<th md-column
+																							md-order-by="matricula">
+																							<span>Matrícula</span></th>
+																						<th md-column
+																							md-order-by="nome">
+																							<span>Nome</span></th>
+																						<th md-column>
+																							<span>Filial</span></th>
+																						<th md-column>
+																							<span>Lotação</span></th>
+																						<th md-column><span>Data
+																								Admissão</span></th>
+																					</tr>
+																				</thead>
+																				<tbody md-body>
+																					<tr md-row md-select="item"
+																						md-select-id="item"
+																						md-auto-select
+																						ng-repeat="item in list.data">
+																						<td md-cell>
+																							<md-checkbox
+																								ng-checked="exists(item.id, selected)"
+																								ng-click="toggle(item.id, selected)">
+																							</md-checkbox>
+																						</td>
+																						<td md-cell>{{item.matricula}}
+																						</td>
+																						<td md-cell>{{item.nome}}</td>
+																						<td md-cell>
+																							{{item.filial.nomeFilial}}
+																						</td>
+																						<td md-cell>
+																							{{item.lotacao.descricao}}
+																						</td>
+																						<td md-cell>
+																							{{item.dataAdmissao | date:'dd/MM/yyyy'}}
+																						</td>
+																					</tr>
+																				</tbody>
+																			</table>
+																		</md-table-container>
+																		<md-table-pagination
+																			md-label="{page: 'Página:', rowsPerPage: 'Registros por página:', of: 'de'}"
+																			md-limit="query.limit"
+																			md-limit-options="limitOptions"
+																			md-page="query.page"
+																			md-total="{{list.count}}"
+																			md-on-paginate="getFuncionarios"
+																			md-page-select> </md-table-pagination>
+															</md-card>
+														</article>
+														<div class="row">
+															<div class="col-md-12 text-center">
+																<p class="btn btn-default btn-w-md" ui-wave
+																	data-ng-click="goBack()">Voltar</p>
+															</div>
+														</div>
+													</div>
+												</div>
+											</div>
+										</div>
+									</form>
+								</div>
+							</div>
+						</div>
+					</article>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

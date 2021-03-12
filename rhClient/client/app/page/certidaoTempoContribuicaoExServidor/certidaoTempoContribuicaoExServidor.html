@@ -1,0 +1,191 @@
+<div class="page" ng-controller="certidaoTempoContribuicaoExServidorCtrl">
+	<div class="row ui-section">
+		<div class="col-lg-12 clearfix">
+			<h2 class="section-header" style="float: left;">Certidão de tempo de contribuição - Ex-Servidor</h2>
+			<div style="float: right">
+				<md-button class="md-fab md-primary" ng-href="" ng-click="showRelatorio()">
+					<md-tooltip md-direction="bottom">Relatório</md-tooltip> <span class="fa fa-file-pdf-o"></span>
+				</md-button>
+				<md-button ng-show="podeCadastrar" class="md-fab md-accent"
+					ng-href="#!/certidaoTempoContribuicaoExServidor/formulario">
+					<md-tooltip md-direction="bottom">Nova Certidão</md-tooltip> <span class="fa fa-plus"></span>
+				</md-button>
+				<span class="space"></span>
+			</div>
+		</div>
+		<div class="col-md-12">
+			<div class="panel panel-default">
+				<div class="panel-body">
+					<article class="article">
+						<md-card class="no-margin-h">
+							<div layout="column">
+								<div layout-padding>
+									<div layout layout-sm="column">
+										<md-input-container flex> <label>Funcionário - Matrícula - PIS/PASEP -
+												CPF</label> <input ng-model="descricaoBusca"
+												placeholder="Buscar por funcionário, matrícula, PIS/PASEP ou CPF..."
+												ng-keypress="($event.keyCode === 13) && loadList()">
+										</md-input-container>
+										<md-input-container flex> <label>Filtrar por Status</label>
+											<md-select name="status" ng-model="status">
+												<md-option ng-value=null>
+													<em>-- Selecione --</em>
+												</md-option>
+												<md-option ng-repeat="obj in lista.status" value="{{obj.value}}">
+													{{obj.label}} </md-option>
+											</md-select>
+										</md-input-container>
+										<md-button class="md-icon-button" ng-click="limpaFiltro()">
+											<md-tooltip md-direction="top">Limpar Filtros</md-tooltip>
+											<md-icon>autorenew</md-icon>
+										</md-button>
+										<md-button class="md-icon-button" ng-click="loadList()">
+											<md-tooltip md-direction="top">Atualizar</md-tooltip>
+											<md-icon>refresh</md-icon>
+										</md-button>
+									</div>
+								</div>
+							</div>
+							<md-tabs md-dynamic-height md-border-bottom md-selected="abaActive">
+								<md-tab label="{{c.label}}" ng-repeat="c in lista.abas"
+									md-on-select="abaAtual(c.value)">
+									<md-content class="md-padding">
+										<md-table-container>
+											<table md-table ng-model="selected" md-progress="promise">
+												<thead ng-if="!options.decapitate" md-head md-order="query.order"
+													md-on-reorder="loadList">
+													<tr md-row>
+														<th md-column><span>Funcionário</span></th>
+														<th md-column><span>Matrícula</span></th>
+														<th md-column><span>PIS/PASEP</span></th>
+														<th md-column><span>Status</span></th>
+														<th md-column><span>Data do cadastro</span></th>
+														<th md-column><span>Tipo de certidão</span></th>
+														<th md-column><span>Ações</span></th>
+													</tr>
+												</thead>
+												<tbody md-body>
+													<tr md-row md-select="item" md-select-id="item" md-auto-select
+														ng-repeat="item in list.data">
+														<td md-cell>{{item.funcionario.nome}}</td>
+														<td md-cell>{{item.funcionario.matricula}}</td>
+														<td md-cell>{{item.funcionario.pisPasep}}</td>
+														<td md-cell>{{item.statusSituacaoCertidao}}</td>
+														<td md-cell>{{item.criadoEm | date: 'dd/MM/yyyy'}}</td>
+														<td md-cell>
+															{{item.numeroRetificacao ? 'RETIFICAÇÃO' : 'CERTIDÃO'}}</td>
+														<td md-cell>
+															<a href="" ng-show="podeAtualizar"
+																ui-sref="certidaoTempoContribuicaoExServidorEdit({ id: item.id })">
+																<md-tooltip md-direction="top">Editar</md-tooltip>
+																<i class="fa fa-pencil fa-lg"></i>
+															</a>
+															<a href=""
+																ui-sref="certidaoTempoContribuicaoExServidorDetalhes({ id: item.id, detalhes: true })">
+																<md-tooltip md-direction="top">Detalhes Cadastrais
+																</md-tooltip>
+																<i class="fa fa-search fa-lg"></i>
+															</a>
+															<a href="" ng-show="podeAtualizar && !item.rascunho"
+																ng-click="showConfirmRetificar($event,item.id)">
+																<md-tooltip md-direction="top">Retificar</md-tooltip>
+																<i class="fa fa-clone fa-lg"></i>
+															</a>
+															<a href="" ng-show="!item.rascunho"
+																ng-click="showConfirmImprimir($event,item.id,item.arquivado)">
+																<md-tooltip md-direction="top">Imprimir Certidão
+																</md-tooltip>
+																<i class="fa fa-print fa-lg"></i>
+															</a>
+															<a href="" ng-show="podeExcluir && !item.arquivado"
+																ng-click="showConfirm($event,item.id)">
+																<md-tooltip md-direction="top">Excluir</md-tooltip>
+																<i class="fa fa-trash-o fa-lg"></i>
+															</a>
+														</td>
+													</tr>
+												</tbody>
+											</table>
+										</md-table-container>
+										<md-table-pagination
+											md-label="{page: 'Página:', rowsPerPage: 'Registros por página:', of: 'de'}"
+											md-limit="query.limit" md-limit-options="limitOptions" md-page="query.page"
+											md-total="{{list.count}}" md-on-paginate="loadList" md-page-select>
+										</md-table-pagination>
+									</md-content>
+								</md-tab>
+								<md-tab label="TODAS" ng-click="abaAtual('TODAS')">
+									<md-content class="md-padding">
+										<md-table-container>
+											<table md-table ng-model="selected" md-progress="promise">
+												<thead ng-if="!options.decapitate" md-head md-order="query.order"
+													md-on-reorder="loadList">
+													<tr md-row>
+														<th md-column><span>Funcionário</span></th>
+														<th md-column><span>Matrícula</span></th>
+														<th md-column><span>PIS/PASEP</span></th>
+														<th md-column><span>Status</span></th>
+														<th md-column><span>Data do cadastro</span></th>
+														<th md-column><span>Tipo de certidão</span></th>
+														<th md-column><span>Ações</span></th>
+													</tr>
+												</thead>
+												<tbody md-body>
+													<tr md-row md-select="item" md-select-id="item" md-auto-select
+														ng-repeat="item in list.data">
+														<td md-cell>{{item.funcionario.nome}}</td>
+														<td md-cell>{{item.funcionario.matricula}}</td>
+														<td md-cell>{{item.funcionario.pisPasep}}</td>
+														<td md-cell>{{item.statusSituacaoCertidao}}</td>
+														<td md-cell>{{item.criadoEm | date: 'dd/MM/yyyy'}}</td>
+														<td md-cell>
+															{{item.numeroRetificacao ? 'RETIFICAÇÃO' : 'CERTIDÃO'}}</td>
+														<td md-cell>
+															<a href="" ng-show="podeAtualizar"
+																ui-sref="certidaoTempoContribuicaoExServidorEdit({ id: item.id })">
+																<md-tooltip md-direction="top">Editar</md-tooltip>
+																<i class="fa fa-pencil fa-lg"></i>
+															</a>
+															<a href=""
+																ui-sref="certidaoTempoContribuicaoExServidorDetalhes({ id: item.id, detalhes: true })">
+																<md-tooltip md-direction="top">Detalhes Cadastrais
+																</md-tooltip>
+																<i class="fa fa-search fa-lg"></i>
+															</a>
+															<a href="" ng-show="podeAtualizar && !item.rascunho"
+																ng-click="showConfirmRetificar($event,item.id)">
+																<md-tooltip md-direction="top">Retificar</md-tooltip>
+																<i class="fa fa-clone fa-lg"></i>
+															</a>
+															<a href="" ng-show="!item.rascunho"
+																ng-click="showConfirmImprimir($event,item.id,item.arquivado)">
+																<md-tooltip md-direction="top">Imprimir Certidão
+																</md-tooltip>
+																<i class="fa fa-print fa-lg"></i>
+															</a>
+															<a href="" ng-show="podeExcluir && !item.arquivado"
+																ng-click="showConfirm($event,item.id)">
+																<md-tooltip md-direction="top">Excluir</md-tooltip>
+																<i class="fa fa-trash-o fa-lg"></i>
+															</a>
+														</td>
+													</tr>
+												</tbody>
+											</table>
+										</md-table-container>
+										<md-table-pagination
+											md-label="{page: 'Página:', rowsPerPage: 'Registros por página:', of: 'de'}"
+											md-limit="query.limit" md-limit-options="limitOptions" md-page="query.page"
+											md-total="{{list.count}}" md-on-paginate="loadList" md-page-select>
+										</md-table-pagination>
+									</md-content>
+								</md-tab>
+							</md-tabs>
+						</md-card>
+					</article>
+
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

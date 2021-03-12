@@ -1,0 +1,81 @@
+<div class="page" ng-controller="feriasProgramacaoHistoryCtrl">
+    <div class="row ui-section">
+        <div class="col-lg-12 clearfix">
+            <h2 class="section-header" style="float: left;">Histórico de Programação de Férias</h2>
+            <div style="float: right">
+                <md-button class="md-fab md-primary" ng-href="" ng-click="showRelatorio()">
+                    <md-tooltip md-direction="bottom">Relatório</md-tooltip>
+                    <span class="fa fa-file-pdf-o"></span>
+                </md-button>
+                <span class="space"></span>
+            </div>            
+        </div>
+        <div class="col-md-12">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <div class="row">
+                        <div class="col-lg-12 col-lg-offset-0">
+                            <div layout="column" ng-cloak class="md-inline-form inputdemoBasicUsage">
+                                <div layout-padding>
+                                    <h4>Dados do Funcionário</h4>
+                                    <div layout layout-sm="column">
+                                        <md-input-container flex>
+                                            <label>Filial</label>
+                                            <input ng-disabled="true" ng-model="funcionario.empresa.nomeFilial" name="nomeFilial">
+                                        </md-input-container>                                            
+                                        <md-input-container flex>
+                                            <label>Matrícula</label>
+                                            <input ng-disabled="true" ng-model="funcionario.matricula" name="matricula">
+                                        </md-input-container>
+                                        <md-input-container flex>
+                                            <label>Nome</label>
+                                            <input ng-disabled="true" ng-model="funcionario.nome" name="nome">
+                                        </md-input-container>
+                                    </div>
+                                    <div layout layout-sm="column">
+                                        <table md-table>
+                                            <thead md-head>
+                                                <tr md-row>
+                                                    <th md-column>
+                                                        <span>Período Aquisitivo</span>
+                                                    </th>
+                                                    <th md-column>
+                                                        <span>Status</span>
+                                                    </th>
+                                                    <th md-column>
+                                                        <span>Partição 1º</span>
+                                                    </th>
+                                                    <th md-column>
+                                                        <span>Partição 2º</span>
+                                                    </th>
+                                                    <th md-column>
+                                                        <span>Partição 3º</span>
+                                                    </th>                                                                                                                                                                                                                                                 
+                                                </tr>
+                                            </thead>
+                                            <tbody md-body>
+                                                <tr md-row md-select="feriasProgramada" md-select-id="feriasProgramada" md-auto-select ng-repeat="feriasProgramada in feriasProgramacoes">
+                                                    <td md-cell>{{feriasProgramada.exercicioInicio | date:'dd/MM/yyyy'}} - {{feriasProgramada.exercicioFim | date:'dd/MM/yyyy'}}</td>
+                                                    <td md-cell>{{feriasProgramada.situacaoLabel}}</td>
+                                                    <td md-cell>{{feriasProgramada.dataInicialUm | date:'dd/MM/yyyy'}} - {{feriasProgramada.dataFinalUm | date:'dd/MM/yyyy'}}</td>
+                                                    <td md-cell>{{feriasProgramada.dataInicialDois | date:'dd/MM/yyyy'}} - {{feriasProgramada.dataFinalDois | date:'dd/MM/yyyy'}}</td>
+                                                    <td md-cell>{{feriasProgramada.dataInicialTres | date:'dd/MM/yyyy'}} - {{feriasProgramada.dataFinalTres | date:'dd/MM/yyyy'}}</td>
+                                                </tr>
+                                            </tbody>
+                                        </table>                                       
+                                    </div>
+                                       
+                                <div class="row">
+                                    <div class="col-md-12 text-center" style="margin-top: 40px">
+                                        <p class="btn btn-default btn-w-md" ui-wave data-ng-click="goBack()">Voltar</p>
+                                    </div>
+                                </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

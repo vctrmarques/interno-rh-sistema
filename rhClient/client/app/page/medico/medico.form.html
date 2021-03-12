@@ -1,0 +1,613 @@
+<section class="page-form-ele page" ng-controller="medicoFormCtrl">
+    <div class="row ui-section">
+        <div class="col-lg-8 clearfix">
+            <h2 class="section-header">
+                <h2 class="section-header">{{!detalhes ? 'Formulário do Médico' : 'Detalhes do Médico'}}</h2>
+        </div>
+        <div class="col-md-12">
+            <section class="panel panel-default">
+                <div class="panel-body">
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div layout="column" ng-cloak class="md-inline-form inputdemoBasicUsage">
+                                <div layout-padding>
+                                    <form name="medicoForm" ng-disabled="detalhes" ng-submit="save()">
+                                        <md-tabs md-dynamic-height md-border-bottom>
+                                            <md-tab label="Dados Cadastrais">
+                                                <md-content class="md-padding">
+                                                    <div class="divider divider"></div>
+                                                    <div layout layout-sm="column">
+                                                        <md-input-container class="md-block">
+                                                            <label>Matrícula</label>
+                                                            <input ng-disabled="detalhes || edit"
+                                                                ng-model="medico.matricula" name="matricula"
+                                                                ng-required="true" ng-pattern="/^[0-9]*$/">
+                                                            <div ng-messages="medicoForm.matricula.$error" multiple
+                                                                role="alert">
+                                                                <div ng-message="required">Campo de preenchimento
+                                                                    obrigatório.</div>
+                                                                <div ng-message="pattern">Este campo só permite números
+                                                                </div>
+                                                            </div>
+                                                        </md-input-container>
+                                                        <md-input-container flex>
+                                                            <label>Nome</label>
+                                                            <input ng-disabled="detalhes"
+                                                                ng-model="medico.nome" name="nome" ng-required="true">
+                                                            <div ng-messages="medicoForm.nome.$error" multiple
+                                                                role="alert">
+                                                                <div ng-message="required">Campo de preenchimento
+                                                                    obrigatório.</div>
+                                                            </div>
+                                                        </md-input-container>
+                                                        <md-switch ng-disabled="detalhes"
+                                                            ng-if="!mostrarStatus"
+                                                            ng-model="medico.status"
+                                                            aria-label="Ativo">
+                                                            {{medico.status ? 'Ativo(a)':'Inativo(a)'}}
+                                                        </md-switch>
+                                                    </div>
+                                                    <div layout layout-sm="column">
+                                                        <md-input-container flex>
+                                                            <label>Empresa</label>
+                                                            <md-select ng-disabled="detalhes"
+                                                                ng-model="medico.empresaId" name="empresa"
+                                                                ng-required="true">
+                                                                <md-option ng-repeat="empresa in list.empresa"
+                                                                    ng-value="empresa.id">
+                                                                    {{empresa.nomeFilial}}
+                                                                </md-option>
+                                                            </md-select>
+                                                            <div ng-messages="medicoForm.empresa.$error" multiple
+                                                                role="alert">
+                                                                <div ng-message="required">Campo de preenchimento
+                                                                    obrigatório.</div>
+                                                            </div>
+                                                        </md-input-container>
+                                                        <md-input-container flex>
+                                                            <label>Filial</label>
+                                                            <md-select ng-disabled="detalhes"
+                                                                ng-model="medico.filialId"
+                                                                ng-change="Lotacao(medico.filialId)"
+                                                                name="filialId" ng-required="true">
+                                                                <md-option ng-repeat="filial in list.filial"
+                                                                    ng-value="filial.id">
+                                                                    {{filial.nomeFilial}}
+                                                                </md-option>
+                                                            </md-select>
+                                                            <div ng-messages="medicoForm.filialId.$error" multiple
+                                                                role="alert">
+                                                                <div ng-message="required">Campo de preenchimento
+                                                                    obrigatório.</div>
+                                                            </div>
+                                                        </md-input-container>
+                                                    </div>
+                                                    <div layout layout-sm="column" style="margin-top: 3%;">
+                                                        <md-input-container flex>
+                                                            <label>Estado Civil</label>
+                                                            <md-select ng-disabled="detalhes" ng-required="true"
+                                                                ng-model="medico.estadoCivil" name="estadoCivil">
+                                                                <md-option
+                                                                    ng-repeat="ec in list.estadoCivil"
+                                                                    value="{{ec.value}}"> {{ec.label}}
+                                                                </md-option>
+                                                            </md-select>
+                                                            <div ng-messages="medicoForm.estadoCivil.$error"
+                                                                multiple>
+                                                                <div ng-message="required">Campo de
+                                                                    preenchimento obrigatório.</div>
+                                                            </div>
+                                                        </md-input-container>
+                                                        <md-input-container flex>
+                                                            <label>Gênero</label>
+                                                            <md-select ng-disabled="detalhes" ng-required="true"
+                                                                ng-model="medico.sexo" name="sexo">
+                                                                <md-option ng-repeat="g in list.generos"
+                                                                    value="{{g.value}}"> {{g.label}}
+                                                                </md-option>
+                                                            </md-select>
+                                                            <div ng-messages="medicoForm.sexo.$error"
+                                                                multiple>
+                                                                <div ng-message="required">Campo de preenchimento obrigatório.</div>
+                                                            </div>
+                                                        </md-input-container>
+                                                        <div class="col-md-4 text-center">
+                                                            <md-input-container class="md-block">
+                                                                <label>Data de Nascimento</label>
+                                                                <md-icon class="material-icons icon-momentpicker"
+                                                                    ng-class="md-datepicker-calendar-icon"
+                                                                    aria-label="md-calendar">date_range</md-icon>
+                                                                <input name="dataNascimento"
+                                                                    moment-picker="medico.dataNascimento"
+                                                                    placeholder="Selecione a data"
+                                                                    ng-model="medico.dataNascimento"
+                                                                    format="DD/MM/YYYY" locale="pt-br"
+                                                                    start-view="month"
+                                                                    ng-model-options="{ updateOn: 'blur' }"
+                                                                    ng-disabled="detalhes" ng-required="true"
+                                                                    change="verificaIdade()">
+                                                                <div class="has-error" style="margin-top: 5px"
+                                                                    ng-messages="medicoForm.dataNascimento.$error"
+                                                                    multiple role="alert">
+                                                                    <div ng-message="required">Campo de preenchimento obrigatório.</div>
+                                                                </div>
+                                                            </md-input-container>
+                                                        </div>
+                                                    </div>
+                                                    <div layout layout-sm="column">
+                                                        <md-autocomplete ng-disabled="detalhes" flex
+                                                            md-no-cache="noCache" md-floating-label="Naturalidade"
+                                                            md-selected-item="medico.naturalidade"
+                                                            md-search-text="searchNaturalidade" md-clear-button="true"
+                                                            md-items="item in querySearch(searchNaturalidade)"
+                                                            md-item-text="item.descricao" md-delay="1000"
+                                                            md-min-length="1" ng-required="true">
+                                                            <md-item-template> <span
+                                                                    md-highlight-text="searchNaturalidade"
+                                                                    md-highlight-flags="^i">{{item.descricao}}
+                                                                </span>
+                                                            </md-item-template>
+                                                            <md-not-found> Item "{{searchNaturalidade}}"
+                                                                não encontrado. </md-not-found>
+                                                        </md-autocomplete>
+                                                        <md-autocomplete ng-disabled="detalhes" flex
+                                                            md-no-cache="noCache" md-floating-label="Nacionalidade"
+                                                            md-selected-item="medico.nacionalidade"
+                                                            md-search-text="searchNacionalidade" md-clear-button="true"
+                                                            md-items="item in querySearchNacionalidade(searchNacionalidade)"
+                                                            md-item-text="item.descricao" md-delay="1000"
+                                                            md-min-length="1" ng-required="true">
+                                                            <md-item-template> <span
+                                                                    md-highlight-text="searchNacionalidade"
+                                                                    md-highlight-flags="^i">{{item.descricao}}
+                                                                </span>
+                                                            </md-item-template>
+                                                            <md-not-found> Item "{{searchNacionalidade}}"
+                                                                não encontrado. </md-not-found>
+                                                        </md-autocomplete>
+                                                        <md-autocomplete ng-disabled="detalhes" flex
+                                                            md-no-cache="noCache" md-floating-label="Usuário Médico"
+                                                            md-selected-item="medico.usuario"
+                                                            md-search-text="searchUsuario" md-clear-button="true"
+                                                            md-items="item in querySearchUsuario(searchUsuario)"
+                                                            md-item-text="item.descricao" md-delay="1000"
+                                                            md-min-length="1">
+                                                            <md-item-template> <span
+                                                                    md-highlight-text="searchUsuario"
+                                                                    md-highlight-flags="^i">{{item.descricao}}
+                                                                </span>
+                                                            </md-item-template>
+                                                        </md-autocomplete>
+                                                    </div>
+                                                    <div layout layout-sm="column">
+                                                        <md-input-container flex>
+                                                            <label>Nome da Mãe</label>
+                                                            <input ng-disabled="detalhes" ng-model="medico.nomeMae"
+                                                                name="nomeMae" ng-required="true">
+                                                            <div ng-messages="medicoForm.nomeMae.$error" multiple
+                                                                role="alert">
+                                                                <div ng-message="required">Campo de preenchimento
+                                                                    obrigatório.</div>
+                                                            </div>
+                                                        </md-input-container>
+                                                        <md-input-container flex>
+                                                            <label>Nome do Pai</label>
+                                                            <input ng-disabled="detalhes" ng-model="medico.nomePai"
+                                                                name="nomePai">
+                                                        </md-input-container>
+                                                    </div>
+                                                    <div layout layout-sm="column">
+                                                        <div layout layout-sm="column" class="col-md-3">
+                                                            <md-input-container flex>
+                                                                <label>Coordenador Médico</label>
+                                                                <md-switch ng-disabled="detalhes"
+                                                                    ng-model="medico.coordenadorMedico"
+                                                                    aria-label="Coordenador Médico">
+                                                                    {{medico.coordenadorMedico ? 'Sim':'Não'}}
+                                                                </md-switch>
+                                                            </md-input-container>
+                                                        </div>
+                                                        <div layout layout-sm="column" class="col-md-3">
+                                                            <md-input-container flex>
+                                                                <label>Clínico geral</label>
+                                                                <md-switch ng-disabled="detalhes"
+                                                                    ng-model="medico.clinicoGeral"
+                                                                    aria-label="Coordenador Médico">
+                                                                    {{medico.clinicoGeral ? 'Sim':'Não'}}
+                                                                </md-switch>
+                                                            </md-input-container>
+                                                        </div>
+                                                        <div layout layout-sm="column" class="col-md-3">
+                                                            <md-input-container flex>
+                                                                <label>Especialista</label>
+                                                                <md-switch ng-disabled="detalhes"
+                                                                    ng-model="medico.especialista"
+                                                                    aria-label="Coordenador Médico">
+                                                                    {{medico.especialista ? 'Sim':'Não'}}
+                                                                </md-switch>
+                                                            </md-input-container>
+                                                        </div>
+                                                    </div>
+                                                </md-content>
+                                            </md-tab>
+                                            <md-tab label="Documentação">
+                                                <md-content class="md-padding">
+                                                    <div class="divider divider"></div>
+                                                    <div layout layout-sm="column">
+                                                        <md-input-container flex>
+                                                            <label>Identidade</label>
+                                                            <input ng-disabled="detalhes"
+                                                                ng-model="medico.identidade" name="identidade"
+                                                                ng-required="true" ng-pattern="/^[0-9]*$/">
+                                                            <div ng-messages="medicoForm.identidade.$error"
+                                                                multiple role="alert">
+                                                                <div ng-message="required">Campo de preenchimento obrigatóri.</div>
+                                                                <div ng-message="pattern">Este campo só permite números</div>
+                                                            </div>
+                                                        </md-input-container>
+                                                        <md-input-container flex>
+                                                            <label>Órgão Expedidor</label>
+                                                            <input ng-disabled="detalhes"
+                                                                ng-model="medico.orgaoExpeditor"
+                                                                name="orgaoExpeditor" ng-required="true">
+                                                            <div ng-messages="medicoForm.orgaoExpeditor.$error"y multiple role="alert">
+                                                                <div ng-message="required">Campo de preenchimento obrigatório.</div>
+                                                            </div>
+                                                        </md-input-container>
+                                                        <md-input-container flex>
+                                                            <label>UF</label>
+                                                            <md-select ng-disabled="detalhes" name="rgUfId"
+                                                                ng-model="medico.rgUfId" ng-required="true">
+                                                                <md-option ng-repeat="uf in list.uf" ng-value="uf.id">
+                                                                    {{uf.sigla}} - {{uf.estado}}
+                                                                </md-option>
+                                                            </md-select>
+                                                            <div ng-messages="medicoForm.rgUfId.$error"
+                                                                multiple role="alert">
+                                                                <div ng-message="required">Campo de preenchimento
+                                                                    obrigatório.</div>
+                                                            </div>
+                                                        </md-input-container>
+                                                        <div class="col-md-4 text-center">
+                                                            <md-input-container class="md-block">
+                                                                <label>Data de Expedição</label>
+                                                                <md-icon class="material-icons icon-momentpicker"
+                                                                    ng-class="md-datepicker-calendar-icon"
+                                                                    aria-label="md-calendar">date_range</md-icon>
+                                                                <input name="dataExpedicaoRg"
+                                                                    moment-picker="medico.dataExpedicaoRg"
+                                                                    placeholder="Selecione a data"
+                                                                    ng-model="medico.dataExpedicaoRg"
+                                                                    format="DD/MM/YYYY" locale="pt-br"
+                                                                    start-view="month"
+                                                                    ng-model-options="{ updateOn: 'blur' }"
+                                                                    ng-disabled="detalhes" ng-required="true">
+                                                                <div class="has-error" style="margin-top: 5px"
+                                                                    ng-messages="medicoForm.dataExpedicaoRg.$error"
+                                                                    multiple role="alert">
+                                                                    <div ng-message="required">Campo de preenchimento
+                                                                        obrigatório.</div>
+                                                                </div>
+                                                            </md-input-container>
+                                                        </div>
+                                                    </div>
+                                                    <div layout layout-sm="column">
+                                                        <md-input-container flex>
+                                                            <label>CPF</label>
+                                                            <input ng-disabled="detalhes" name="cpf" ng-required="true"
+                                                                type="text" ng-model="medico.cpf" ui-br-cpf-mask>
+                                                            <div ng-messages="medicoForm.cpf.$error" multiple
+                                                                role="alert">
+                                                                <div ng-message="required">Campo de preenchimento
+                                                                    obrigatório.</div>
+                                                            </div>
+                                                        </md-input-container>
+                                                        <md-input-container flex>
+                                                            <label>CRM</label>
+                                                            <input ng-disabled="detalhes" name="crm" ng-required="true"
+                                                                type="text" ng-model="medico.crm">
+                                                            <div ng-messages="medicoForm.crm.$error" multiple
+                                                                role="alert">
+                                                                <div ng-message="required">Campo de preenchimento obrigatório.</div>
+                                                            </div>
+                                                        </md-input-container>
+                                                        <md-input-container flex>
+                                                            <label>UF</label>
+                                                            <md-select ng-disabled="detalhes" name="crmUfId"
+                                                                ng-model="medico.crmUfId" ng-required="true">
+                                                                <md-option ng-repeat="uf in list.uf" ng-value="uf.id">
+                                                                    {{uf.sigla}} - {{uf.estado}}
+                                                                </md-option>
+                                                            </md-select>
+                                                            <div ng-messages="medicoForm.crmUfId.$error"
+                                                                multiple role="alert">
+                                                                <div ng-message="required">Campo de preenchimento
+                                                                    obrigatório.</div>
+                                                            </div>
+                                                        </md-input-container>
+                                                        <div class="col-md-4 text-center">
+                                                            <md-input-container class="md-block">
+                                                                <label>Data de Expedição</label>
+                                                                <md-icon class="material-icons icon-momentpicker"
+                                                                    ng-class="md-datepicker-calendar-icon"
+                                                                    aria-label="md-calendar">date_range</md-icon>
+                                                                <input name="dataExpedicaoCrm"
+                                                                    moment-picker="medico.dataExpedicaoCrm"
+                                                                    placeholder="Selecione a data"
+                                                                    ng-model="medico.dataExpedicaoCrm"
+                                                                    format="DD/MM/YYYY" locale="pt-br"
+                                                                    start-view="month"
+                                                                    ng-model-options="{ updateOn: 'blur' }"
+                                                                    ng-disabled="detalhes" ng-required="true">
+                                                                <div class="has-error" style="margin-top: 5px"
+                                                                    ng-messages="medicoForm.dataExpedicaoCrm.$error"
+                                                                    multiple role="alert">
+                                                                    <div ng-message="required">Campo de preenchimento
+                                                                        obrigatório.</div>
+                                                                </div>
+                                                            </md-input-container>
+                                                        </div>
+                                                    </div>
+                                                    <div layout layout-sm="column">
+                                                        <md-input-container flex>
+                                                            <label>Especialidade Médica</label>
+                                                            <md-select ng-required=true ng-model="medico.especialidadeMedicaId" placeholder="Selecione uma Especialidade Médica"
+                                                                data-md-container-class="selectdemoSelectHeader" name="especialidadeMedica" ng-disabled="detalhes" multiple>
+                                                                <md-select-header class="demo-select-header">
+                                                                </md-select-header>
+                                                                <md-optgroup label="especialidadeMedicaList">
+                                                                    <md-option
+                                                                        ng-repeat="item in list.especialidadeMedicaList"
+                                                                        ng-value="item.id">
+                                                                        {{item.codigo}} - {{item.nome}}
+                                                                    </md-option>
+                                                                </md-optgroup>
+                                                            </md-select>
+                                                            <div multiple ng-messages="medicoForm.especialidadeMedica.$error" role="alert">
+                                                                <div ng-message="required">Campo de preenchimento obrigatório.</div>
+                                                            </div>
+                                                        </md-input-container>
+                                                    </div>
+                                                </md-content>
+                                            </md-tab>
+                                            <md-tab label="Contato & Endereço">
+                                                <md-content class="md-padding">
+                                                    <div class="divider divider"></div>
+                                                    <div layout layout-sm="column">
+                                                        <md-input-container flex>
+                                                            <label>Logradouro</label>
+                                                            <input ng-disabled="detalhes"
+                                                                ng-model="medico.logradouro" name="logradouro"
+                                                                ng-required="true">
+                                                            <div ng-messages="medicoForm.logradouro.$error"
+                                                                multiple role="alert">
+                                                                <div ng-message="required">Campo de preenchimento
+                                                                    obrigatório.</div>
+                                                            </div>
+                                                        </md-input-container>
+                                                        <md-input-container class="md-block">
+                                                            <label>Número</label>
+                                                            <input ng-disabled="detalhes" ng-required="true"
+                                                                ng-model="medico.numero" name="numero"
+                                                                ui-number-mask="0" ui-hide-group-sep>
+                                                            <div ng-messages="medicoForm.numero.$error" multiple
+                                                                role="alert">
+                                                                <div ng-message="required">Campo de preenchimento obrigatório.</div>
+                                                            </div>
+                                                        </md-input-container>
+                                                        <md-input-container flex>
+                                                            <label>Complemento</label>
+                                                            <input ng-disabled="detalhes"
+                                                                ng-model="medico.complemento" name="complemento">
+                                                        </md-input-container>
+                                                    </div>
+                                                    <div layout layout-sm="column">
+                                                        <md-input-container flex>
+                                                            <label>UF</label>
+                                                            <md-select ng-disabled="detalhes" name="enderecoUfId"
+                                                                ng-model="medico.enderecoUfId"
+                                                                ng-change="getMunicipiosByUf()" ng-required="true">
+                                                                <md-option ng-repeat="uf in list.uf" ng-value="uf.id">
+                                                                    {{uf.sigla}} - {{uf.estado}}
+                                                                </md-option>
+                                                            </md-select>
+                                                            <div ng-messages="medicoForm.enderecoUfId.$error" multiple
+                                                                role="alert">
+                                                                <div ng-message="required">Campo de preenchimento obrigatório.</div>
+                                                            </div>
+                                                        </md-input-container>
+                                                        <md-input-container flex ng-show="medico.enderecoUfId">
+                                                            <label>Município</label>
+                                                            <md-select ng-disabled="detalhes" name="municipioId"
+                                                                ng-required="true" ng-model="medico.municipioId">
+                                                                </md-option>
+                                                                <md-option ng-repeat="municipio in list.municipio"
+                                                                    ng-value="municipio.id">
+                                                                    {{municipio.descricao}}
+                                                                </md-option>
+                                                            </md-select>
+                                                            <div ng-messages="medicoForm.municipioId.$error" multiple
+                                                                role="alert">
+                                                                <div ng-message="required">Campo de preenchimento obrigatório.</div>
+                                                            </div>
+                                                        </md-input-container>
+                                                        <md-input-container flex>
+                                                            <label>Bairro</label>
+                                                            <input ng-disabled="detalhes" ng-model="medico.bairro"
+                                                                name="bairro" ng-required="true">
+                                                            <div ng-messages="medicoForm.bairro.$error" multiple
+                                                                role="alert">
+                                                                <div ng-message="required">Campo de preenchimento
+                                                                    obrigatório.</div>
+                                                            </div>
+                                                        </md-input-container>
+                                                        <md-input-container flex>
+                                                            <label>CEP</label>
+                                                            <input ng-disabled="detalhes" ng-model="medico.cep"
+                                                                name="cep" ng-required="true" ui-br-cep-mask>
+                                                            <div ng-messages="medicoForm.cep.$error" multiple
+                                                                role="alert">
+                                                                <div ng-message="cep">CEP Inválido.</div>
+                                                                <div ng-message="required">Campo de preenchimento
+                                                                    obrigatório.</div>
+                                                            </div>
+                                                    </div>
+                                                    <div layout layout-sm="column">
+                                                        <div class="col-md-6">
+                                                            <div class="panel panel-default">
+                                                                <div class="panel-heading"><div class="panel-title">Telefones</div></div>
+                                                                <div class="panel-body">
+                                                                    <div class="row" ng-show="!detalhes">
+                                                                        <div layout layout-sm="column" class="col-sm-5">
+                                                                            <md-input-container flex> <input ng-model="numeroTelefone" placeholder="Número" ui-br-phone-number-mask> </md-input-container>
+                                                                        </div>
+                                                                        <div layout layout-sm="column" class="col-sm-5">
+                                                                            <md-input-container flex>
+                                                                                <label>Tipo</label>
+                                                                                <md-select name="tipoTelefone" ng-model="tipoTelefone">
+                                                                                    <md-option ng-value=null><em>-- Selecione --</em></md-option>
+                                                                                    <md-option ng-repeat="obj in list.tipoTelefone"
+                                                                                        value="{{obj.label}}">
+                                                                                        {{obj.label}}
+                                                                                    </md-option>
+                                                                                </md-select>
+                                                                            </md-input-container>
+                                                                        </div>
+                                                                        <div layout layout-sm="column" class="col-sm-2">
+                                                                            <md-input-container class="md-block">
+                                                                                <button ng-click="adicionarTelefone()" type="button" class="btn btn-primary btn-sm">
+                                                                                    <i class="fa fa-plus"></i>
+                                                                                </button>
+                                                                            </md-input-container>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="row" ng-show="medico.telefones.length > 0">
+                                                                        <div class="col-sm-12">
+                                                                            <md-table-container>
+                                                                                <table md-table style="border: 1px solid #CCC;">
+                                                                                    <thead md-head>
+                                                                                        <tr md-row>
+                                                                                            <th md-column><span>Número</span></th>
+                                                                                            <th md-column><span>Tipo</span></th>
+                                                                                            <th md-column ng-show="!detalhes"><span>Ações</span></th>
+                                                                                        </tr>
+                                                                                    </thead>
+                                                                                    <tbody md-body>
+                                                                                        <tr md-row md-select="item" md-select-id="item" md-auto-select ng-repeat="item in medico.telefones">
+                                                                                            <td md-cell><input ng-model="item.numero" style="border: none;background: none;" ng-disabled="true" ui-br-phone-number-mask></td>
+                                                                                            <td md-cell>{{item.tipo}}</td>
+                                                                                            <td md-cell><a ng-if="!botoesGestao && !detalhes" ng-click="removerTelefone($index)"> <md-tooltip md-direction="top">Excluir</md-tooltip> <i class="fa fa-trash-o fa-lg"></i>
+                                                                                            </a></td>
+                                                                                        </tr>
+                                                                                    </tbody>
+                                                                                </table>
+                                                                            </md-table-container>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-6">
+                                                            <div class="panel panel-default">
+                                                                <div class="panel-heading"><div class="panel-title">E-mail</div></div>
+                                                                <div class="panel-body">
+                                                                    <div class="row" ng-show="!detalhes">
+                                                                        <div layout layout-sm="column" class="col-sm-10">
+                                                                            <md-input-container flex> 
+                                                                                <input type="email" ng-model="email" name="email"
+                                                                                    ng-pattern="/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/">
+                                                                                <div ng-messages="medicoForm.email.$error" multiple
+                                                                                    ng-if='medicoForm.email.$dirty'>
+                                                                                    <div ng-message="pattern">Formato de e-mail inválido.</div>
+                                                                                </div>
+                                                                            </md-input-container>
+                                                                        </div>
+                                                                        <div layout layout-sm="column" class="col-sm-2">
+                                                                            <md-input-container class="md-block">
+                                                                                <button ng-click="adicionarEmail()" type="button" class="btn btn-primary btn-sm">
+                                                                                    <i class="fa fa-plus"></i>
+                                                                                </button>
+                                                                            </md-input-container>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="row" ng-show="medico.emails.length > 0">
+                                                                        <div class="col-sm-12">
+                                                                            <md-table-container>
+                                                                                <table md-table style="border: 1px solid #CCC;">
+                                                                                    <thead md-head>
+                                                                                        <tr md-row>
+                                                                                            <th md-column><span>Email</span></th>
+                                                                                            <th md-column ng-show="!detalhes"><span>Ações</span></th>
+                                                                                        </tr>
+                                                                                    </thead>
+                                                                                    <tbody md-body>
+                                                                                        <tr md-row md-select="item" md-select-id="item" md-auto-select ng-repeat="item in medico.emails">
+                                                                                            <td md-cell>{{item}}</td>
+                                                                                            <td md-cell><a ng-if="!botoesGestao && !detalhes" ng-click="removerEmail($index)"> <md-tooltip md-direction="top">Excluir</md-tooltip> <i class="fa fa-trash-o fa-lg"></i>
+                                                                                            </a></td>
+                                                                                        </tr>
+                                                                                    </tbody>
+                                                                                </table>
+                                                                            </md-table-container>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </md-content>
+                                            </md-tab>
+                                        </md-tabs> 
+                                        <br />
+                                        <div ng-if="detalhes" layout layout-sm="column">
+                                            <table md-table md-progress="promise">
+                                                <thead md-head>
+                                                    <tr md-row>
+                                                        <th md-column>
+                                                            <span>Criado em:</span>
+                                                        </th>
+                                                        <th md-column>
+                                                            <span>Atualizado em:</span>
+                                                        </th>
+                                                        <th md-column>
+                                                            <span>Criado por:</span>
+                                                        </th>
+                                                        <th md-column>
+                                                            <span>Atualizado por:</span>
+                                                        </th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody md-body>
+                                                    <tr md-row>
+                                                        <td md-cell>{{medico.criadoEm | date:'dd/MM/yy - HH:mm'}}
+                                                        </td>
+                                                        <td md-cell>{{medico.alteradoEm | date:'dd/MM/yy - HH:mm'}}
+                                                        </td>
+                                                        <td md-cell>{{medico.criadoPor}}</td>
+                                                        <td md-cell>{{medico.alteradoPor}}</td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-12 text-center">
+                                                <button ng-if="!detalhes" ng-disabled="medicoForm.$invalid"
+                                                    type="submit" ui-wave class="btn btn-primary btn-w-md">
+                                                    <md-tooltip ng-if="medicoForm.$invalid" md-direction="top">
+                                                        Preencha todos os campos obrigatórios.</md-tooltip>
+                                                    Salvar
+                                                </button>
+                                                <p class="btn btn-default btn-w-md" ui-wave data-ng-click="goBack()">
+                                                    Voltar</p>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div>
+</section>

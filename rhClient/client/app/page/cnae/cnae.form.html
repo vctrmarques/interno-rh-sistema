@@ -1,0 +1,88 @@
+<div class="page" ng-controller="cnaeFormCtrl">
+    <div class="row ui-section">
+        <div class="col-lg-8 clearfix">
+            <h2 class="section-header">{{!detalhes ? 'Formulário de Código Nacional de Atividade Econômica' : 'Detalhes de Código Nacional de Atividade Econômica'}}</h2>
+        </div>
+        <div class="col-md-12">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <div class="row">
+                        <div class="col-lg-8 col-lg-offset-2">
+                            <form ng-disabled="detalhes" name="cnaeForm" ng-submit="save()">
+                                <div layout="column" ng-cloak class="md-inline-form inputdemoBasicUsage">
+                                    
+                                    <div layout-padding>
+                                        <div layout layout-sm="column">
+                                            <md-input-container >
+                                                <label>Seção</label>
+                                                <input ng-disabled="detalhes"  ng-required="true" ng-model="cnae.codigoSecao"
+                                                    name="codigo_secao" maxlength="1" class="text-uppercase">
+                                            </md-input-container>
+                                        
+                                            <md-input-container flex>
+                                                <label>Nome Seção</label>
+                                                <input ng-disabled="detalhes" ng-required="true" ng-model="cnae.nomeSecao"
+                                                    name="nome_secao" maxlength="200">
+                                            </md-input-container>
+                                        </div>
+                                        
+                                        <div layout layout-sm="column">
+                                            <md-input-container >
+                                                <label>Classe</label>
+                                                <input ng-disabled="detalhes" ui-number-mask="0"  ng-required="true" ng-model="cnae.codigoClasse"
+                                                    name="codigo_classe" maxlength="10">
+                                            </md-input-container>
+                                        
+                                            <md-input-container flex>
+                                                <label>Nome Classe</label>
+                                                <input ng-disabled="detalhes" ng-required="true" ng-model="cnae.nomeClasse"
+                                                    name="nome_classe" maxlength="200">
+                                            </md-input-container>
+                                        </div>
+
+                                    </div>
+
+                                    <div ng-if="detalhes" layout layout-sm="column">
+                                            <table md-table md-progress="promise">
+                                                <thead md-head>
+                                                    <tr md-row>
+                                                        <th md-column>
+                                                            <span>Criado em:</span>
+                                                        </th>
+                                                        <th md-column>
+                                                            <span>Atualizado em:</span>
+                                                        </th>
+                                                        <th md-column>
+                                                            <span>Criado por:</span>
+                                                        </th>
+                                                        <th md-column>
+                                                            <span>Atualizado por:</span>
+                                                        </th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody md-body>
+                                                    <tr md-row>
+                                                        <td md-cell>{{cnae.criadoEm | date:'dd/MM/yy - HH:mm'}}</td>
+                                                        <td md-cell>{{cnae.alteradoEm | date:'dd/MM/yy - HH:mm'}}</td>
+                                                        <td md-cell>{{cnae.criadoPor}}</td>
+                                                        <td md-cell>{{cnae.alteradoPor}}</td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+
+                                        <div class="row">
+                                            <div class="col-md-12 text-center">
+                                                <button ng-if="!detalhes" ng-disabled="cnaeForm.$invalid" type="submit" ui-wave class="btn btn-primary btn-w-md">Salvar</button>
+                                                <p class="btn btn-default btn-w-md" ui-wave data-ng-click="goBack()">Voltar</p>
+                                            </div>
+                                        </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

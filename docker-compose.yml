@@ -1,0 +1,71 @@
+version: "3"
+services:
+    db:
+        container_name: irsdb
+        image: mcr.microsoft.com/mssql/server:2017-latest-ubuntu
+        working_dir: /usr/src/app
+        environment:
+            - ACCEPT_EULA=Y
+            - SA_PASSWORD=1q2w!Q@W
+            - MSSQL_PID=Developer
+        volumes:
+            - ./db/20190723.bak:/var/opt/mssql/backup/dump.bak:rw
+            - ./db/entrypoint.sh:/usr/src/app/entrypoint.sh:rw
+            - ./db/populate.sql:/usr/src/app/populate.sql:rw
+        ports:
+            - "1234:1433"
+            - "1235:1434"
+        networks:
+            - back-end
+        restart: "no"
+        command: sh -c './entrypoint.sh & /opt/mssql/bin/sqlservr'
+
+    api:
+        container_name: irsapi
+        image: maven:3.6.1-jdk-8
+        working_dir: /api
+        volumes:
+            - ./rhServer/:/api
+            - ~/.m2:/root/.m2
+        ports:
+            - "8080:8080"
+        networks:
+            - front-end
+            - back-end
+        restart: "no"
+        command: mvn clean flyway:migrate spring-boot:run
+        depends_on:
+            - db
+
+    app:
+        container_name: irsapp
+        image: node:10.15.3
+        user: node
+        working_dir: /home/node/app
+        environment:
+            - NODE_ENV=development
+            - PATH=$PATH:/home/node/.npm-global/bin
+            - NPM_CONFIG_PREFIX=/home/node/.npm-global
+        volumes:
+            - ./rhClient/:/home/node/app:rw
+        ports:
+            - "3000:3000"
+            - "3001:3001"
+        networks:
+            - front-end
+        restart: "no"
+        command: ./setup.sh true
+        depends_on:
+            - api
+
+networks:
+    front-end:
+    back-end:
+
+# Required:
+# - on server = on "application.properties" change port of "5000" to "8080";
+# - on server = on "application.properties" and "pom.xml" change:
+#   - "localhost:1433" to "irsdb";
+#   - "rhlinkcon_motor" to "rhlinkcon";
+#   - user and password to yours.
+# - on client = change on "confi.js" location of "http://localhost:8080/rhlinkconServer" to "http://localhost:8080".

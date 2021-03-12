@@ -1,0 +1,83 @@
+<div class="page" ng-controller="atividadeFormCtrl">
+    <div class="row ui-section">
+        <div class="col-lg-8 clearfix">
+            <h2 class="section-header">{{!detalhes ? 'Formulário Atividade' : 'Detalhes Atividade'}}</h2>
+        </div>
+        <div class="col-md-12">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <div class="row">
+                        <div class="col-lg-8 col-lg-offset-2">
+                            <div layout="column" ng-cloak class="md-inline-form inputdemoBasicUsage">
+                                <div layout-padding>
+                                    <form ng-disabled="detalhes" name="atividadeForm" ng-submit="save()">
+                                        <div layout layout-sm="column">
+                                            <md-input-container flex>
+                                                <label>Código</label>
+                                                <input ng-disabled="detalhes" ng-required="true" ng-model="atividade.codigo" name="codigo">
+                                                <div ng-messages="atividadeForm.codigo.$error" multiple ng-if='atividadeForm.codigo.$dirty'>
+                                                    <div ng-message="required">Campo de preenchimento obrigatório.</div>
+                                                </div>
+                                            </md-input-container>
+
+                                            <md-input-container flex>
+                                                <label>Atividade</label>
+                                                <input ng-disabled="detalhes" ng-required="true" ng-model="atividade.descricao" name="atividade" minlength="3">
+                                                <div ng-messages="atividadeForm.atividade.$error" multiple ng-if='atividadeForm.atividade.$dirty'>
+                                                    <div ng-message="required">Campo de preenchimento obrigatório.</div>
+                                                    <div ng-message="minlength">Campo deve ter no mínimo 3 caracteres.</div>
+                                                </div>
+                                            </md-input-container>
+
+                                        </div>
+                                        <div layout layout-sm="column">
+                                            <md-input-container flex>
+                                                <label>Observação</label>
+                                                <textarea ng-disabled="detalhes" ng-model="atividade.observacao" flex></textarea>
+                                            </md-input-container>
+                                        </div>
+
+                                        <div ng-if="detalhes" layout layout-sm="column">
+                                            <table md-table md-progress="promise">
+                                                <thead md-head>
+                                                    <tr md-row>
+                                                        <th md-column>
+                                                            <span>Criado em:</span>
+                                                        </th>
+                                                        <th md-column>
+                                                            <span>Atualizado em:</span>
+                                                        </th>
+                                                        <th md-column>
+                                                            <span>Criado por:</span>
+                                                        </th>
+                                                        <th md-column>
+                                                            <span>Atualizado por:</span>
+                                                        </th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody md-body>
+                                                    <tr md-row>
+                                                        <td md-cell>{{atividade.criadoEm | date:'dd/MM/yy - HH:mm'}}</td>
+                                                        <td md-cell>{{atividade.alteradoEm | date:'dd/MM/yy - HH:mm'}}</td>
+                                                        <td md-cell>{{atividade.criadoPor}}</td>
+                                                        <td md-cell>{{atividade.alteradoPor}}</td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+
+                                        <div class="row">
+                                            <div class="col-md-12 text-center">
+                                                <button ng-if="!detalhes" ng-disabled="atividadeForm.$invalid" type="submit" ui-wave class="btn btn-primary btn-w-md">Salvar</button>
+                                                <p class="btn btn-default btn-w-md" ui-wave data-ng-click="goBack()">Voltar</p>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>

@@ -1,0 +1,181 @@
+<section class="page-form-ele page" ng-controller="arrecadacaoIndiceFormCtrl">
+    <div class="row ui-section">
+        <div class="col-lg-8 clearfix">
+            <h2 class="section-header">
+                <h2 class="section-header">{{!detalhes ? 'Formulário de Índices' : 'Detalhes de Índices'}}</h2>
+        </div>
+        <div class="col-md-12">
+            <section class="panel panel-default">
+                <div class="panel-body">
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div layout="column" ng-cloak class="md-inline-form inputdemoBasicUsage">
+                                <div layout-padding>
+                                    <form name="indiceForm" ng-disabled="detalhes" ng-submit="save()">
+                                        <div layout layout-sm="column" ng-if="!detalhes">
+                                            <md-input-container flex>
+                                                <label>Índices</label>
+                                                <input ng-disabled="detalhes || regraDeBloqueioDeIndice" ng-model="arrecadacaoIndice.indice" name="arrecadacaoIndice.indice">
+                                            </md-input-container>
+                                        </div>
+                                        <div layout layout-sm="column" ng-if="!detalhes">
+                                            <md-input-container flex style="max-width: 200px;">
+                                                <md-select name="arrecadacaoIndice.ano" placeholder="Ano" ng-model="arrecadacaoIndice.ano" ui-number-mask="0" min="1980" max="9999"
+                                                 ui-hide-group-sep maxlength="4" ng-change="changeAno()" ng-disabled="detalhes">
+                                                <md-option ng-repeat="item in list.listaAnos" ng-value="item">
+                                                    {{item}}
+                                                </md-option>
+                                            </md-select>
+                                            </md-input-container>
+                                            <md-input-container flex style="max-width: 200px;">
+                                                <md-select ng-disabled="detalhes || !arrecadacaoIndice.ano || regraDeBloqueioDePeriodicidade"
+                                                    ng-model="arrecadacaoIndice.periodicidade" name="arrecadacaoIndice.periodicidade" placeholder="Periodicidade"
+                                                    ng-change="getPeriodicidade(arrecadacaoIndice.periodicidade,arrecadacaoIndice.ano)">
+                                                    <md-option ng-repeat="g in list.periodicidade"
+                                                        value="{{g.value}}"> {{g.label}}
+                                                    </md-option>
+                                                </md-select>
+                                            </md-input-container>
+                                            <md-input-container flex style="max-width: 200px;">
+                                                <md-select ng-disabled="detalhes || !arrecadacaoIndice.ano || !arrecadacaoIndice.periodicidade"
+                                                    ng-model="arrecadacaoIndice.mes" name="mes" placeholder="Meses">
+                                                    <md-option ng-repeat="g in mesesList"
+                                                        value="{{g.value}}"> {{g.label}}
+                                                    </md-option>
+                                                </md-select>
+                                            </md-input-container>
+                                            <md-input-container flex>
+                                                <label>Alíquota (%)</label>
+                                                <input ng-disabled="detalhes" autocomplete="off"
+                                                    ng-model="arrecadacaoIndice.aliquota" name="arrecadacaoIndice.aliquota" ui-number-mask="2" maxlength="6">
+                                            </md-input-container>
+                                            <div layout layout-sm="column" class="col-sm-2">
+                                                <md-input-container class="md-block">
+                                                    <button ng-click="adicionarArrecadacaoIndece()" type="button" class="btn btn-primary btn-sm">
+                                                        <i class="fa fa-plus"></i>
+                                                    </button>
+                                                </md-input-container>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <md-table-container>
+                                                <div ng-repeat="item in arrecadacaoIndice.anos track by $index">
+                                                    <div ng-if="!detalhes" ng-class="getAccordionClass($index)" id="{{'accordion-indices'+item.ano}}" ng-click="accordion(item.ano)">
+                                                        Ano - {{item.ano}}
+                                                    </div>
+                                                    <div class="accordion-content">
+                                                        <md-table-container>
+                                                            <table md-table ng-model="selected" md-progress="promise">
+                                                                <thead ng-if="!options.decapitate" md-head md-order="query.order">
+                                                                    <tr md-row>
+                                                                        <th md-column  style="width: 200px;"><span>Periodicidade</span></th>
+                                                                        <th md-column  style="width: 500px;"><span>Meses</span></th>
+                                                                        <th md-column><span>Alíquota (%)</span></th>
+                                                                        <th md-column ng-show="!detalhes"><span>Ações</span></th>
+                                                                    </tr>
+                                                                </thead>
+                                                                <tbody md-body>
+                                                                    <tr md-row md-auto-select ng-repeat="itemMeses in item.meses">
+                                                                        <td md-cell>{{item.periodicidade | uppercase}}</td>
+
+                                                                        <td md-cell>
+                                                                            <span>{{itemMeses.mes}}</span>
+                                                                        </td>
+                                                                        
+                                                                        <td md-cell>{{itemMeses.aliquota | number: 2}}</td>
+
+
+                                                                        <td md-cell><a ng-if="!botoesGestao && !detalhes" ng-click="removerIndice(item.ano, itemMeses.mes)"> <md-tooltip md-direction="top">Excluir</md-tooltip> <i class="fa fa-trash-o fa-lg"></i>
+                                                                    </tr>
+                                                                </tbody>
+                                                            </table>
+                                                        </md-table-container>
+                                                    </div>
+                                                </div>
+                                            </md-table-container>
+                                        </div> 
+
+                                        <div class="panel panel-default" ng-if="detalhes">
+                                            <div class="panel-heading"><div class="panel-title">Detalhe Índice</div></div>
+                                            <div class="panel-body">
+                                                <md-table-container >
+                                                    <table md-table md-progress="promise">
+                                                        <thead ng-if="!options.decapitate" md-head md-order="query.order"
+                                                            md-on-reorder="loadList">
+                                                            <tr md-row>
+                                                                <th md-column>
+                                                                    <span>Meses</span>
+                                                                </th>
+                                                                <th md-column>
+                                                                    <span>Alíquota (%)</span>
+                                                                </th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody md-body>
+                                                            <tr md-row ng-repeat="itemMeses in arrecadacaoIndiceDetalhe.meses" ng-style="checkEstilo(itemMeses)">
+                                                                <td md-cell>{{itemMeses.mes}}</td>
+                                                                <td md-cell>{{itemMeses.aliquota | number: 2}}</td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </md-table-container>
+                                                <md-table-pagination ng-show="list.count > 10"
+                                                    md-label="{page: 'Página:', rowsPerPage: 'Registros por página:', of: 'de'}"
+                                                    md-limit="query.limit" md-limit-options="limitOptions" md-page="query.page"
+                                                    md-total="{{list.count}}" md-on-paginate="loadList" md-page-select>
+                                                </md-table-pagination>
+                                            </div>
+                                        </div>
+                                        <br />
+                                        <div ng-if="detalhes" layout layout-sm="column">
+                                            <table md-table md-progress="promise">
+                                                <thead md-head>
+                                                    <tr md-row>
+                                                        <th md-column>
+                                                            <span>Criado em:</span>
+                                                        </th>
+                                                        <th md-column>
+                                                            <span>Atualizado em:</span>
+                                                        </th>
+                                                        <th md-column>
+                                                            <span>Criado por:</span>
+                                                        </th>
+                                                        <th md-column>
+                                                            <span>Atualizado por:</span>
+                                                        </th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody md-body>
+                                                    <tr md-row>
+                                                        <td md-cell>{{arrecadacaoIndice.criadoEm | date:'dd/MM/yy - HH:mm'}}
+                                                        </td>
+                                                        <td md-cell>{{arrecadacaoIndice.alteradoEm | date:'dd/MM/yy - HH:mm'}}
+                                                        </td>
+                                                        <td md-cell>{{arrecadacaoIndice.criadoPor}}</td>
+                                                        <td md-cell>{{arrecadacaoIndice.alteradoPor}}</td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-12 text-center">
+                                                <button ng-if="!detalhes" ng-disabled="medicoForm.$invalid"
+                                                    type="submit" ui-wave class="btn btn-primary btn-w-md">
+                                                    <md-tooltip ng-if="medicoForm.$invalid" md-direction="top">
+                                                        Preencha todos os campos obrigatórios.</md-tooltip>
+                                                    Salvar
+                                                </button>
+                                                <p class="btn btn-default btn-w-md" ui-wave data-ng-click="goBack()">
+                                                    Voltar</p>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div>
+</section>

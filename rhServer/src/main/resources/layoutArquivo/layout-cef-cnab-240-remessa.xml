@@ -1,0 +1,259 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<txg:Texgit xmlns:txg="http://jrimum.org/texgit"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://jrimum.org/texgit TexgitSchema.xsd"
+	version="1.0-academic">
+
+	<FlatFile>
+		<layout>
+			<name>Arquivo-Remessa-Caixa-CNAB240</name>
+			<version>Version 01</version>
+			<description>
+				Layout para Pagamento
+
+				Arquivo texto - padrão CNAB
+				Meio de Registro Transmissão de Dados
+				Descrição de Registro - Tamanho 240 Bytes
+				Organização Sequencial
+
+				ARQUIVO FORMATO CNAB REMESSA, REGISTROS:
+
+				0 - Header do Arquivo
+				1 - Header do Lote
+				3 - Segmento A
+				3 - Segmento B
+				5 - Trailler Lote
+				9 - Trailler Arquivo
+			</description>
+		</layout>
+		<GroupOfRecords>
+			<Record name="HeaderArquivo" description="Header do arquivo" >
+				<GroupOfFields>
+					<!-- Identificador do registro 0 -->
+					<IdType name="8-8-CodigoRegistro" length="1" position="3" value="0" />
+					<Field name="1-3-CodigoBanco" length="3" type="INTEGER" padding="ZERO_LEFT" value="104"/>
+					<Field name="4-7-LoteServico" length="4" padding="ZERO_LEFT" value="0000" />
+					
+					<Field name="Filler1" blankAccepted="true" length="9" />
+					
+					<Field name="18-18-TipoInscricaoEmpresa" length="1" type="INTEGER" />
+					<Field name="19-32-NumeroInscricaoEmpresa" length="14" padding="ZERO_LEFT" />
+					
+					<Field name="33-38-CodigoConvencio" length="6" padding="ZERO_LEFT" />
+					
+					<Field name="39-40-ParametroTransmissao" length="2" padding="ZERO_LEFT" />
+					
+					<Field name="41-41-AmbienteCliente" length="1"/>
+					<Field name="42-42-AmbienteCaixa" length="1" blankAccepted="true"/>
+					
+					<Field name="43-45-OrigemAplicativo" length="3" blankAccepted="true"/>
+					
+					<Field name="46-49-NumeroVersao" length="4" padding="ZERO_LEFT" value="0000"/>
+					
+					<Field name="Filler2" blankAccepted="true" length="3"/>
+					
+					<Field name="53-57-AgenciaConta" length="5" padding="ZERO_LEFT" />
+					<Field name="58-58-DigitoVerificadorAgencia" length="1" />
+					<Field name="59-70-NumeroConta" length="12" padding="ZERO_LEFT" />
+					<Field name="71-71-DigitoVerificadorConta" length="1" />
+					<Field name="72-72-DigitoVerificadorContaAgencia" length="1" blankAccepted="true"/>
+
+					<Field name="73-102-NomeEmpresa" length="30" padding="WHITE_SPACE_RIGHT"/>
+					<Field name="103-132-NomeBanco" length="30" padding="WHITE_SPACE_RIGHT" value="CAIXA"/>
+					
+					<Field name="Filler3" blankAccepted="true" length="10"/>
+					
+					<Field name="143-143-TipoArquivo" type="INTEGER" length="1" value="1" />
+					
+					<Field name="144-151-DataGeracao" length="8" type="DATE" format="DATE_DDMMYYYY" padding="ZERO_LEFT" />
+					<Field name="152-157-HoraGeracao" length="6" type="INTEGER" padding="ZERO_LEFT" />
+					<Field name="158-163-NumeroSequencialArquivo" type="INTEGER" length="6" padding="ZERO_LEFT" />
+					
+					<Field name="164-166-NumeroVersaoLayoutArquivo" length="3" value="080" />
+					<Field name="167-171-DensidadeGravacaoArquivo" length="5" padding="ZERO_LEFT" value="01600" />
+					
+					<Field name="Filler4" length="20" blankAccepted="true" />
+					
+					<Field name="192-211-ReservadoEmpresa" length="20" padding="WHITE_SPACE_RIGHT" value="REMESSA-PRODUCAO"/>
+					
+					<Field name="Filler5" length="11" blankAccepted="true"/>
+					
+					<Field name="223-225-IdentCobranca" length="3" blankAccepted="true" />
+					<Field name="226-228-VAN" length="3" padding="ZERO_LEFT" value="0"/>
+					<Field name="229-230-TipoServico" length="2" blankAccepted="true"/>
+					<Field name="231-240-OcorrenciaSemPapel" length="10" blankAccepted="true" />
+				</GroupOfFields>
+			</Record>
+			<Record name="HeaderLote" description="Header do lote" >
+				<GroupOfFields>
+					<IdType name="8-8-CodigoRegistro" length="1" position="3" value="1" />
+					<Field name="1-3-CodigoBanco" length="3" type="INTEGER" padding="ZERO_LEFT" value="104"/>
+					<Field name="4-7-LoteServico" length="4" padding="ZERO_LEFT" value="0001" />
+					<Field name="9-9-TipoOperacao" length="1" />
+					<Field name="10-11-TipoServico" length="2" value="30" />
+					
+					<Field name="12-13-FormaLancamento" length="2" value="01" />
+					<Field name="14-16-NumeroVersaoLayoutLote" length="3" value ="041" />
+					
+					<Field name="Filler1" length="1" blankAccepted="true"/>
+					
+					<Field name="18-18-TipoInscricaoEmpresa" length="1" type="INTEGER" />
+					<Field name="19-32-NumeroInscricaoEmpresa" length="14" type="INTEGER" padding="ZERO_LEFT" />
+					<Field name="33-38-CodigoConvenio" length="6" type="INTEGER" padding="ZERO_LEFT" />
+					<Field name="39-40-TipoCompromisso" length="2" type="INTEGER" padding="ZERO_LEFT" value="02"/>
+					
+                    <Field name="41-44-CodigoCompromisso" length="4" padding="ZERO_LEFT"/>
+                    <Field name="45-46-ParametroTransmissao" length="2" />
+                    
+                    <Field name="Filler2" length="6" blankAccepted="true"/>
+                    
+					<Field name="53-57-AgenciaConta" length="5" padding="ZERO_LEFT" />
+					<Field name="58-58-DigitoVerificadorAgencia" length="1" />
+					<Field name="59-70-NumeroConta" length="12" padding="ZERO_LEFT" />
+					<Field name="71-71-DigitoVerificadorConta" length="1" />
+					<Field name="72-72-DigitoVerificadorContaAgencia" length="1" blankAccepted="true"/>
+					
+					<Field name="73-102-NomeEmpresa" length="30" padding="WHITE_SPACE_RIGHT"/>
+					
+					<Field name="103-142-Mensagem1" length="40" blankAccepted="true" />
+					
+					<Field name="143-172-Logradouro" length="30"/>
+					<Field name="173-177-Numero" length="5"/>
+					<Field name="178-192-Complemento" length="15"/>
+					<Field name="193-212-Cidade" length="20"/>
+					<Field name="213-217-PrefixoCep" length="5" type="INTEGER"/>
+					<Field name="218-220-SufixoCep" length="3" type="INTEGER"/>
+					<Field name="221-222-UF" length="2"/>
+					<Field name="223-230-UsoExclusivoFebraban" length="8" blankAccepted="true"/>
+					<Field name="231-240-Ocorrencias" length="10" blankAccepted="true"/>
+					
+				</GroupOfFields>
+			</Record>
+			<Record name="SegmentoA" repeatable="true" description="Dados do título">
+				<GroupOfFields>
+					<IdType name="14-14-CodigoSegmentoRegistroDetalhe" length="1" position="5" value="A" />
+					<Field name="1-3-CodigoBanco" length="3" type="INTEGER" padding="ZERO_LEFT" value="104"/>
+					<Field name="4-7-LoteServico" length="4" padding="ZERO_LEFT" value="0001" />
+					<Field name="8-8-CodigoRegistro" length="1" value="3" />
+					<Field name="9-13-NumeroSequencialRegistroLote" type="INTEGER" length="5" padding="ZERO_LEFT" />
+					
+					<Field name="15-15-TipoMovimento" length="1" />
+					<Field name="16-17-CodigoMovimento" length="2" value="0" padding="ZERO_LEFT"/>
+					
+					<Field name="18-20-CamaraCompensacao" length="3" padding="ZERO_LEFT" />
+					
+					<Field name="21-23-CodigoBancoDestino" length="3" padding="ZERO_LEFT" />
+					<Field name="24-28-AgenciaDestino" length="5" padding="ZERO_LEFT" />
+					<Field name="29-29-DigitoVerificadorAgencia" length="1" type="CHARACTER" />
+					<Field name="30-41-ContaDestino" length="12" padding="ZERO_LEFT" />
+					<Field name="42-42-DigitoVerificadorConta" length="1" type="CHARACTER" />
+					<Field name="43-43-DigitoVerificadorAgenciaConta" length="1" type="CHARACTER" blankAccepted="true"/>
+					
+					<Field name="44-73-NomeFavorecido" length="30" padding="WHITE_SPACE_RIGHT"/>
+					<Field name="74-79-NumeroDocumento" length="6" padding="ZERO_LEFT" type="INTEGER"/>
+					
+					<Field name="Filler1" length="13" blankAccepted="true"/>
+					
+					<Field name="93-93-TipoContaFinalidade" length="1" />
+					<Field name="94-101-DataVencimento" length="8" type="DATE" format="DATE_DDMMYYYY" padding="ZERO_LEFT" />
+					<Field name="102-104-TipoMoeda" length="3" value="BRL"/>
+					<Field name="105-119-QuantidadeMoeda" length="15" value="0" padding="ZERO_LEFT"/>
+					<Field name="120-134-ValorLancamento" length="15" padding="ZERO_LEFT"/>
+					<Field name="135-143-NumeroDocumentoBanco" length="9" padding="ZERO_LEFT" type="INTEGER"/>
+					
+					<Field name="Filler2" length="3" blankAccepted="true"/>
+					
+					<Field name="147-148-QuantidadeParcelas" length="2" padding="ZERO_LEFT" value="1"/>
+					<Field name="149-149-IndicadorBloqueio" length="1" value="N"/>
+					<Field name="150-150-IndicadorFormaParcelamento" length="1" value="3"/>
+					<Field name="151-152-PeriodoVencimento" length="2" value="05"/>
+					<Field name="153-154-NumeroParcela" length="2" value="00"/>
+					<Field name="155-162-DataVencimento" length="8" value="0" padding="ZERO_LEFT" />
+					<Field name="163-177-ValorRealEfetivado" length="15" value="0" padding="ZERO_LEFT" type="INTEGER"/>
+					
+					<Field name="178-217-Informacao2" length="40" blankAccepted="true" />
+					
+					<Field name="218-219-FinalidadeDOC" length="2" value="0" type="INTEGER" padding="ZERO_LEFT"/>
+					
+					<Field name="220-229-UsoFebraban" length="10" blankAccepted="true"/>
+					
+					<Field name="230-230-AvisoFavorecido" length="1" value="0" type="INTEGER" padding="ZERO_LEFT"/>
+					
+					<Field name="231-240-Ocorrencias" length="10" blankAccepted="true"/>
+					
+					
+				</GroupOfFields>
+				<GroupOfInnerRecords>
+					<Record name="SegmentoB" repeatable="true" description="Dados">
+						<GroupOfFields>
+							<IdType name="14-14-CodigoSegmentoRegistroDetalhe" length="1" position="5" value="B" />
+							<Field name="1-3-CodigoBanco" length="3" type="INTEGER" padding="ZERO_LEFT" value="104"/>
+							<Field name="4-7-LoteServico" length="4" padding="ZERO_LEFT" value="0001" />
+							<Field name="8-8-CodigoRegistro" length="1" value="3" />
+							<Field name="9-13-NumeroSequencialRegistroLote" type="INTEGER" length="5" padding="ZERO_LEFT" />
+							
+							<Field name="15-17-UsoExclusivoFebrabanCNAB1" length="3" blankAccepted="true" />
+							
+							<Field name="18-18-TipoInscricao" length="1" type="INTEGER" />
+							<Field name="19-32-NumeroInscricao" length="14" type="INTEGER" padding="ZERO_LEFT" />
+							
+							<Field name="33-62-Logradouro" length="30" type="CHARACTER" />
+							<Field name="63-67-Numero" length="5" type="INTEGER" blankAccepted="true"/>
+							<Field name="68-82-Complemento" length="15" blankAccepted="true"/>
+							<Field name="83-97-Bairro" length="15" blankAccepted="true"/>
+							<Field name="98-117-Cidade" length="20" blankAccepted="true"/>
+							<Field name="118-122-PrefixoCep" length="5" type="INTEGER" />
+							<Field name="123-125-SufixoCep" length="3" type="INTEGER" />
+							<Field name="126-127-UF" length="2" type="CHARACTER" />
+							
+							<Field name="128-135-DataVencimento" length="8" type="DATE" format="DATE_DDMMYYYY" padding="ZERO_LEFT" />
+							
+							<Field name="136-150-ValorDocumento" length="15" padding="ZERO_LEFT" value="0"/>
+							<Field name="151-165-ValorAbatimento" length="15" padding="ZERO_LEFT" value="0"/>
+							<Field name="166-180-ValorDesconto" length="15" padding="ZERO_LEFT" value="0"/>
+							<Field name="181-195-ValorMora" length="15" padding="ZERO_LEFT" value="0"/>
+							<Field name="196-210-ValorMulta" length="15" padding="ZERO_LEFT" value="0"/>
+							<Field name="211-225-CodigoDocumento" length="15" blankAccepted="true"/>
+							<Field name="226-240-UsoFebraban" length="15" blankAccepted="true"/>
+						</GroupOfFields>
+					</Record>
+				</GroupOfInnerRecords>
+			</Record>
+			<Record name="TraillerLote" >
+				<GroupOfFields>
+					<IdType name="8-8-TipoRegistro" length="1" position="3" value="5" />
+					<Field name="1-3-CodigoBanco" length="3" type="INTEGER" padding="ZERO_LEFT" value="104"/>
+					<Field name="4-7-LoteServico" length="4" value="0001" />
+					
+					<Field name="9-17-UsoExclusivoFebrabanCNAB1" length="9" blankAccepted="true" />
+					
+					<Field name="18-23-QuantidadeRegistrosLote" length="6" type="INTEGER" padding="ZERO_LEFT"/>
+					
+					<Field name="24-41-SomatorioValores" length="18" type="INTEGER" padding="ZERO_LEFT"/>
+					<Field name="42-59-SomatorioQuantidadeMoedas" length="18" type="INTEGER" padding="ZERO_LEFT" value="0"/>
+					<Field name="60-65-NumeroAvisoDebito" length="6" type="INTEGER" padding="ZERO_LEFT" value="0"/>
+					
+					<Field name="66-230-UsoExclusivoFebrabanCNAB2" length="165" blankAccepted="true" />
+					
+					<Field name="231-240-Ocorrencias" length="10" blankAccepted="true" />
+					
+				</GroupOfFields>
+			</Record>
+			<Record name="TraillerArquivo">
+				<GroupOfFields>
+					<IdType name="8-8-TipoRegistro" length="1" position="3" value="9" />
+					<Field name="1-3-CodigoBanco" length="3" type="INTEGER" padding="ZERO_LEFT" value="104"/>
+					<Field name="4-7-LoteServico" length="4" value="9999" />
+					
+					<Field name="9-17-UsoExclusivoFebrabanCNAB1" length="9" blankAccepted="true" />
+					
+					<Field name="18-23-QuantidadeLotesArquivo" length="6" type="INTEGER" padding="ZERO_LEFT"/>
+					<Field name="24-29-QuantidadeRegistrosArquivos" length="6" type="INTEGER" padding="ZERO_LEFT"/>
+					<Field name="30-35-QuantidadeContasConciliacao" length="6" type="INTEGER" padding="ZERO_LEFT" value="0"/>
+
+					<Field name="36-240-UsoExclusivoFebrabanCNAB3" length="205" blankAccepted="true" />
+				</GroupOfFields>
+			</Record>
+		</GroupOfRecords>
+	</FlatFile>
+</txg:Texgit>

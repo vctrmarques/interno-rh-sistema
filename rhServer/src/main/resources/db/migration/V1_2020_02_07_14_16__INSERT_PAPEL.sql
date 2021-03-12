@@ -1,0 +1,24 @@
+--Flávio Silva
+--Criação de papeis.
+
+IF EXISTS(SELECT * FROM menu WHERE nome = 'Perfis de Acesso')
+BEGIN
+DECLARE
+    @menuId AS VARCHAR(1000)
+
+	SELECT @menuId = CAST(id AS VARCHAR(1000)) FROM menu WHERE nome = 'Perfis de Acesso'
+	
+	IF NOT EXISTS(SELECT * FROM papel WHERE nome = 'ROLE_PERFIL_ACESSO_CADASTRAR')
+		INSERT INTO papel (nome, id_menu) VALUES ('ROLE_PERFIL_ACESSO_CADASTRAR', @menuId)
+		
+	IF NOT EXISTS(SELECT * FROM papel WHERE nome = 'ROLE_PERFIL_ACESSO_ATUALIZAR')
+		INSERT INTO papel (nome, id_menu) VALUES ('ROLE_PERFIL_ACESSO_ATUALIZAR', @menuId)
+		
+	IF NOT EXISTS(SELECT * FROM papel WHERE nome = 'ROLE_PERFIL_ACESSO_EXCLUIR')
+		INSERT INTO papel (nome, id_menu) VALUES ('ROLE_PERFIL_ACESSO_EXCLUIR', @menuId)
+		
+	IF NOT EXISTS(SELECT * FROM papel WHERE nome = 'ROLE_PERFIL_ACESSO_VISUALIZAR')
+		INSERT INTO papel (nome, id_menu) VALUES ('ROLE_PERFIL_ACESSO_VISUALIZAR', @menuId)
+	
+END
+

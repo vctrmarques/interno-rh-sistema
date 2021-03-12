@@ -1,0 +1,69 @@
+<md-dialog aria-label="Relatório por Status" ng-click="hideSelects();" flex="40">
+    <form ng-cloak>
+        <md-toolbar>
+            <div class="md-toolbar-tools">
+                <h2>Relatório por Status</h2>
+                <span flex></span>
+                <md-button class="md-icon-button" ng-click="cancel()">
+                    <md-icon class="material-icons">close</md-icon>
+                </md-button>
+            </div>
+        </md-toolbar>
+
+        <md-dialog-content>
+            <div class="md-dialog-content">
+                <div layout layout-sm="column">
+                    <md-input-container flex ng-click="$event.stopPropagation()">
+                        <label>Status Contemplado</label>
+                        <md-select ng-model="selectedStatusReport" placeholder="Selecione status" multiple>
+                            <md-option ng-value="obj" ng-repeat="obj in lista.status">
+                                {{obj.label}}
+                            </md-option>
+                        </md-select>
+                    </md-input-container>
+                </div>
+                <div layout layout-sm="column">
+                    <md-input-container flex ng-click="$event.stopPropagation()">
+                        <label>Fundo Contemplado</label>
+                        <md-select ng-model="selectedFundosReport" placeholder="Selecione fundos" multiple>
+                            <md-option ng-value="obj" ng-repeat="obj in lista.fundos">
+                                {{obj.label}}
+                            </md-option>
+                        </md-select>
+                    </md-input-container>
+                </div>
+                <div layout layout-sm="column">
+                    <md-input-container flex>
+                        <label>Período inicial</label>
+                        <md-icon class="material-icons icon-momentpicker" ng-class="md-datepicker-calendar-icon"
+                            aria-label="md-calendar">
+                            date_range
+                        </md-icon>
+                        <input moment-picker="dataInicialReport" placeholder="Selecione a data" name="dataInicialReport"
+                            max-date="dataFinalReport" ng-model="dataInicialReport" format="DD/MM/YYYY" locale="pt-br"
+                            start-view="month" ng-model-options="{ updateOn: 'blur' }">
+                    </md-input-container>
+                    <md-input-container flex>
+                        <label>Período final</label>
+                        <md-icon class="material-icons icon-momentpicker" ng-class="md-datepicker-calendar-icon"
+                            aria-label="md-calendar">
+                            date_range
+                        </md-icon>
+                        <input moment-picker="dataFinalReport" placeholder="Selecione a data" name="dataFinalReport"
+                            min-date="dataInicialReport" ng-model="dataFinalReport" format="DD/MM/YYYY" locale="pt-br"
+                            start-view="month" ng-model-options="{ updateOn: 'blur' }">
+                    </md-input-container>
+                </div>
+            </div>
+        </md-dialog-content>
+
+        <md-dialog-actions layout="row">
+            <md-button md-no-ink class="md-primary" ng-click="gerar()">
+                Gerar
+            </md-button>
+            <md-button ng-click="cancel()">
+                Cancelar
+            </md-button>
+        </md-dialog-actions>
+    </form>
+</md-dialog>

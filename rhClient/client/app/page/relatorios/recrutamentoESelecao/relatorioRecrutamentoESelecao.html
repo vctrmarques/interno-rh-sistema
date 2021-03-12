@@ -1,0 +1,174 @@
+<div class="page" ng-controller="relatorioRecrutamentoESelecaoCtrl">
+    <div class="row ui-section">
+        <div class="col-lg-12 clearfix">
+            <h2 class="section-header" style="float: left;">
+                Relatórios Gerencias do Recrutamento e Seleção
+            </h2>
+        </div>
+        <div class="col-md-12">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <article class="article">
+                        <md-card class="no-margin-h">
+                            <div layout="column">
+                                <div layout-padding>
+                                        <div layout layout-sm="column">
+                                            <md-input-container flex>
+                                                <label>Tipo</label>
+                                                <md-select ng-model="filtro.tipo" flex>
+                                                    <md-option ng-value="null">
+                                                        -- Selecione --
+                                                    </md-option>
+                                                    <md-option ng-value="'relatorio'">
+                                                        Relatório
+                                                    </md-option>
+                                                    <md-option ng-value="'grafico'">
+                                                            Gráfico
+                                                    </md-option>
+                                                </md-select>
+                                            </md-input-container>
+                                            <md-input-container flex ng-if="filtro.tipo == 'grafico'">
+                                                <label>Tipo de gráfico</label>
+                                                <md-select ng-model="filtro.tipoGrafico"
+                                                    flex>
+                                                    <md-option ng-value="null">
+                                                            -- Selecione --
+                                                        </md-option>
+                                                    <md-option ng-repeat="tipoGrafico in listaTipoGrafico"
+                                                        ng-value="tipoGrafico.id">
+                                                        {{tipoGrafico.nome}}
+                                                    </md-option>
+                                                </md-select>
+                                            </md-input-container>
+                                            <md-input-container flex ng-if="filtro.tipo == 'relatorio'">
+                                                <label>Tipo de relatório</label>
+                                                <md-select ng-model="filtro.tipoRelatorio"
+                                                        flex ng-change="cleanFiltroRelatorios()">
+                                                    <md-option ng-value="null">
+                                                            -- Selecione --
+                                                        </md-option>
+                                                    <md-option ng-value="'sintetico'">
+                                                        Sintético
+                                                    </md-option>
+                                                    <md-option ng-value="'analitico'">
+                                                            Analítico
+                                                        </md-option>
+                                                </md-select>
+                                            </md-input-container>
+                                            <md-input-container flex>
+                                                    <label>Período Inicial</label>
+                                                    <md-icon class="material-icons icon-momentpicker"
+                                                        ng-class="md-datepicker-calendar-icon" aria-label="md-calendar">
+                                                        date_range
+                                                    </md-icon>
+                                                    <input name="dataInicio" moment-picker="filtro.dataInicio"
+                                                        placeholder="Selecione a data" ng-model="filtro.dataInicio"
+                                                        format="DD/MM/YYYY" locale="pt-br" start-view="month"
+                                                        ng-model-options="{ updateOn: 'blur' }" ng-disabled="detalhes">
+                                            </md-input-container>
+                                            <md-input-container flex>
+                                                <label>Período Final</label>
+                                                <md-icon class="material-icons icon-momentpicker"
+                                                    ng-class="md-datepicker-calendar-icon" aria-label="md-calendar">
+                                                    date_range
+                                                </md-icon>
+                                                <input name="dataFinal" moment-picker="filtro.dataFinal"
+                                                    min-date="filtro.dataFinal" placeholder="Selecione a data"
+                                                    ng-model="filtro.dataFinal" format="DD/MM/YYYY" locale="pt-br"
+                                                    start-view="month" ng-model-options="{ updateOn: 'blur' }"
+                                                    ng-disabled="detalhes">
+                                            </md-input-container>
+                                            <md-button ng-if="filtro.tipo == 'relatorio'" class="md-icon-button" ng-click="showDialog()">
+                                                <md-tooltip md-direction="top">Filtros</md-tooltip>
+                                                <md-icon>search</md-icon>
+                                            </md-button>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-12 text-center">
+                                                <button ng-click="exibirInformacoes()" ui-wave
+                                                class="btn btn-primary btn-w-md">Exibir</button>
+                                            </div>
+                                        </div>
+                                        <div ng-show="mostrarGraficoBarra">
+                                            <div class="panel panel-default panel-minimal">
+                                                <div class="divider divider-md"></div>
+                                                <div class="panel-heading">Gráfico Barra</div>
+                                                <div class="panel-body">
+                                                    <div id="graficoBarra" style="height: 350px; width: 800px"></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div ng-show="mostrarGraficoPizza">
+                                            <div class="panel panel-default panel-minimal">
+                                                <div class="divider divider-md"></div>
+                                                <div class="panel-heading">Gráfico Pizza</div>
+                                                <div class="panel-body">
+                                                    <div id="graficoPizza" style="height: 350px; width: 800px"></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!--
+                                Após conversa com o pessoal de negócio na época, foi orientado a remover o grid. Pois os resultado eram
+                                somatórios.
+
+                            <div layout="column">
+                                <md-input-container flex>
+                                    <label>Processo ou Termo Atendimento</label>
+                                    <input ng-model="processoOuTermo">
+                                </md-input-container>
+                            </div>
+
+                            <md-table-container>
+                                <table md-table ng-model="selected" md-progress="promise">
+                                    <thead ng-if="!options.decapitate" md-head md-order="filtro.query.order" md-on-reorder="loadList">
+                                        <tr md-row>
+                                            <th md-column md-order-by="responsavel">
+                                                <span>Responsável</span>
+                                            </th>
+                                            <th md-column>
+                                                <span>Solicitante</span>
+                                            </th>
+                                            <th md-column>
+                                                <span>Motivo Solicitação</span>
+                                            </th>
+                                            <th md-column md-order-by="processo">
+                                                <span>Processo</span>
+                                            </th>
+                                            <th md-column>
+                                                <span>Tempo de Atendimento</span>
+                                            </th>
+                                        </tr>
+                                    </thead>
+
+                                    <tbody md-body>
+                                        <tr md-row md-select="item" md-select-id="item" md-auto-select ng-repeat="item in resultado.dados">
+                                            <td md-cell>{{item.requisicaoPessoal.solicitante.nome}</td>
+                                            <td md-cell>{{item.requisicaoPessoal.solicitante.nome}}</td>
+                                            <td md-cell>{{item.requisicaoPessoal.motivoSolicitacao}}</td>
+                                            <td md-cell>{{item.requisicaoPessoal.id}}</td>
+                                            <td md-cell>{{item.statusTempoAtendimento}}</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </md-table-container>
+
+                            <md-table-pagination md-label="{page: 'Página:', rowsPerPage: 'Registros por página:', of: 'de'}"
+                                md-limit="filtro.query.limit"
+                                md-limit-options="limitOptions"
+                                md-page="filtro.query.page"
+                                md-total="{{resultado.count}}"
+                                md-on-paginate="loadList"
+                                md-page-select>
+                            </md-table-pagination>
+                            -->
+                        </md-card>
+                    </article>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

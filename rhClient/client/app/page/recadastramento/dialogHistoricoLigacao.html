@@ -1,0 +1,99 @@
+<md-dialog style="min-width: 500px;">
+    <form ng-cloak>
+        <md-toolbar>
+            <div style="background-color: #01722c" class="md-toolbar-tools">
+                <h2>Histórico de ligações</h2>
+                <span flex></span>
+                <a ng-click="cancel()">
+                    <i class="fa fa-close"></i>
+                </a>
+            </div>
+        </md-toolbar>
+
+        <md-dialog-content>
+            <div class="page">
+                <div class="well well-sm">{{selectedItem.matricula}} - {{selectedItem.nome}}</div>
+                <div class="row">
+
+                    <div layout layout-sm="column" class="col-sm-10">
+                        <md-input-container flex>
+                            <label>Observação</label>
+                            <textarea ng-model="historicoLigacao.observacao"></textarea>
+                        </md-input-container>
+                    </div>
+                    <div layout layout-sm="column" class="col-sm-2">
+                        <md-input-container class="md-block">
+                            <button ng-click="adicionarObservacao()" type="button" class="btn btn-primary btn-sm">
+                                <i class="fa fa-plus"></i>
+                            </button>
+                        </md-input-container>
+                    </div>
+                </div>
+
+                <div class="alert alert-danger clearfix" ng-show="mostraDivAlerta">
+                    <div class="pull-left">Deseja Excluir esse item?</div>
+                    <div class="pull-right">
+                        <button ng-click="confirmarExclusaoHistoricoLigacao()" type="button" class="btn btn-danger btn-sm">
+                            Sim
+                        </button>
+                        <button ng-click="cancelarExclusaoHistoricoLigacao()" type="button" class="btn btn-default btn-sm">
+                            Não
+                        </button>
+                    </div>
+                </div>
+                    
+                <md-table-container>
+                    <table md-table ng-model="selectedHL" md-progress="ligacoes">
+                        <thead md-head md-order="queryHL.order" md-on-reorder="historicoLigacoes">
+                            <tr md-row>
+                                <th md-column>
+                                    <span>Data Ligação</span>
+                                </th>
+                                <th md-column>
+                                    <span>Usuário</span>
+                                </th>
+                                <th md-column>
+                                    <span>Observação</span>
+                                </th>
+                                <th md-column>
+                                    <span>Ações</span>
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody md-body>
+                            <tr md-row md-select="item" md-select-id="item" md-auto-select
+                                ng-repeat="item in lista.ligacoes.data">
+                                <td md-cell>{{convertDate(item.criadoEm, false)}}</td>
+                                <td md-cell>{{item.criadoPor}}</td>
+                                <td md-cell>{{item.observacao}}</td>
+    
+                                <td md-cell>
+                                    <a href="" ng-click="editarHistoricoLigacao(item)">
+                                        <md-tooltip md-direction="top">Atualizar/Editar</md-tooltip>
+                                        <i class="fa fa-pencil fa-lg"></i>
+                                    </a>
+                                    <a href="" ng-show="botoesGestao && !item.status"
+                                        ng-click="showConfirmHistoricoLigacao(item.id)">
+                                        <md-tooltip md-direction="top">Excluir</md-tooltip>
+                                        <i class="fa fa-trash-o fa-lg"></i>
+                                    </a>
+
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </md-table-container>
+                <md-table-pagination
+                    md-label="{page: 'Página:', rowsPerPage: 'Registros por página:', of: 'de'}"
+                    md-limit="queryHL.limit" md-limit-options="limitOptions" md-page="queryHL.page"
+                    md-total="{{lista.ligacoes.count}}" md-on-paginate="historicoLigacoes" md-page-select>
+                </md-table-pagination>
+               
+	        </div>
+
+            <div class="md-dialog-content text-center">
+				<button class="btn btn-default btn-w-md" ng-click="cancel()">Voltar</button>
+            </div>
+        </md-dialog-content>
+    </form>
+</md-dialog>

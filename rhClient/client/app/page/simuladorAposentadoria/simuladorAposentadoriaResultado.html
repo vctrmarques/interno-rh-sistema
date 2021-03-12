@@ -1,0 +1,562 @@
+<div class="page-signin" ng-controller="simuladorAposentadoriaResultadoFormCtrl">
+    <div class="wrapper" style="margin-top: 50px;">
+        <div class="main-body" style="max-width: none;">
+            <div>
+                <div class="card bg-white">
+
+                    <div class="col-lg-12 clearfix" style="margin-bottom: 20px;text-align: center;margin-top: 20px">
+                        <h4 class="section-header" style="font-weight: bold">Resultado Simulador de Aposentadoria</h4>
+                    </div>
+
+                    <div class="col-md-12">
+                        <div class="panel panel-default">
+                            <div class="panel-body">
+
+                                <div class="row">
+                                    <div class="col-lg-12">
+
+                                        <div layout="column" ng-cloak class="md-inline-form inputdemoBasicUsage">
+
+                                            <h4 class="nome-usuario-label">Dados gerais</h4>
+                                            <div class="row" style="margin-top: 10px">
+                                                <div class="col-md-4">
+                                                    <label>Nome</label>
+                                                    <p>{{resultado.nome}}</p>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <label>Sexo</label>
+                                                    <p>{{resultado.sexo === 'masculino' ? 'Masculino':'Feminino'}}</p>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <label>Data de nascimento</label>
+                                                    <p>{{resultado.dataNascimento | date: 'dd/MM/yyyy'}}</p>
+                                                </div>
+                                            </div>
+                                            <div class="row" style="margin-top: 10px">
+                                                <div class="col-md-4">
+                                                    <label>Idate atual</label>
+                                                    <p>{{resultado.idade}} anos</p>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <label>Atividade atual</label>
+                                                    <p>{{resultado.modalidade}}</p>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <label>Ingresso no serviço público</label>
+                                                    <p>{{resultado.dataIngressoServicoPublico | date: 'dd/MM/yyyy'}}</p>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-12">
+                        <div class="panel panel-default">
+                            <div class="panel-body">
+                                <div class="row">
+                                    <div class="col-lg-12">
+                                        <div layout="column" ng-cloak class="md-inline-form inputdemoBasicUsage">
+                                            <h4 class="nome-usuario-label">Tempo de contribuição no cargo atual</h4>
+                                            <div layout layout-sm="column">
+                                                <md-table-container flex>
+                                                    <table md-table>
+                                                        <thead md-head>
+                                                            <tr md-row>
+                                                                <th md-column>Período inicial</th>
+                                                                <th md-column>Período final</th>
+                                                                <th md-column>Quantidade (dias)</th>
+                                                                <th md-column>Tempo total</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody md-body>
+                                                            <tr md-row>
+                                                                <td md-cell>
+                                                                    {{resultado.tempoContribuicaoCargoAtualInicio |
+                                                                    date:
+                                                                    'dd/MM/yyyy'}}
+
+                                                                </td>
+                                                                <td md-cell>
+                                                                    {{resultado.tempoContribuicaoCargoAtualFim | date:
+                                                                    'dd/MM/yyyy'}}
+                                                                </td>
+                                                                <td md-cell>
+                                                                    {{resultado.tempoContribuicaoCargoAtualTempoTotal.totalDias}}
+                                                                    dias
+                                                                </td>
+                                                                <td md-cell>
+                                                                    {{resultado.tempoContribuicaoCargoAtualTempoTotal.anos}}
+                                                                    ano(s),
+                                                                    {{resultado.tempoContribuicaoCargoAtualTempoTotal.meses}}
+                                                                    mês(es) e
+                                                                    {{resultado.tempoContribuicaoCargoAtualTempoTotal.dias}}
+                                                                    dia(s)
+                                                                </td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </md-table-container>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-12">
+                        <div class="panel panel-default">
+                            <div class="panel-body">
+                                <div class="row">
+                                    <div class="col-lg-12">
+                                        <div layout="column" ng-cloak class="md-inline-form inputdemoBasicUsage">
+                                            <h4 class="nome-usuario-label">Tempo de contribuição na carreira atual</h4>
+                                            <div layout layout-sm="column">
+                                                <md-table-container flex>
+                                                    <table md-table
+                                                        ng-show="resultado.outrosPeriodos && resultado.outrosPeriodos.length > 0">
+                                                        <thead md-head>
+                                                            <tr md-row>
+                                                                <th md-column>Período inicial</th>
+                                                                <th md-column>Período final</th>
+                                                                <th md-column>Quantidade (dias)</th>
+                                                                <th md-column>Tempo total</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody md-body>
+                                                            <tr md-row
+                                                                ng-repeat="outroPeriodo in resultado.outrosPeriodos">
+                                                                <td md-cell>
+                                                                    {{outroPeriodo.inicio | date: 'dd/MM/yyyy'}}
+                                                                </td>
+                                                                <td md-cell>
+                                                                    {{outroPeriodo.fim | date: 'dd/MM/yyyy'}}
+                                                                </td>
+                                                                <td md-cell>
+                                                                    {{outroPeriodo.tempoTotal.totalDias}} dias
+                                                                </td>
+                                                                <td md-cell>
+                                                                    {{outroPeriodo.tempoTotal.anos}} ano(s),
+                                                                    {{outroPeriodo.tempoTotal.meses}} mês(es) e
+                                                                    {{outroPeriodo.tempoTotal.dias}} dia(s)
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td colspan="2"
+                                                                    style="text-align: center;font-weight: bold;">Total
+                                                                </td>
+                                                                <td style="font-weight: bold;">
+                                                                    {{resultado.tempoTotalOutrosPeriodos.totalDias}}
+                                                                    dias</td>
+                                                                <td style="font-weight: bold;">
+                                                                    {{resultado.tempoTotalOutrosPeriodos.anos}} ano(s),
+                                                                    {{resultado.tempoTotalOutrosPeriodos.meses}}
+                                                                    mês(es) e
+                                                                    {{resultado.tempoTotalOutrosPeriodos.dias}} dia(s)
+                                                                </td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+                                                    <p
+                                                        ng-hide="resultado.outrosPeriodos && resultado.outrosPeriodos.length > 0">
+                                                        Sem dados</p>
+                                                </md-table-container>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-12">
+                        <div class="panel panel-default">
+                            <div class="panel-body">
+
+                                <div class="row">
+                                    <div class="col-lg-6">
+                                        <div layout="column" ng-cloak class="md-inline-form inputdemoBasicUsage">
+                                            <h4 class="nome-usuario-label">Licença prêmio não gozada até 16/12/1998
+                                            </h4>
+                                            <div layout layout-sm="column">
+                                                <md-input-container flex>
+                                                    <label>Quantidade</label>
+                                                    <input placeholder="Insira a quantidade de licenças" type="number"
+                                                        ng-disabled="true" name="qtdLicencaPremioFator2"
+                                                        ng-model="resultado.qtdLicencaPremioFator2" />
+                                                </md-input-container>
+                                            </div>
+                                            <p class="nome-usuario-label" ng-show="resultado.qtdLicencaPremioFator2">
+                                                Correspondento a
+                                                {{resultado.qtdLicencaPremioFator2 * 180}} dias</p>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-lg-6">
+                                        <div layout="column" ng-cloak class="md-inline-form inputdemoBasicUsage">
+                                            <h4 class="nome-usuario-label">Licença prêmio não gozada após 16/12/1998
+                                            </h4>
+                                            <div layout layout-sm="column">
+                                                <md-input-container flex>
+                                                    <label>Quantidade</label>
+                                                    <input placeholder="Insira a quantidade de licenças" type="number"
+                                                        ng-disabled="true" name="qtdLicencaPremioFator1"
+                                                        ng-model="resultado.qtdLicencaPremioFator1" />
+                                                </md-input-container>
+                                            </div>
+                                            <p class="nome-usuario-label" ng-show="resultado.qtdLicencaPremioFator1">
+                                                Correspondento
+                                                a
+                                                {{resultado.qtdLicencaPremioFator1 * 90}} dias</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-12">
+                        <div class="panel panel-default">
+                            <div class="panel-body">
+                                <div class="row">
+                                    <div class="col-lg-12">
+                                        <div layout="column" ng-cloak class="md-inline-form inputdemoBasicUsage">
+                                            <h4 class="nome-usuario-label">Tempo de contribuição no serviço público</h4>
+                                            <div layout layout-sm="column">
+                                                <md-table-container flex>
+                                                    <table md-table
+                                                        ng-show="resultado.outrosPeriodosPublicos && resultado.outrosPeriodosPublicos.length > 0">
+                                                        <thead md-head>
+                                                            <tr md-row>
+                                                                <th md-column>Período inicial</th>
+                                                                <th md-column>Período final</th>
+                                                                <th md-column>Quantidade (dias)</th>
+                                                                <th md-column>Tempo total</th>
+                                                                <th md-column>Atividade</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody md-body>
+                                                            <tr md-row
+                                                                ng-repeat="outroPeriodoPublico in resultado.outrosPeriodosPublicos">
+                                                                <td md-cell>
+                                                                    {{outroPeriodoPublico.inicio | date: 'dd/MM/yyyy'}}
+                                                                </td>
+                                                                <td md-cell>
+                                                                    {{outroPeriodoPublico.fim | date: 'dd/MM/yyyy'}}
+                                                                </td>
+                                                                <td md-cell>
+                                                                    {{outroPeriodoPublico.tempoTotal.totalDias}} dias
+                                                                </td>
+                                                                <td md-cell>
+                                                                    {{outroPeriodoPublico.tempoTotal.anos}} ano(s),
+                                                                    {{outroPeriodoPublico.tempoTotal.meses}} mês(es) e
+                                                                    {{outroPeriodoPublico.tempoTotal.dias}} dia(s)
+                                                                </td>
+                                                                <td md-cell>
+                                                                    {{outroPeriodoPublico.atividade | uppercase}}
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td colspan="2"
+                                                                    style="text-align: center;font-weight: bold;">Total
+                                                                </td>
+                                                                <td style="font-weight: bold;">
+                                                                    {{resultado.tempoTotalOutrosPeriodosPublicos.totalDias}}
+                                                                    dias</td>
+                                                                <td style="font-weight: bold;">
+                                                                    {{resultado.tempoTotalOutrosPeriodosPublicos.anos}}
+                                                                    ano(s),
+                                                                    {{resultado.tempoTotalOutrosPeriodosPublicos.meses}}
+                                                                    mês(es) e
+                                                                    {{resultado.tempoTotalOutrosPeriodosPublicos.dias}}
+                                                                    dia(s)
+                                                                </td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+                                                    <p
+                                                        ng-hide="resultado.outrosPeriodosPublicos && resultado.outrosPeriodosPublicos.length > 0">
+                                                        Sem dados</p>
+                                                </md-table-container>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-12">
+                        <div class="panel panel-default">
+                            <div class="panel-body">
+                                <div class="row">
+                                    <div class="col-lg-12">
+                                        <div layout="column" ng-cloak class="md-inline-form inputdemoBasicUsage">
+                                            <h4 class="nome-usuario-label">Dedução por tempo de serviço por afastamento
+                                            </h4>
+                                            <div layout layout-sm="column">
+                                                <md-table-container flex>
+                                                    <table md-table
+                                                        ng-show="resultado.deducoes && resultado.deducoes.length > 0">
+                                                        <thead md-head>
+                                                            <tr md-row>
+                                                                <th md-column>Período inicial</th>
+                                                                <th md-column>Período final</th>
+                                                                <th md-column>Quantidade (dias)</th>
+                                                                <th md-column>Tempo total</th>
+                                                                <th md-column>Contribuição</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody md-body>
+                                                            <tr md-row ng-repeat="deducao in resultado.deducoes">
+                                                                <td md-cell>
+                                                                    {{deducao.inicio | date: 'dd/MM/yyyy'}}
+                                                                </td>
+                                                                <td md-cell>
+                                                                    {{deducao.fim | date: 'dd/MM/yyyy'}}
+                                                                </td>
+                                                                <td md-cell>
+                                                                    {{deducao.tempoTotal.totalDias}} dias
+                                                                </td>
+                                                                <td md-cell>
+                                                                    {{deducao.tempoTotal.anos}} ano(s),
+                                                                    {{deducao.tempoTotal.meses}} mês(es) e
+                                                                    {{deducao.tempoTotal.dias}} dia(s)
+                                                                </td>
+                                                                <td md-cell>
+                                                                    {{deducao.contribuicao === 'sim' ? 'Sim':'Não'}}
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td colspan="2"
+                                                                    style="text-align: center;font-weight: bold;">Total
+                                                                </td>
+                                                                <td style="font-weight: bold;">
+                                                                    {{resultado.tempoTotalDeducoes.totalDias}}
+                                                                    dias</td>
+                                                                <td style="font-weight: bold;">
+                                                                    {{resultado.tempoTotalDeducoes.anos}} ano(s),
+                                                                    {{resultado.tempoTotalDeducoes.meses}} mês(es) e
+                                                                    {{resultado.tempoTotalDeducoes.dias}} dia(s)
+                                                                </td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+                                                    <p ng-hide="resultado.deducoes && resultado.deducoes.length > 0">Sem
+                                                        dados</p>
+                                                </md-table-container>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-12">
+                        <div class="panel panel-default">
+                            <div class="panel-body">
+                                <div class="row">
+                                    <div class="col-lg-12">
+                                        <div layout="column" ng-cloak class="md-inline-form inputdemoBasicUsage">
+                                            <h4 class="nome-usuario-label">Tempo averbados(INSS)</h4>
+                                            <div layout layout-sm="column">
+                                                <md-table-container flex>
+                                                    <table md-table
+                                                        ng-show="resultado.averbacoes && resultado.averbacoes.length > 0">
+                                                        <thead md-head>
+                                                            <tr md-row>
+                                                                <th md-column>Período inicial</th>
+                                                                <th md-column>Período final</th>
+                                                                <th md-column>Quantidade (dias)</th>
+                                                                <th md-column>Tempo total</th>
+                                                                <th md-column>Atividade</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody md-body>
+                                                            <tr md-row ng-repeat="averbacao in resultado.averbacoes">
+                                                                <td md-cell>
+                                                                    {{averbacao.inicio | date: 'dd/MM/yyyy'}}
+                                                                </td>
+                                                                <td md-cell>
+                                                                    {{averbacao.fim | date: 'dd/MM/yyyy'}}
+                                                                </td>
+                                                                <td md-cell>
+                                                                    {{averbacao.tempoTotal.totalDias}} dias
+                                                                </td>
+                                                                <td md-cell>
+                                                                    {{averbacao.tempoTotal.anos}} ano(s),
+                                                                    {{averbacao.tempoTotal.meses}} mês(es) e
+                                                                    {{averbacao.tempoTotal.dias}} dia(s)
+                                                                </td>
+                                                                <td md-cell>
+                                                                    {{averbacao.atividade | uppercase}}
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td colspan="2"
+                                                                    style="text-align: center;font-weight: bold;">Total
+                                                                </td>
+                                                                <td style="font-weight: bold;">
+                                                                    {{resultado.tempoTotalAverbacoes.totalDias}}
+                                                                    dias</td>
+                                                                <td style="font-weight: bold;">
+                                                                    {{resultado.tempoTotalAverbacoes.anos}} ano(s),
+                                                                    {{resultado.tempoTotalAverbacoes.meses}} mês(es) e
+                                                                    {{resultado.tempoTotalAverbacoes.dias}} dia(s)
+                                                                </td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+                                                    <p
+                                                        ng-hide="resultado.averbacoes && resultado.averbacoes.length > 0">
+                                                        Sem dados</p>
+                                                </md-table-container>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                        <div class="panel panel-default">
+                            <div class="panel-body">
+                                <div class="row">
+                                    <div class="col-lg-12">
+                                        <div layout="column" ng-cloak class="md-inline-form inputdemoBasicUsage">
+                                            <h4 class="nome-usuario-label">Contribuições totais</h4>
+                                            <div layout layout-sm="column">
+                                                <md-table-container flex>
+                                                    <table md-table>
+                                                        <thead md-head>
+                                                            <tr md-row>
+                                                                <th md-column>Contribuição</th>
+                                                                <th md-column>Quantidade (dias)</th>
+                                                                <th md-column>Tempo total</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody md-body>
+                                                            <tr md-row>
+                                                                <td md-cell>
+                                                                    Contribuição até a data atual
+                                                                </td>
+                                                                <td md-cell>
+                                                                    {{resultado.tempoTotalContribTotais.totalDias}}
+                                                                </td>
+                                                                <td md-cell>
+                                                                    {{resultado.tempoTotalContribTotais.anos}}
+                                                                    ano(s),
+                                                                    {{resultado.tempoTotalContribTotais.meses}}
+                                                                    mês(es) e
+                                                                    {{resultado.tempoTotalContribTotais.dias}}
+                                                                    dia(s)
+                                                                </td>
+                                                            </tr>
+                                                            <tr md-row>
+                                                                <td md-cell>
+                                                                    Contrib. até a data atual (+) Licença prêmio não
+                                                                    gozada (-) Deduções
+                                                                </td>
+                                                                <td md-cell>
+                                                                    {{resultado.tempoTotalContribTotaisLicenInsalDeduc.totalDias}}
+                                                                </td>
+                                                                <td md-cell>
+                                                                    {{resultado.tempoTotalContribTotaisLicenInsalDeduc.anos}}
+                                                                    ano(s),
+                                                                    {{resultado.tempoTotalContribTotaisLicenInsalDeduc.meses}}
+                                                                    mês(es) e
+                                                                    {{resultado.tempoTotalContribTotaisLicenInsalDeduc.dias}}
+                                                                    dia(s)
+                                                                </td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </md-table-container>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-12 clearfix" style="margin-bottom: 20px;text-align: center;">
+                        <h4 class="section-header" style="font-weight: bold">Possibilidades de Aposentadoria</h4>
+                    </div>
+
+                    <div class="col-md-12" ng-show="resultado.possibAbonoPermanencia">
+                        <div class="panel panel-default">
+                            <div class="panel-body">
+                                <div class="row">
+                                    <div class="col-lg-12">
+                                        <h4 class="nome-usuario-label">Possibilidade abono de permanência</h4>
+                                        <div layout="column" ng-cloak class="md-inline-form inputdemoBasicUsage">
+                                            <div class="row" style="margin-top: 10px">
+                                                <div class="col-md-12">
+                                                    <p>O servidor poderá requerer o abono de permanência em: <span
+                                                            style="font-weight: bold">{{resultado.possibAbonoPermanencia
+                                                            | date: 'dd/MM/yyyy'}}</span></p>
+                                                    <p>Com base no fundamento legal: <span
+                                                            style="font-weight: bold">{{resultado.possibFundamLegal}}</span>
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-12" ng-repeat="possibilidade in resultado.possibilAposentList">
+                        <div class="panel panel-default">
+                            <div class="panel-body">
+                                <div class="row">
+                                    <div class="col-lg-12">
+                                        <h4 class="nome-usuario-label">Possibilidade #{{$index+1}}</h4>
+                                        <div layout="column" ng-cloak class="md-inline-form inputdemoBasicUsage">
+                                            <div class="row" style="margin-top: 10px">
+                                                <div class="col-md-12">
+                                                    <p>O servidor poderá se aposentar em: <span
+                                                            style="font-weight: bold">{{possibilidade.dataAposentadoria
+                                                            | date: 'dd/MM/yyyy'}}</span></p>
+                                                    <p>Na modalidade: <span
+                                                            style="font-weight: bold">{{possibilidade.modalidade}}
+                                                        </span></p>
+                                                    <p>Com base no fundamento legal: <span
+                                                            style="font-weight: bold">{{possibilidade.fundamentoLegal}}</span>
+                                                    </p>
+                                                    <p>Proventos: <span
+                                                            style="font-weight: bold">{{possibilidade.proventos}}</span>
+                                                    </p>
+                                                    <p>Reajuste: <span
+                                                            style="font-weight: bold">{{possibilidade.reajuste}}</span>
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row" style="margin: 50px 0 !important">
+                        <div class="col-md-12 text-center">
+                            <button ui-wave class="btn btn-primary btn-w-md noprint"
+                                onclick="window.print()">Imprimir</button>
+                            <button class="btn btn-default btn-w-md noprint" data-ng-click="alterarInforacoes()">Alterar
+                                Informações</button>
+                            <button class="btn btn-default btn-w-md noprint" data-ng-click="novaConsulta()">Nova
+                                Consulta</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

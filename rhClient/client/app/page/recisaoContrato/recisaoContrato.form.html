@@ -1,0 +1,149 @@
+<div class="page" ng-controller="recisaoContratoFormCtrl">
+    <div class="row ui-section">
+        <div class="col-lg-8 clearfix">
+            <h2 class="section-header">Simulação de Cáuculo de Recisão de Contrato</h2>
+        </div>
+    </div>
+    <div class="col-md-12">
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <form ng-disabled="detalhes" name="recisaoContratoForm" ng-submit="save()">
+                            <div layout layout-sm="column">
+                                <div class="md-padding col-md-12">
+                                    <h4>Dados do Funcionário</h4>
+                                    
+                                    <div layout layout-sm="column"> 
+                                        <div  style="width: 100%;">
+                                            <md-autocomplete ng-disabled="!bloquear" ng-required="true" md-no-cache="noCache" md-floating-label="Nome Responsável"
+                                                md-selected-item="funcionario" md-search-text="searchFuncionario"
+                                                md-items="funcionario in querySearchFuncionario(searchFuncionario)" md-item-text="funcionario.nome" md-delay="100"
+                                                md-min-length="3" md-selected-item-change="funcionarioSelecionado()">
+                                                <md-item-template>
+                                                    <span  md-highlight-text="searchFuncionario" md-highlight-flags="^i">{{funcionario.nome}}</span>
+                                                </md-item-template>
+                                                <md-not-found>
+                                                    Item "{{searchFuncionario}}" não encontrado.
+                                                </md-not-found>
+                                            </md-autocomplete>
+                                            <div ng-messages="recisaoContrato.funcionario.nome.$error">
+                                                <div ng-message="required">Campo de preenchimento obrigatório.</div>
+                                            </div>                                                        
+                                        </div>
+                                    </div>
+                                    
+                                    <div layout layout-sm="column">
+                                        <md-input-container flex>
+                                                <label>Empresa - Filial</label>
+                                                <input name="empresaFilial" ng-model="funcionario.filial.nomeFilial" ng-disabled="true">
+                                        </md-input-container>
+                                    </div>
+
+                                    <div layout layout-sm="column">
+                                        <md-input-container flex>
+                                            <label>Lotação</label>
+                                            <input name="lotacao" ng-model="funcionario.lotacao.descricaoCompleta" ng-disabled="true">
+                                        </md-input-container>
+                                    </div>
+
+                                    <div layout layout-sm="column">
+                                        <div style="width: 20%">
+                                            <md-input-container class="md-block">
+                                                <label>Data de Admissão</label>
+                                                <input name="dataAdmissao" moment-picker="funcionario.dataAdmissao" ng-model="funcionario.dataAdmissao" format="DD/MM/YYYY" locale="pt-br" ng-disabled="true">
+                                            </md-input-container>
+                                        </div>
+
+                                        <div style="width: 20%">
+                                            <md-input-container class="md-block">
+                                                <md-checkbox ng-model="recisaoContrato.feriasVencidas" aria-label="CheckBox" style="float: left; padding-right: 40px;">Ferias vencidas?</md-checkbox>
+                                            </md-input-container>
+                                        </div>
+
+                                        <div style="width: 25%">
+                                            <md-input-container class="md-block">
+                                                <md-checkbox ng-model="recisaoContrato.avisoPrevio" aria-label="CheckBox" style="float: left; padding-right: 40px;">Cumpriu Aviso Prévio?</md-checkbox>
+                                            </md-input-container>
+                                        </div>
+
+                                        <div style="width: 20%">
+                                            <md-input-container class="md-block">
+                                                <label>Data aviso</label>
+                                                <md-icon class="material-icons icon-momentpicker" ng-class="md-datepicker-calendar-icon" aria-label="md-calendar">date_range</md-icon>
+                                                <input name="dataAviso" moment-picker="recisaoContrato.dataAviso" placeholder="Selecione a data"
+                                                    ng-model="recisaoContrato.dataAviso" format="DD/MM/YYYY" locale="pt-br" start-view="month"
+                                                    ng-model-options="{ updateOn: 'blur' }" ng-disabled="!recisaoContrato.avisoPrevio" md-no-cache="noCache">
+                                            </md-input-container>
+                                        </div>
+
+                                        <div style="width: 15%">
+                                            <md-input-container class="md-block">
+                                                <label>Dias</label>
+                                                <input ng-disabled="!recisaoContrato.avisoPrevio" ng-model="recisaoContrato.diasAviso" name="diasAviso" style="width: 50%">
+                                            </md-input-container>
+                                        </div>    
+                                    </div>
+                                    
+                                    <h4>Desligamento</h4>
+
+                                    <div layout layout-sm="column"> 
+                                        <md-input-container flex>
+                                            <label>Motivo de Desligamento</label>
+                                            <md-select ng-disabled="!bloquear" name="motivoDesligamento" ng-model="recisaoContrato.motivoId">
+                                                <md-option ng-repeat="motivo in list.motivoDesligamento" ng-value="motivo.id">
+                                                    {{motivo.descricao}}
+                                                </md-option>
+                                            </md-select>
+                                        </md-input-container>
+                                    </div>
+
+                                    <div layout layout-sm="column">
+                                        <md-input-container class="md-block">
+                                            <label>Data desligamento</label>
+                                            <md-icon class="material-icons icon-momentpicker" ng-class="md-datepicker-calendar-icon"
+                                                aria-label="md-calendar">date_range</md-icon>
+                                            <input name="dataDesligamento" moment-picker="recisaoContrato.dataDesligamento" placeholder="Selecione a data" ng-model="recisaoContrato.dataDesligamento" 
+                                            format="DD/MM/YYYY" locale="pt-br" start-view="month" ng-model-options="{ updateOn: 'blur' }" ng-disabled="!bloquear" md-no-cache="noCache">
+                                        </md-input-container>
+                                    </div>
+
+                                    
+                                    <div layout layout-sm="column">
+                                        <md-input-container class="md-block">
+                                            <label>Homologação</label>
+                                            
+                                            <md-icon class="material-icons icon-momentpicker" ng-class="md-datepicker-calendar-icon"
+                                                aria-label="md-calendar">date_range</md-icon>
+                                            <input name="dataHomologacao" moment-picker="recisaoContrato.dataHomologacao" placeholder="Selecione a data" ng-model="recisaoContrato.dataHomologacao" 
+                                            format="DD/MM/YYYY" locale="pt-br" start-view="month" ng-model-options="{ updateOn: 'blur' }" ng-disabled="bloquear" md-no-cache="noCache">
+                                        </md-input-container>
+
+                                        <md-input-container class="md-block">
+                                            <label>Pagamento</label>  
+
+                                            <md-icon class="material-icons icon-momentpicker" ng-class="md-datepicker-calendar-icon"
+                                                aria-label="md-calendar">date_range</md-icon>
+                                            <input name="dataPagamento" moment-picker="recisaoContrato.dataPagamento" placeholder="Selecione a data"
+                                                ng-model="recisaoContrato.dataPagamento" format="DD/MM/YYYY" locale="pt-br" start-view="month" ng-model-options="{ updateOn: 'blur' }" ng-disabled="bloquear" md-no-cache="noCache">
+                                        </md-input-container>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-12 text-center">
+                                    <button ng-if="bloquear" ng-disabled="recisaoContratoForm.$invalid" type="submit" ui-wave class="btn btn-primary btn-w-md">
+                                        <md-tooltip ng-if="recisaoContratoForm.$invalid" md-direction="top">Preencha todos os campos obrigatórios.</md-tooltip>
+                                        Salvar
+                                    </button>
+                                    <p class="btn btn-default btn-w-md" ui-wave data-ng-click="goBack()">Voltar</p>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

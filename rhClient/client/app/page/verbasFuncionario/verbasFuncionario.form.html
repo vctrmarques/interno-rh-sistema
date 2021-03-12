@@ -1,0 +1,168 @@
+<section class="page-form-ele page" ng-controller="verbasFuncionarioFormCtrl">
+	<div class="row ui-section">
+		<div class="col-lg-8 clearfix">
+			<h2 class="section-header">
+				{{!detalhes ? 'Formulário Verbas do Funcionário' : 'Detalhes das Verbas do Funcionário'}}</h2>
+		</div>
+		<div class="col-md-12">
+			<section class="panel panel-default">
+				<div class="panel-body">
+					<div class="row">
+						<div class="col-lg-8 col-lg-offset-2">
+
+							<div layout="column" ng-cloak class="md-inline-form inputdemoBasicUsage">
+								<div layout-padding>
+									<form name="verbasFuncionarioForm" ng-disabled="detalhes" ng-submit="save()">
+
+										<h4>Dados do Funcinário</h4>
+										<div layout layout-sm="column">
+											<md-input-container class="md-block">
+												<label>Matrícula</label>
+												<input ng-disabled="true" ng-model="funcionario.matricula">
+											</md-input-container>
+											<md-input-container flex>
+												<label>Nome</label>
+												<input ng-disabled="true" ng-model="funcionario.nome">
+											</md-input-container>
+										</div>
+
+										<div layout layout-sm="column">
+											<md-input-container flex>
+												<label>Lotação</label>
+												<input ng-disabled="true" ng-model="funcionario.lotacao.descricao"
+													name="exercicio">
+											</md-input-container>
+											<md-input-container flex>
+												<label>Função</label>
+												<input ng-disabled="true" ng-model="funcionario.funcao.nome"
+													name="exercicio">
+											</md-input-container>
+											<md-input-container flex>
+												<label>Filial</label>
+												<input ng-disabled="true" ng-model="funcionario.filial.nomeFilial"
+													name="nomeFilial">
+											</md-input-container>
+										</div>
+
+										<h4>Dados da Verba</h4>
+										<div layout layout-sm="column">
+											<autocomplete-component disabled='detalhes' label='Verba' required='false'
+												model='verbaFuncionario.verba' input-name='verbaFuncionario.verba'
+												end-point='/verba/search' change=''>
+											</autocomplete-component>
+											<md-input-container class="md-block" style="width: 200px;">
+												<label>Tipo Valor</label>
+												<select-component ng-disabled='detalhes' ng-required='false'
+													ng-model='verbaFuncionario.tipo' name='verbaFuncionario.tipo'
+													end-point='/listaEnums/TipoValorEnum'>
+												</select-component>
+											</md-input-container>
+										</div>
+
+										<div layout layout-sm="column">
+											<md-input-container flex>
+												<label>Recorrência</label>
+												<select-component ng-disabled='detalhes' ng-required='false'
+													ng-model='verbaFuncionario.recorrencia'
+													name='verbaFuncionario.recorrencia'
+													end-point='/listaEnums/RecorrenciaEnum'>
+												</select-component>
+											</md-input-container>
+											<md-input-container flex>
+												<label>Valor</label>
+												<input name="valor" ui-number-mask="5"
+													ng-model="verbaFuncionario.valor">
+											</md-input-container>
+											<md-input-container flex>
+												<label>Parcelas</label>
+												<input
+													ng-disabled="!verbaFuncionario.recorrencia || verbaFuncionario.recorrencia.value === 'FIXA'"
+													name="parcelas" ui-number-mask="0"
+													ng-model="verbaFuncionario.parcelas">
+											</md-input-container>
+											<md-input-container flex>
+												<label>Parcelas Pagas</label>
+												<input
+													ng-disabled="!verbaFuncionario.recorrencia || verbaFuncionario.recorrencia.value === 'FIXA'"
+													name="parcelasPagas" ui-number-mask="0"
+													ng-model="verbaFuncionario.parcelasPagas">
+											</md-input-container>
+										</div>
+
+										<div class="row" style="margin-bottom: 40px;">
+											<div class="col-md-12 text-center">
+												<md-button class="md-fab" ng-click="adicionar()">
+													<md-tooltip md-direction="bottom">Adicionar Verba</md-tooltip>
+													<span class="fa fa-plus"></span>
+												</md-button>
+											</div>
+										</div>
+
+										<h4>Verbas Adicionadas</h4>
+										<md-table-container>
+											<table md-table ng-model="selected" ng-if="verbasFuncionario.length > 0"
+												md-progress="promise" style="margin-top: 20px">
+												<thead md-head md-on-reorder="loadList">
+													<tr md-row>
+														<th md-column><span>Código</span></th>
+														<th md-column><span>Verba</span></th>
+														<th md-column><span>Tipo</span></th>
+														<th md-column><span>Valor</span></th>
+														<th md-column><span>Recorrência</span></th>
+														<th md-column><span>Parcelas Totais</span></th>
+														<th md-column>
+															<span>ParcelasPagas</span>
+														</th>
+														<th md-column ng-if="!detalhes"><span>Ações</span></th>
+													</tr>
+												</thead>
+												<tbody md-body>
+													<tr md-row md-select="item" md-select-id="item" md-auto-select
+														ng-repeat="vf in verbasFuncionario">
+														<td md-cell>
+															{{vf.verba.codigo}}
+														</td>
+														<td md-cell>
+															{{vf.verba.descricaoVerba}}
+														</td>
+														<td md-cell>{{vf.tipo}}</td>
+														<td md-cell>{{vf.valor}}</td>
+														<td md-cell>
+															{{vf.recorrencia}}
+														</td>
+														<td md-cell>{{vf.parcelas}}</td>
+														<td md-cell>{{vf.parcelasPagas}}</td>
+														<td md-cell>
+															<a ng-if="!botoesGestao && !detalhes"
+																ng-click="showConfirm($event, $index)">
+																<md-tooltip md-direction="top">Excluir
+																</md-tooltip>
+																<i class="fa fa-trash-o fa-lg"></i>
+															</a>
+														</td>
+													</tr>
+												</tbody>
+											</table>
+										</md-table-container>
+
+										<!-- <audit-data show="detalhes" data="verbaFuncionario"></audit-data> -->
+
+										<div class="row" style="margin-top: 30px;">
+											<div class="col-md-12 text-center">
+												<button ng-if="!detalhes" type="submit" ui-wave
+													class="btn btn-primary btn-w-md">Salvar</button>
+												<p class="btn btn-default btn-w-md" ui-wave data-ng-click="goBack()">
+													Voltar
+												</p>
+											</div>
+										</div>
+									</form>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</section>
+		</div>
+	</div>
+</section>

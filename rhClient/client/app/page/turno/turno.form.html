@@ -1,0 +1,183 @@
+<div class="page" ng-controller="turnoFormCtrl">
+    <div class="row ui-section">
+        <div class="col-lg-8 clearfix">
+            <h2 class="section-header">{{!detalhes ? 'Formulário Categoria de Turno' : 'Detalhes Categoria de
+                Turno'}}</h2>
+        </div>
+        <div class="col-md-12">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <div class="row">
+                        <div class="col-lg-8 col-lg-offset-2">
+                            <form ng-disabled="detalhes" name="turnoForm" ng-submit="save()">
+                                <div layout="column" ng-cloak class="md-inline-form inputdemoBasicUsage">
+
+                                    <div layout-padding>
+                                        <div layout layout-sm="column">
+                                            <md-input-container flex>
+                                                <label>Código</label>
+                                                <input ng-disabled="detalhes" ng-required="true" ng-model="turno.codigo"
+                                                    maxlength="20" name="codigo">
+                                                <div ng-messages="turnoForm.codigo.$error" role="alert" multiple>
+                                                    <div ng-message="required">Campo de preenchimento obrigatório.</div>
+                                                </div>
+                                            </md-input-container>
+                                            <md-input-container flex ng-if="turno.ativo">
+                                                <label>Início da vigência</label>
+                                                <md-icon class="material-icons icon-momentpicker" ng-class="md-datepicker-calendar-icon"
+                                                    aria-label="md-calendar">date_range</md-icon>
+                                                <input name="dataInicio" required moment-picker="turno.dataInicio"
+                                                    placeholder="Selecione a data" ng-model="turno.dataInicio" format="DD/MM/YYYY"
+                                                    locale="pt-br" start-view="month" ng-model-options="{ updateOn: 'blur' }"
+                                                    ng-disabled="detalhes">
+                                            </md-input-container>
+                                            <md-input-container flex ng-if="!turno.ativo">
+                                                <label>Início da vigência</label>
+                                                <md-icon class="material-icons icon-momentpicker" ng-class="md-datepicker-calendar-icon"
+                                                    aria-label="md-calendar">date_range</md-icon>
+                                                <input name="dataInicio" required moment-picker="turno.dataInicio"
+                                                    placeholder="Selecione a data" ng-model="turno.dataInicio" format="DD/MM/YYYY"
+                                                    locale="pt-br" start-view="month" ng-model-options="{ updateOn: 'blur' }"
+                                                    ng-disabled="detalhes">
+                                            </md-input-container>
+                                            <md-input-container flex ng-if="!turno.ativo">
+                                                <label>Fim da vigência</label>
+                                                <md-icon class="material-icons icon-momentpicker" ng-class="md-datepicker-calendar-icon"
+                                                    aria-label="md-calendar">date_range</md-icon>
+                                                <input name="dataFim" required moment-picker="turno.dataFim" min-date="turno.dataInicio"
+                                                    placeholder="Selecione a data" ng-model="turno.dataFim" format="DD/MM/YYYY"
+                                                    locale="pt-br" start-view="month" ng-model-options="{ updateOn: 'blur' }"
+                                                    ng-disabled="detalhes">
+                                            </md-input-container>
+                                        </div>
+
+                                        <h4>Horário</h4>
+                                        <div layout-padding>
+                                            <div layout layout-sm="column">
+                                                <md-input-container flex>
+                                                    <md-switch ng-disabled="detalhes" ng-disabled="detalhes" ng-model="turno.horarioFlexivel"
+                                                        ng-click="changeHorarioFlexivel();" aria-label="Ativo">
+                                                        Horário Flexível
+                                                    </md-switch>
+                                                </md-input-container>
+                                            </div>
+                                        </div>
+
+                                        <div layout layout-sm="column">
+                                            <md-input-container flex>
+                                                <label>Jornada</label>
+                                                <input type="time" ng-disabled="detalhes || !turno.horarioFlexivel"
+                                                    ng-model="turno.jornada" name="jornada" placeholder="HH:mm:ss"
+                                                    ng-required="turno.horarioFlexivel" />
+                                            </md-input-container>
+                                            <md-input-container flex>
+                                                <label>Hora Incial</label>
+                                                <input type="time" name="horarioFlexivelInicio" ng-model="turno.horarioFlexivelInicio"
+                                                    ng-change="calcularJornada();" placeholder="HH:mm:ss" ng-required="!turno.horarioFlexivel"
+                                                    ng-disabled="detalhes || turno.horarioFlexivel" />
+                                            </md-input-container>
+                                            <md-input-container>
+                                                &nbsp; às &nbsp;
+                                            </md-input-container>
+                                            <md-input-container flex>
+                                                <label>Hora Final</label>
+                                                <input type="time" name="horarioFlexivelFim" ng-model="turno.horarioFlexivelFim"
+                                                    ng-change="calcularJornada();" placeholder="HH:mm:ss" ng-required="!turno.horarioFlexivel"
+                                                    ng-disabled="detalhes || turno.horarioFlexivel" />
+                                            </md-input-container>
+                                        </div>
+
+
+                                        <h4>Intervalo</h4>
+                                        <div layout-padding>
+                                            <div layout layout-sm="column">
+                                                <md-input-container flex>
+                                                    <md-switch ng-disabled="detalhes" ng-disabled="detalhes" ng-model="turno.intervaloFlexivel"
+                                                        ng-click="changeIntervaloFlexivel();" aria-label="Ativo">
+                                                        Intervalo Flexível
+                                                    </md-switch>
+                                                </md-input-container>
+                                            </div>
+                                        </div>
+
+                                        <div layout layout-sm="column">
+                                            <md-input-container flex>
+                                                <label>Intervalo</label>
+                                                <input type="time" ng-disabled="detalhes || !turno.intervaloFlexivel"
+                                                    ng-model="turno.intervalo" name="intervalo" ng-change="calcularJornada();"
+                                                    placeholder="HH:mm:ss" ng-required="!turno.intervaloFlexivel"
+                                                    ng-required="turno.intervaloFlexivel" />
+                                            </md-input-container>
+                                            <md-input-container flex>
+                                                <label>Hora Incial</label>
+                                                <input type="time" name="intervaloFlexivelInicio" ng-model="turno.intervaloFlexivelInicio"
+                                                    ng-change="calcularIntervalo();" placeholder="HH:mm:ss" ng-required="!turno.intervaloFlexivel"
+                                                    ng-disabled="detalhes || turno.intervaloFlexivel" />
+                                            </md-input-container>
+                                            <md-input-container>
+                                                &nbsp; às &nbsp;
+                                            </md-input-container>
+                                            <md-input-container flex>
+                                                <label>Hora Final</label>
+                                                <input type="time" name="intervaloFlexivelFim" ng-model="turno.intervaloFlexivelFim"
+                                                    ng-change="calcularIntervalo();" placeholder="HH:mm:ss" ng-required="!turno.intervaloFlexivel"
+                                                    ng-disabled="detalhes || turno.intervaloFlexivel" />
+                                            </md-input-container>
+                                        </div>
+
+                                        <h4>Folgas na Semana</h4>
+                                        <div layout layout-sm="column">
+                                            <md-input-container flex ng-repeat="folga in folgasList">
+                                                <md-checkbox ng-model="turnoFolgas[folga]" value="{{folga}}"
+                                                    ng-disabled="detalhes">
+                                                    {{folga}}
+                                                </md-checkbox>
+                                            </md-input-container>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div ng-if="detalhes" layout layout-sm="column">
+                                    <table md-table md-progress="promise">
+                                        <thead md-head>
+                                            <tr md-row>
+                                                <th md-column>
+                                                    <span>Criado em:</span>
+                                                </th>
+                                                <th md-column>
+                                                    <span>Atualizado em:</span>
+                                                </th>
+                                                <th md-column>
+                                                    <span>Criado por:</span>
+                                                </th>
+                                                <th md-column>
+                                                    <span>Atualizado por:</span>
+                                                </th>
+                                            </tr>
+                                        </thead>
+                                        <tbody md-body>
+                                            <tr md-row>
+                                                <td md-cell>{{turno.criadoEm | date:'dd/MM/yy - HH:mm'}}</td>
+                                                <td md-cell>{{turno.alteradoEm | date:'dd/MM/yy - HH:mm'}}</td>
+                                                <td md-cell>{{turno.criadoPor}}</td>
+                                                <td md-cell>{{turno.alteradoPor}}</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+
+                                <div class="row" style="margin: 50px 0">
+                                    <div class="col-md-12 text-center">
+                                        <button ng-if="!detalhes" ng-disabled="categoriaDoencaForm.$invalid" type="submit"
+                                            ui-wave class="btn btn-primary btn-w-md">Salvar</button>
+                                        <p class="btn btn-default btn-w-md" ui-wave data-ng-click="goBack()">Voltar</p>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

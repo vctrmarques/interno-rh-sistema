@@ -1,0 +1,364 @@
+<div class="page" ng-controller="periciaMedicaFormCtrl">
+    <div class="row ui-section">
+        <div class="col-lg-8 clearfix">
+            <h2 class="section-header">{{!detalhes ? 'Formulário de Agendamento de Perícia Médica' : 'Detalhes de Agendamento de Perícia Médica'}}</h2>
+        </div>
+        <div class="col-md-12">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div layout="column" ng-cloak class="md-inline-form inputdemoBasicUsage">
+                                <div layout-padding>
+                                    <form ng-disabled="detalhes" name="periciaMedicaForm" ng-submit="save()">
+                                        <md-tabs md-dynamic-height md-border-bottom>
+                                            <md-tab label="Agendamento">
+                                                <md-content class="md-padding">
+                                                    <div class="divider divider"></div>
+                                                    <div layout layout-sm="column">
+                                                        <md-input-container class="md-block">
+                                                            <label>CPF</label>
+                                                            <input ng-disabled="edit" name="pacientePericiaMedica.cpf" ng-required="true"
+                                                                type="text" ng-model="pacientePericiaMedica.cpf" ui-br-cpf-mask>
+                                                            <div ng-messages="periciaMedicaForm.pacientePericiaMedica.cpf.$error" multiple
+                                                                role="alert">
+                                                                <div ng-message="cpf">O Cpf informado é inválido.</div>
+                                                                <div ng-message="required">Campo de preenchimento
+                                                                    obrigatório.</div>
+                                                            </div>
+                                                        </md-input-container>
+                                                        <md-input-container flex>
+                                                            <label>Paciente</label>
+                                                            <input ng-disabled="detalhes"
+                                                                ng-model="pacientePericiaMedica.paciente" name="pacientePericiaMedica.paciente" required>
+                                                            <div ng-messages="periciaMedicaForm.pacientePericiaMedica.paciente.$error" multiple role="alert">
+                                                                <div ng-message="required">Campo de preenchimento obrigatório.</div>
+                                                            </div>
+                                                        </md-input-container>
+                                                        <md-input-container flex>
+                                                            <label>Tipo de Analise</label>
+                                                            <md-select name="pacientePericiaMedica.tipoAnalise" ng-model="pacientePericiaMedica.tipoAnalise">
+                                                                <md-option ng-repeat="item in list.tipoAnaliseList"
+                                                                        value="{{item.value}}"> {{item.label}}
+                                                                    </md-option>
+                                                            </md-select>
+                                                        </md-input-container>
+                                                        <md-input-container flex >
+                                                            <label>Número Processo Pensão</label>
+                                                            <input ng-disabled="detalhes"
+                                                                autocomplete="off" maxlength="30"
+                                                                ui-hide-group-sep ng-required="false"
+                                                                ng-model="pensaoPrevidenciariaPagamento.numeroProcessoPensao"
+                                                                name="numeroProcessoPensao">
+                                                        </md-input-container>
+                                                    </div>
+                                                    <div layout layout-sm="column">
+                                                        <div class="col-md-12">
+                                                            <div class="panel panel-default">
+                                                                <div class="panel-heading"><div class="panel-title">Contato</div></div>
+                                                                <div class="panel-body">
+                                                                    <md-table-container>
+                                                                        <table md-table ng-model="selected" md-progress="promise">
+                                                                            <thead ng-if="!options.decapitate" md-head md-order="query.order">
+                                                                                <tr md-row>
+                                                                                    <th md-column  style="width: 500px;"><span>Telefone</span></th>
+                                                                                </tr>
+                                                                            </thead>
+                                                                            <tbody md-body>
+                                                                                <tr md-row md-auto-select ng-repeat="telefone in pacientePericiaMedica.telefone">
+                                                                                    <td md-cell>
+                                                                                        <input ng-model="telefone" style="border: none;background: none;" ng-disabled="true" ui-br-phone-number-mask>
+                                                                                    </td>
+                                                                                </tr>
+                                                                            </tbody>
+                                                                        </table>
+                                                                    </md-table-container>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div layout layout-sm="column">
+                                                        <md-input-container flex ng-show="periciaMedica.observacaoMedica">
+                                                            <label>Observação Médico</label>
+                                                            <textarea ng-model="periciaMedica.observacaoMedica"
+                                                                ng-disabled="true" rows="5" md-select-on-focus></textarea>
+                                                        </md-input-container>
+                                                        <md-input-container flex>
+                                                            <label>Observação Assistente</label>
+                                                            <textarea ng-model="periciaMedica.observacaoAssistente"
+                                                                rows="5" md-select-on-focus></textarea>
+                                                        </md-input-container>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-md-12 text-center">
+                                                            <md-button class="md-raised btn-w-md md-accent" style="width: 200px;"
+                                                                ng-click="showRecusouPericia($event, periciaMedica.id)"> Recusou a fazer Perícia
+                                                            </md-button>
+                                                        </div>
+                                                    </div>
+                                                    <div class="divider divider-lg"></div>
+                                                    <div layout layout-sm="column">
+                                                        <md-input-container flex>
+                                                            <label>Especialidade Médica</label>
+                                                            <md-select ng-disabled="detalhes" name="especialidadeMedica"
+                                                                ng-model="periciaMedica.especialidadeMedicaId">
+                                                                <md-option ng-value=null><em>-- Selecione --</em></md-option>
+                                                                <md-option
+                                                                    ng-repeat="especialidade in list.especialidadeMedicaList"
+                                                                    ng-value="especialidade.id">
+                                                                   {{especialidade.nome}}
+                                                                </md-option>
+                                                            </md-select>
+                                                        </md-input-container>
+                                                        <md-input-container flex>
+                                                            <label>Data Consulta</label>
+                                                            <md-icon class="material-icons icon-momentpicker"
+                                                                ng-class="md-datepicker-calendar-icon" aria-label="md-calendar">
+                                                                date_range
+                                                            </md-icon>
+                                                            <input moment-picker="periciaMedica.dataAgenda"
+                                                                placeholder="Insira uma data" name="dataAgenda"
+                                                                autocomplete="off" ng-disabled="detalhes"
+                                                                ng-model="periciaMedica.dataAgenda" format="DD/MM/YYYY"
+                                                                locale="pt-br" start-view="month"
+                                                                min-date="menorData" ng-model-options="{ updateOn: 'blur' }">
+                                                            <div ng-messages="periciaMedica.dataAgenda.$error" multiple role="alert"></div>
+                                                        </md-input-container>
+                                                        <md-input-container flex>
+                                                            <label>Periodo do Agendamento</label>
+                                                            <md-select ng-disabled="detalhes" ng-model="periciaMedica.periodoAgendamento" name="periodoAgendamento">
+                                                                <md-option ng-value=null><em>-- Selecione --</em></md-option>
+                                                                <md-option ng-repeat="turno in list.periodoAgendamento"
+                                                                    value="{{turno.value}}">
+                                                                    {{turno.label}}
+                                                                </md-option>
+                                                            </md-select>
+                                                        </md-input-container>
+                                                        <md-input-container flex>
+                                                            <label>Tipo Perícia</label>
+                                                            <md-select ng-model="periciaMedica.tipoPericia" name="tipoPericia" ng-disabled="isTipoPericia">
+                                                                <md-option value="Presencial">Presencial</md-option>
+                                                                <md-option value="Não Presencial">Não Presencial</md-option>
+                                                            </md-select>
+                                                        </md-input-container>
+                                                    </div>
+                                                    <div class="callout callout-info">
+                                                        <p>Após preencher o filtro de especialidade médicas, clique no botão abaixo "Visualizar Agenda" para
+                                                            visualizar a Agenda Médica. Você pode também filtar por data e periodo manhã ou tarde.</p>
+                                                    </div>
+            
+                                                    <div class="row">
+                                                        <div class="col-md-12 text-center">
+                                                            <md-button class="md-raised btn-w-md md-accent" style="width: 200px;"
+                                                                ng-click="visualizarAgenda()" ng-disabled="detalhes">Visualizar
+                                                                Agenda
+                                                            </md-button>
+                                                        </div>
+                                                    </div>
+            
+                                                    <div class="divider divider-lg"></div>
+                                                    <div class="divider divider-lg divider-dashed"></div>
+                                                    <div class="divider divider-lg"></div>
+
+                                                    <div class="panel panel-default" ng-show="exibirRelatorio">
+                                                        <div class="row ui-section">
+                                                            <div class="col-lg-12 clearfix">
+                                                                <h2 class="section-header text-center">Agenda Médica</h2>
+                                                            </div>
+                                                            <div class="col-md-12">        
+                                                                <div class="row" ng-cloak>
+                                                                    <div class="col-md-12">
+                                                                        <section class="panel panel-default">
+                                                                            <div class="panel-body no-padding">                
+                                                                                <md-tabs md-selected="selectedIndex" md-border-bottom md-autoselect style="min-height : 700px">
+
+                                                                                    <md-tab ng-repeat="tab in tabs" ng-disabled="tab.disabled" label="{{tab.nome}}">
+                                                                                            <div class="panel panel-default">
+                                                                                                <div class="panel-heading">
+                                                                                                    <div class="panel-title text-center">Especialidades Médicas</div>
+                                                                                                </div>
+                                                                                                <div class="panel-body">
+                                                                                                    <div class="row">
+                                                                                                        <div class="col-md-12 text-center">
+                                                                                                            <span ng-repeat="em in tab.especialidadeMedica">
+                                                                                                                {{$last ? em+'.':em +','}}
+                                                                                                            </span>
+                                                                                                        </div>
+                                                                                                        </br>
+                                                                                                    </div>
+                                                                                                    <div class="row" style="max-height: 500px; overflow: auto;">
+                                                                                                        <div class="divider divider-lg divider-solid" style="margin: 15px;"></div>
+                                                                                                        <div class="col-md-1"></div>
+                                                                                                        <md-radio-group class="ui-md-radio-group-inline" ng-model="periciaMedica.agendaMedicaDataId">
+                                                                                                            <div ng-repeat="agendaMedica in tab.lista | limitTo: query.limit : (query.page -1) * query.limit">
+                                                                                                                <div class="col-md-2 text-center"
+                                                                                                                    style="border-right: #e2edeb dashed 1px; border-left: #e2edeb dashed 1px;">
+                                                                                                                    <p style="font-weight: bold;">
+                                                                                                                        {{agendaMedica.diaSemana | uppercase}}</p>
+                                                                                                                    <p>{{agendaMedica.data | date:'dd/MM/yyyy'}}</p>
+                                                                                                                    <div class="divider divider-dashed"></div>
+                                                                                                                        <span ng-repeat="agendaMedicaData in agendaMedica.horarios">
+                                                                                                                            <div>
+                                                                                                                                <md-radio-button value="{{agendaMedicaData.id}}"><span style="font-size: 16px;">{{agendaMedicaData.hora}}</span></md-radio-group>
+                                                                                                                            </div>
+                                                                                                                        </span>
+                                                                                                                </div>
+                                                                                                            </div>
+                                                                                                        </md-radio-group>
+                                                                                                        <div class="col-md-1"></div>
+                                                                                                    </div>
+                                                                                                    <div class="divider"></div>
+                                                                                                    <md-table-pagination ng-show="tab.lista.length > 0"
+                                                                                                        md-label="{page: 'Página:', rowsPerPage: 'Registros por página:', of: 'de'}"
+                                                                                                        md-limit="query.limit" md-limit-options="limitOptions"
+                                                                                                        md-page="query.page" md-total="{{tab.lista.length}}" md-page-select>
+                                                                                                    </md-table-pagination>
+                                                                                                </div>
+                                                                                            </div>
+                                                                                    </md-tab>
+
+                                                                                </md-tabs> 
+                                                                            </div>
+                                                                        </section>
+                                                                    </div>
+                                                                </div> 
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="callout callout-success" ng-show="exibirAlertaRelatorio">
+                                                        <span>Não ha Agenda de horário para a perícia médica </span>
+                                                    </div>
+                                                </md-content>
+                                            </md-tab>
+
+                                            <md-tab label="Histórico de Consulta">
+                                                <md-content class="md-padding">
+                                                    <div class="divider divider"></div>
+                                                    <div layout layout-sm="column">
+                                                        <md-input-container class="md-block">
+                                                            <label>CPF</label>
+                                                            <input ng-disabled="edit" name="pacientePericiaMedica.cpf" ng-required="true"
+                                                                type="text" ng-model="pacientePericiaMedica.cpf" ui-br-cpf-mask>
+                                                            <div ng-messages="periciaMedicaForm.pacientePericiaMedica.cpf.$error" multiple
+                                                                role="alert">
+                                                                <div ng-message="cpf">O Cpf informado é inválido.</div>
+                                                                <div ng-message="required">Campo de preenchimento
+                                                                    obrigatório.</div>
+                                                            </div>
+                                                        </md-input-container>
+                                                        <md-input-container flex>
+                                                            <label>Paciente</label>
+                                                            <input ng-disabled="detalhes"
+                                                                ng-model="pacientePericiaMedica.paciente" name="pacientePericiaMedica.paciente" required>
+                                                            <div ng-messages="periciaMedicaForm.pacientePericiaMedica.paciente.$error" multiple role="alert">
+                                                                <div ng-message="required">Campo de preenchimento obrigatório.</div>
+                                                            </div>
+                                                        </md-input-container>
+                                                        <md-input-container flex>
+                                                            <label>Tipo de Analise</label>
+                                                            <md-select name="pacientePericiaMedica.tipoAnalise" ng-model="pacientePericiaMedica.tipoAnalise">
+                                                                <md-option ng-repeat="item in list.tipoAnaliseList"
+                                                                        value="{{item.value}}"> {{item.label}}
+                                                                    </md-option>
+                                                            </md-select>
+                                                        </md-input-container>
+                                                        <md-input-container flex >
+                                                            <label>Número Processo Pensão</label>
+                                                            <input ng-disabled="detalhes"
+                                                                autocomplete="off" maxlength="30"
+                                                                ui-hide-group-sep
+                                                                ng-model="pensaoPrevidenciariaPagamento.numeroProcessoPensao"
+                                                                name="numeroProcessoPensao">
+                                                            <div ng-messages="periciaMedicaForm.empresa.$error" multiple
+                                                                role="alert">
+                                                                <div ng-message="required">Campo de preenchimento
+                                                                    obrigatório.</div>
+                                                            </div>
+                                                        </md-input-container>
+                                                    </div>
+                                                    <div layout layout-sm="column">
+                                                        <div class="col-md-12">
+                                                            <div class="panel panel-default">
+                                                                <div class="panel-heading"><div class="panel-title">Histório de Consulta</div></div>
+                                                                <div class="panel-body">
+                                                                    <md-table-container>
+                                                                        <table md-table ng-model="selected" md-progress="promise">
+                                                                            <thead ng-if="!options.decapitate" md-head md-order="query.order">
+                                                                                <tr md-row>
+                                                                                    <th md-column  style="width: 600px;"><span>Especialidade</span></th>
+                                                                                    <th md-column  style="width: 200px;"><span>Data do Agendamento</span></th>
+                                                                                    <th md-column  style="width: 200px;"><span>Horário</span></th>
+                                                                                    <th md-column  style="width: 600px;"><span>Médico</span></th>
+                                                                                    <th md-column  style="width: 200px;"><span>Compareceu</span></th>
+                                                                                </tr>
+                                                                            </thead>
+                                                                            <tbody md-body>
+                                                                                <tr md-row md-auto-select ng-repeat="paciente in pacientePericiaMedica.consultasPericiasMedicasDto">
+                                                                                    <td md-cell>{{paciente.nomeEspecialidadeMedica}}</td>
+                                                                                    <td md-cell>{{paciente.dataConsulta | date: 'dd/MM/yyyy'}}</td>
+                                                                                    <td md-cell>{{paciente.horario}}</td>
+                                                                                    <td md-cell>{{paciente.nomeMedico}}</td>
+                                                                                    <td md-cell>{{paciente.compareceu}}</td>
+                                                                                </tr>
+                                                                            </tbody>
+                                                                        </table>
+                                                                    </md-table-container>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </md-content>
+                                            </md-tab>
+                                        </md-tabs>
+                                        <br />
+                                        <div ng-if="detalhes" layout layout-sm="column">
+                                            <table md-table md-progress="promise">
+                                                <thead md-head>
+                                                    <tr md-row>
+                                                        <th md-column>
+                                                            <span>Criado em:</span>
+                                                        </th>
+                                                        <th md-column>
+                                                            <span>Atualizado em:</span>
+                                                        </th>
+                                                        <th md-column>
+                                                            <span>Criado por:</span>
+                                                        </th>
+                                                        <th md-column>
+                                                            <span>Atualizado por:</span>
+                                                        </th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody md-body>
+                                                    <tr md-row>
+                                                        <td md-cell>{{funcionario.criadoEm | date:'dd/MM/yy - HH:mm'}}
+                                                        </td>
+                                                        <td md-cell>{{funcionario.alteradoEm | date:'dd/MM/yy - HH:mm'}}
+                                                        </td>
+                                                        <td md-cell>{{funcionario.criadoPor}}</td>
+                                                        <td md-cell>{{funcionario.alteradoPor}}</td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-12 text-center">
+                                                <button ng-if="!detalhes" ng-disabled="periciaMedicaForm.$invalid || !exibirRelatorio"
+                                                    type="submit" ui-wave class="btn btn-primary btn-w-md">
+                                                    <md-tooltip ng-if="periciaMedicaForm.$invalid" md-direction="top">
+                                                        Preencha todos os campos obrigatórios.</md-tooltip>
+                                                    Salvar
+                                                </button>
+                                                <p class="btn btn-default btn-w-md" ui-wave data-ng-click="goBack()">
+                                                    Voltar</p>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>

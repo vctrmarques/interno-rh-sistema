@@ -1,0 +1,117 @@
+<md-dialog>
+    <form ng-cloak>
+        <md-toolbar>
+            <div style="background-color: #01722c" class="md-toolbar-tools">
+                <h2>Filtragem de Dados</h2>
+                <span flex></span>
+                <a href="" ng-click="cancel()">
+                    <i class="fa fa-close"></i>
+                </a>
+            </div>
+        </md-toolbar>
+        <md-dialog-content>
+            <div class="page">
+                <div class="row ui-section">
+                    <div class="col-md-12">
+                        <div class="panel panel-default">
+                            <div class="panel-body">
+                                <article class="article">
+                                    <md-card class="no-margin-h">
+                                        <div layout="column">
+                                            <div layout-padding>
+                                                <div class="tempos" style="float: left; margin-left: 25%">
+                                                    <div class="row">
+                                                        <div class="col text-center">
+                                                            <h4>Tempo de Atendimento</h4>
+                                                        </div>
+                                                    </div>
+                                                    <br />
+
+                                                    <div class="row">
+                                                        <div class="col">
+                                                            <md-checkbox ng-model="filtro.concluidoAntes"
+                                                                aria-label="CheckBox">
+                                                                Concluídos antes da data limite</md-checkbox>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="row">
+                                                        <div class="col">
+                                                            <md-checkbox ng-model="filtro.concluidoNoLimite"
+                                                                aria-label="CheckBox">
+                                                                Concluídos na data limite
+                                                            </md-checkbox>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="row">
+                                                        <div class="col">
+                                                            <md-checkbox ng-model="filtro.concluidoDepois"
+                                                                aria-label="CheckBox">
+                                                                Concluídos após a data limite
+                                                            </md-checkbox>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div class="modelos" style="float: right; margin-right: 25%" ng-if="filtro.tipoRelatorio == 'analitico'">
+                                                    <div class="row">
+                                                        <div class="col text-center">
+                                                            <h4>Modelos de Relatórios</h4>
+                                                        </div>
+                                                    </div>
+                                                    <br />
+
+                                                    <div class="row">
+                                                        <div class="col">
+                                                            <md-checkbox ng-model="filtro.todosProcessos"
+                                                                aria-label="CheckBox">
+                                                                Total de Processos(Concl, Susp, Canc)</md-checkbox>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="row">
+                                                        <div class="col">
+                                                            <md-checkbox ng-model="filtro.tempoAtendimentoVaga"
+                                                                aria-label="CheckBox">Tempo de Atendimento á Vagas
+                                                                Solicitadas
+                                                            </md-checkbox>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="row">
+                                                        <div class="col">
+                                                            <md-checkbox ng-model="filtro.vagasAbertas"
+                                                                aria-label="CheckBox">
+                                                                Vagas em Aberto</md-checkbox>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="row">
+                                                        <div class="col">
+                                                            <md-checkbox
+                                                                ng-model="filtro.efetivosAposContratoExperiencia"
+                                                                aria-label="CheckBox">Efetivados após Contrato de
+                                                                Experiência
+                                                            </md-checkbox>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-md-12 text-center">
+                                                        <button ng-click="clickDialog()" ui-wave
+                                                            class="btn btn-primary btn-w-md">Confirmar</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </md-card>
+                                </article>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </md-dialog-content>
+    </form>
+</md-dialog>

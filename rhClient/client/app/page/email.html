@@ -1,0 +1,59 @@
+<md-dialog style="min-width:25%;max-height:500px;">
+    <form ng-cloak>
+        <md-toolbar>
+            <div style="background-color: #01722c" class="md-toolbar-tools">
+                <h2>Recuperação de Senha</h2>
+                <span flex></span>
+                <a ng-click="cancel()">
+                    <i class="fa fa-close"></i>
+                </a>
+            </div>
+        </md-toolbar>
+
+        <md-dialog-content>
+            <div class="page">
+                <form name="email_form">
+                    <div class="card-content">
+                        <section class="logo text-center">
+                            <h2>
+                                <a href="">
+                                    <img ng-src="{{logoSrc}}"
+                                        class="imgLogin">
+                                </a>
+                                <br>
+                                {{main.brand}}
+                            </h2>
+                        </section>
+
+                        <fieldset>
+                            <div class="form-group">
+                                <div class="ui-input-group">
+                                    <input type="hidden" ng-init="type='login'" class="form-control" name="type"
+                                        id="type" ng-model="type">
+                                    <input type="text" ng-required="true" class="form-control" name="email" id="email"
+                                        ng-model="user.email">
+                                    <span class="input-bar"></span>
+                                    <label>Email*</label>
+                                </div>
+                            </div>
+                            <div class="divider"></div>
+                            <div class="alert alert-danger" data-ng-show="showEmailInvalido">
+                                E-mail com formato inválido.
+                            </div>
+                        </fieldset>
+                    </div>
+                </form>
+            </div>
+        </md-dialog-content>
+        <md-dialog-actions layout="row">
+            <div style="padding: 15px;">
+                <md-button md-no-ink class="md-primary" ng-click="salvar()">
+                    Enviar
+                </md-button>
+                <md-button ng-click="cancel()">
+                    Cancelar
+                </md-button>
+            </div>
+        </md-dialog-actions>
+    </form>
+</md-dialog>

@@ -1,0 +1,44 @@
+<md-dialog style="min-width: 500px;">
+    <form ng-cloak>
+        <md-toolbar>
+            <div style="background-color: #01722c" class="md-toolbar-tools">
+                <h2>Hitórico situação pagamento</h2>
+                <span flex></span>
+                <a ng-click="cancel()">
+                    <i class="fa fa-close"></i>
+                </a>
+            </div>
+        </md-toolbar>
+
+        <md-dialog-content>
+            <div class="page">
+                <md-table-container>
+                    <table md-table>
+                        <thead md-head>
+                            <tr md-row>
+                                <th md-column>
+                                    <span>Descrição da situação</span>
+                                </th>
+                                <th md-column>
+                                    <span>Data</span>
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody md-body>
+                            <tr md-row md-select="item" md-select-id="item" md-auto-select
+                                ng-repeat="item in lista.historicoSituacoes">
+                                <td md-cell>{{item.situacao}}</td>
+                                <td md-cell>{{convertDate(item.criadoEm, false)}}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </md-table-container>
+               
+	        </div>
+
+            <div class="md-dialog-content text-center">
+				<button class="btn btn-default btn-w-md" ng-click="cancel()">Voltar</button>
+            </div>
+        </md-dialog-content>
+    </form>
+</md-dialog>

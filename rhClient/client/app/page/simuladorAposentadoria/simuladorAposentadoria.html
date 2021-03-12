@@ -1,0 +1,872 @@
+<div class="page-signin" ng-controller="simuladorAposentadoriaFormCtrl">
+    <div class="wrapper" style="margin-top: 50px;">
+        <div class="main-body" style="max-width: none;">
+            <div>
+                <div class="card bg-white">
+
+                    <div class="row">
+                        <div class="col-md-4" style="padding-top: 40px;">
+                            <section class="logo text-center">
+                                <h3 style="color: #01722c">
+                                    <a href="">
+                                        <img style="width: 100px;height: auto"
+                                            src="assets/images/Brasao_Prefeitura_Goiania_Prev_vert.png">
+                                    </a>
+                                    <br>
+                                    {{main.brand}}
+                                </h3>
+                            </section>
+                        </div>
+                        <div class="col-md-8" style="padding-top: 90px;">
+                            <div class="col-lg-12 clearfix">
+                                <h4 class="section-header" style="font-weight: bold">Formulário
+                                    Simulador de Aposentadoria</h4>
+                            </div>
+                        </div>
+                    </div>
+
+                    <form name="simuAposForm">
+                        <div class="col-md-12">
+                            <div class="panel panel-default">
+                                <div class="panel-body">
+                                    <h4 class="nome-usuario-label">Dados do servidor</h4>
+                                    <div layout layout-sm="column">
+                                        <md-input-container flex>
+                                            <label for="nome">Nome</label>
+                                            <input type="text" required placeholder="Insira seu nome" name="nome"
+                                                ng-model="simuladorAposentadoria.nome" />
+                                            <div ng-messages="simuAposForm.nome.$error" multiple role="alert">
+                                                <div ng-message="required">Campo de preenchimento
+                                                    obrigatório.</div>
+                                            </div>
+                                        </md-input-container>
+                                    </div>
+                                    <div layout layout-sm="column">
+                                        <md-input-container flex>
+                                            <label>Data de nascimento</label>
+                                            <md-icon class="material-icons icon-momentpicker"
+                                                ng-class="md-datepicker-calendar-icon" aria-label="md-calendar">
+                                                date_range</md-icon>
+                                            <input name="dataNascimento"
+                                                moment-picker="simuladorAposentadoria.dataNascimento"
+                                                placeholder="Selecione a data"
+                                                ng-model="simuladorAposentadoria.dataNascimento" format="DD/MM/YYYY"
+                                                locale="pt-br" start-view="month"
+                                                ng-model-options="{ updateOn: 'blur' }" ng-required="true">
+                                            <div ng-messages="simuAposForm.dataNascimento.$error" multiple role="alert">
+                                                <div ng-message="required">Campo de preenchimento
+                                                    obrigatório.</div>
+                                            </div>
+                                        </md-input-container>
+                                        <md-input-container flex>
+                                            <label for="sexo">Sexo</label>
+                                            <md-select required placeholder="Selecione o sexo" name="sexo"
+                                                ng-model="simuladorAposentadoria.sexo">
+                                                <md-option ng-value="sexo.value" ng-repeat="sexo in sexos">
+                                                    {{sexo.label}}</md-option>
+                                            </md-select>
+                                            <div ng-messages="simuAposForm.sexo.$error" multiple role="alert">
+                                                <div ng-message="required">Campo de preenchimento
+                                                    obrigatório.</div>
+                                            </div>
+                                        </md-input-container>
+                                        <md-input-container flex>
+                                            <label style="width: 100%">
+                                                Data de ingresso no serviço
+                                                público</label>
+                                            <md-icon class="material-icons icon-momentpicker"
+                                                ng-class="md-datepicker-calendar-icon" aria-label="md-calendar">
+                                                date_range</md-icon>
+                                            <input name="dataIngressoServicoPublico"
+                                                change="setTempoContribuicaoInicio()"
+                                                moment-picker="simuladorAposentadoria.dataIngressoServicoPublico"
+                                                min-date="simuladorAposentadoria.dataNascimento"
+                                                ng-disabled="simuAposForm.dataNascimento.$invalid"
+                                                placeholder="Selecione a data"
+                                                ng-model="simuladorAposentadoria.dataIngressoServicoPublico"
+                                                format="DD/MM/YYYY" locale="pt-br" start-view="month"
+                                                ng-model-options="{ updateOn: 'blur' }" ng-required="true">
+                                            <div ng-messages="simuAposForm.dataIngressoServicoPublico.$error" multiple
+                                                role="alert">
+                                                <div ng-message="required">Campo de preenchimento
+                                                    obrigatório.</div>
+                                            </div>
+                                        </md-input-container>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-12">
+                            <div class="panel panel-default">
+                                <div class="panel-body">
+
+                                    <div class="row">
+                                        <div class="col-lg-12">
+
+                                            <div layout="column" ng-cloak class="md-inline-form inputdemoBasicUsage">
+                                                <h4 class="nome-usuario-label">Atividade atual de contribuição do
+                                                    servidor público</h4>
+                                                <div layout layout-sm="column">
+                                                    <md-input-container flex>
+                                                        <label>Atividade atual</label>
+                                                        <md-select required placeholder="Selecione a modalidade"
+                                                            name="modalidade"
+                                                            ng-model="simuladorAposentadoria.modalidade">
+                                                            <md-option ng-value="modalidade"
+                                                                ng-repeat="modalidade in modalidadesAposentadorias">
+                                                                {{modalidade}}</md-option>
+                                                        </md-select>
+                                                        <div ng-messages="simuAposForm.modalidade.$error" role="alert"
+                                                            multiple>
+                                                            <div ng-message="required">Campo de preenchimento
+                                                                obrigatório.</div>
+                                                        </div>
+                                                    </md-input-container>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-12">
+                            <div class="panel panel-default">
+                                <div class="panel-body">
+                                    <h4 class="nome-usuario-label">Tempo de contribuição no cargo atual
+                                    </h4>
+                                    <div layout layout-sm="column">
+                                        <md-input-container flex>
+                                            <label>Início</label>
+                                            <md-icon class="material-icons icon-momentpicker"
+                                                ng-class="md-datepicker-calendar-icon" aria-label="md-calendar">
+                                                date_range</md-icon>
+                                            <input required name="tempoContribuicaoCargoAtualInicio"
+                                                change="validaTempoContribuicaoInicio()"
+                                                min-date="simuladorAposentadoria.dataNascimento" ng-disabled="true"
+                                                moment-picker="simuladorAposentadoria.tempoContribuicaoCargoAtualInicio"
+                                                placeholder="Selecione a data"
+                                                ng-model="simuladorAposentadoria.tempoContribuicaoCargoAtualInicio"
+                                                format="DD/MM/YYYY" locale="pt-br" start-view="month"
+                                                ng-model-options="{ updateOn: 'blur' }">
+                                            <div class="has-error" style="margin-top: 5px"
+                                                ng-messages="submitted && simuAposForm.tempoContribuicaoCargoAtualInicio.$error || tempoContribuicaoCargoAtualInicioError"
+                                                multiple role="alert">
+                                                <div ng-message="required">Campo de preenchimento
+                                                    obrigatório.</div>
+                                                <div ng-if="tempoContribuicaoCargoAtualInicioError">
+                                                    {{tempoContribuicaoCargoAtualInicioError}}</div>
+                                            </div>
+                                        </md-input-container>
+                                        <md-input-container flex>
+                                            <label>Fim</label>
+                                            <md-icon class="material-icons icon-momentpicker"
+                                                ng-class="md-datepicker-calendar-icon" aria-label="md-calendar">
+                                                date_range</md-icon>
+                                            <input required name="tempoContribuicaoCargoAtualFim"
+                                                change="validaTempoContribuicaoFim()"
+                                                min-date="simuladorAposentadoria.dataNascimento"
+                                                ng-disabled="simuAposForm.dataNascimento.$invalid"
+                                                moment-picker="simuladorAposentadoria.tempoContribuicaoCargoAtualFim"
+                                                placeholder="Selecione a data"
+                                                ng-model="simuladorAposentadoria.tempoContribuicaoCargoAtualFim"
+                                                format="DD/MM/YYYY" locale="pt-br" start-view="month"
+                                                ng-model-options="{ updateOn: 'blur' }">
+                                            <div class="has-error" style="margin-top: 5px"
+                                                ng-messages="submitted && simuAposForm.tempoContribuicaoCargoAtualFim.$error || tempoContribuicaoCargoAtualFimError"
+                                                multiple role="alert">
+                                                <div ng-message="required">Campo de preenchimento
+                                                    obrigatório.</div>
+                                                <div ng-if="tempoContribuicaoCargoAtualFimError">
+                                                    {{tempoContribuicaoCargoAtualFimError}}</div>
+                                            </div>
+                                        </md-input-container>
+                                        <md-input-container flex>
+                                            <div style="padding-top: 40px; padding-left: 50px">
+                                                <label
+                                                    ng-show="simuladorAposentadoria.tempoContribuicaoCargoAtualDias">Total:
+                                                    {{simuladorAposentadoria.tempoContribuicaoCargoAtualDias}}
+                                                    {{simuladorAposentadoria.tempoContribuicaoCargoAtualDias === 1 ? 'dia':'dias'}}
+                                                </label>
+                                            </div>
+                                        </md-input-container>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-12">
+                            <div class="panel panel-default">
+                                <div class="panel-body">
+
+                                    <div class="row">
+                                        <div class="col-lg-6">
+                                            <div layout="column" ng-cloak class="md-inline-form inputdemoBasicUsage">
+                                                <h4 class="nome-usuario-label">Licença prêmio não gozada até 16/12/1998
+                                                </h4>
+                                                <div layout layout-sm="column">
+                                                    <md-input-container flex>
+                                                        <label>Quantidade</label>
+                                                        <input placeholder="Insira a quantidade de licenças"
+                                                            type="number" name="qtdLicencaPremioFator2" min="0"
+                                                            ng-model="simuladorAposentadoria.qtdLicencaPremioFator2" />
+                                                    </md-input-container>
+                                                </div>
+                                                <p class="nome-usuario-label"
+                                                    ng-show="simuladorAposentadoria.qtdLicencaPremioFator2">
+                                                    Correspondento a
+                                                    {{simuladorAposentadoria.qtdLicencaPremioFator2 * 180}} dias</p>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-lg-6">
+                                            <div layout="column" ng-cloak class="md-inline-form inputdemoBasicUsage">
+                                                <h4 class="nome-usuario-label">Licença prêmio não gozada após 16/12/1998
+                                                </h4>
+                                                <div layout layout-sm="column">
+                                                    <md-input-container flex>
+                                                        <label>Quantidade</label>
+                                                        <input placeholder="Insira a quantidade de licenças"
+                                                            type="number" name="qtdLicencaPremioFator1" min="0"
+                                                            ng-model="simuladorAposentadoria.qtdLicencaPremioFator1" />
+                                                    </md-input-container>
+                                                </div>
+                                                <p class="nome-usuario-label"
+                                                    ng-show="simuladorAposentadoria.qtdLicencaPremioFator1">
+                                                    Correspondento
+                                                    a
+                                                    {{simuladorAposentadoria.qtdLicencaPremioFator1 * 90}} dias</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-12">
+                            <div class="panel panel-default">
+                                <div class="panel-body">
+
+                                    <div class="row">
+                                        <div class="col-lg-12">
+
+                                            <div layout="column" ng-cloak class="md-inline-form inputdemoBasicUsage">
+
+                                                <div layout layout-sm="column">
+                                                    <md-input-container flex>
+                                                        <h4 class="nome-usuario-label">Dedução de tempo de serviço por
+                                                            afastamento</h4>
+                                                        <md-radio-group ng-model="deducao.tipo">
+                                                            <md-radio-button value="PERIODO" class="md-primary">
+                                                                Por Período </md-radio-button>
+                                                            <md-radio-button value="TEMPO" class="md-primary">
+                                                                Por Tempo
+                                                            </md-radio-button>
+                                                        </md-radio-group>
+                                                    </md-input-container>
+                                                </div>
+
+                                                <div layout layout-sm="column" ng-show="deducao.tipo === 'PERIODO'">
+                                                    <md-input-container flex>
+                                                        <label>Início
+                                                        </label>
+                                                        <md-icon class="material-icons icon-momentpicker"
+                                                            ng-class="md-datepicker-calendar-icon"
+                                                            aria-label="md-calendar">date_range</md-icon>
+                                                        <input min-date="simuladorAposentadoria.dataNascimento"
+                                                            ng-disabled="simuAposForm.dataNascimento.$invalid"
+                                                            moment-picker="deducao.inicio"
+                                                            placeholder="Selecione a data" ng-model="deducao.inicio"
+                                                            format="DD/MM/YYYY" change="validaDeducaoInicio()"
+                                                            locale="pt-br" start-view="month"
+                                                            ng-model-options="{ updateOn: 'blur' }">
+                                                    </md-input-container>
+                                                    <md-input-container flex>
+                                                        <label>Fim
+                                                        </label>
+                                                        <md-icon class="material-icons icon-momentpicker"
+                                                            ng-class="md-datepicker-calendar-icon"
+                                                            aria-label="md-calendar">date_range</md-icon>
+                                                        <input min-date="simuladorAposentadoria.dataNascimento"
+                                                            ng-disabled="simuAposForm.dataNascimento.$invalid"
+                                                            change="validaDeducaoFim()" moment-picker="deducao.fim"
+                                                            placeholder="Selecione a data" ng-model="deducao.fim"
+                                                            format="DD/MM/YYYY" locale="pt-br" start-view="month"
+                                                            ng-model-options="{ updateOn: 'blur' }">
+                                                    </md-input-container>
+                                                    <md-input-container flex>
+                                                        <label>Houve contribuição?
+                                                        </label>
+                                                        <md-select ng-model="deducao.contribuicao">
+                                                            <md-option ng-value="contribuicao.value"
+                                                                ng-repeat="contribuicao in contribuicoes">
+                                                                {{contribuicao.label}}</md-option>
+                                                        </md-select>
+                                                    </md-input-container>
+                                                </div>
+
+                                                <div layout layout-sm="column" ng-show="deducao.tipo === 'TEMPO'">
+                                                    <md-input-container flex>
+                                                        <label>Ano
+                                                        </label>
+                                                        <input placeholder="Insira o Ano" type="number"
+                                                            name="deducaoAno" min="0" ng-model="deducao.ano" />
+                                                    </md-input-container>
+                                                    <md-input-container flex>
+                                                        <label>Mês
+                                                        </label>
+                                                        <input placeholder="Insira o Mês" type="number"
+                                                            name="deducaoMes" min="0" max="11" ng-model="deducao.mes" />
+                                                    </md-input-container>
+                                                    <md-input-container flex>
+                                                        <label>Dia</label>
+                                                        <input placeholder="Insira o Dia" type="number"
+                                                            name="deducaoDia" min="0" max="30" ng-model="deducao.dia" />
+                                                    </md-input-container>
+                                                    <md-input-container flex>
+                                                        <label>Houve contribuição?
+                                                        </label>
+                                                        <md-select ng-model="deducao.contribuicao">
+                                                            <md-option ng-value="contribuicao.value"
+                                                                ng-repeat="contribuicao in contribuicoes">
+                                                                {{contribuicao.label}}</md-option>
+                                                        </md-select>
+                                                    </md-input-container>
+                                                </div>
+
+                                                <section layout="row" layout-sm="column" layout-align="center center"
+                                                    layout-wrap>
+                                                    <md-button class="md-raised" ng-click="adicionarDeducao()">Adicionar
+                                                        Dedução</md-button>
+                                                </section>
+
+                                                <div layout layout-sm="column"
+                                                    ng-show="simuladorAposentadoria.deducoes.length > 0">
+                                                    <md-table-container flex>
+                                                        <table md-table>
+                                                            <thead md-head>
+                                                                <tr md-row>
+                                                                    <th md-column>Período / Tempo</th>
+                                                                    <th md-column>Dias</th>
+                                                                    <th md-column>Houve Contribuição</th>
+                                                                    <th md-column>Ações</th>
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody md-body>
+                                                                <tr md-row
+                                                                    ng-repeat="deducao in simuladorAposentadoria.deducoes">
+                                                                    <td md-cell>
+                                                                        <span ng-show="deducao.tipo === 'PERIODO'">
+                                                                            Período: {{deducao.inicio | moment: 'format':
+                                                                            'DD/MM/YYYY'}} à {{deducao.fim | moment: 'format':
+                                                                            'DD/MM/YYYY'}}
+                                                                        </span>
+                                                                        <span ng-show="deducao.tipo === 'TEMPO'">
+                                                                            Tempo:
+                                                                            {{deducao.ano ? deducao.ano : 0 }}
+                                                                            ano(s),
+                                                                            {{deducao.mes ? deducao.mes : 0 }}
+                                                                            mês(es) e
+                                                                            {{deducao.dia ? deducao.dia : 0 }}
+                                                                            dia(s).
+                                                                        </span>
+                                                                    </td>
+                                                                    <td md-cell>{{deducao.totalDias}} {{deducao.totalDias
+                                                                        > 1 ?
+                                                                        'dias' :
+                                                                        'dia'}}</td>
+                                                                    <td md-cell>{{deducao.contribuicao ===
+                                                                        'sim' ?
+                                                                        'Sim' :
+                                                                        'Não' }}</td>
+                                                                    <td md-cell>
+                                                                        <a href=""
+                                                                            ng-click="removeItemDeducoes($index)">
+                                                                            <md-tooltip md-direction="top">Remover
+                                                                            </md-tooltip>
+                                                                            <i class="fa fa-times fa-lg"></i>
+                                                                        </a>
+                                                                    </td>
+                                                                </tr>
+                                                            </tbody>
+                                                        </table>
+                                                    </md-table-container>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-12">
+                            <div class="panel panel-default">
+                                <div class="panel-body">
+
+                                    <div class="row">
+                                        <div class="col-lg-12">
+
+                                            <div layout="column" ng-cloak class="md-inline-form inputdemoBasicUsage">
+                                                <div layout layout-sm="column">
+                                                    <md-input-container flex>
+                                                        <h4 class="nome-usuario-label">Outros períodos de contribuição
+                                                            na
+                                                            carreira atual</h4>
+
+                                                        <md-radio-group ng-model="outroPeriodo.tipo">
+                                                            <md-radio-button value="PERIODO" class="md-primary">
+                                                                Por Período </md-radio-button>
+                                                            <md-radio-button value="TEMPO" class="md-primary">
+                                                                Por Tempo
+                                                            </md-radio-button>
+                                                        </md-radio-group>
+                                                    </md-input-container>
+                                                </div>
+                                                <div layout layout-sm="column"
+                                                    ng-show="outroPeriodo.tipo === 'PERIODO'">
+                                                    <md-input-container flex>
+                                                        <label>Início
+                                                        </label>
+                                                        <md-icon class="material-icons icon-momentpicker"
+                                                            ng-class="md-datepicker-calendar-icon"
+                                                            aria-label="md-calendar">date_range</md-icon>
+                                                        <input min-date="simuladorAposentadoria.dataNascimento"
+                                                            ng-disabled="simuAposForm.dataNascimento.$invalid"
+                                                            moment-picker="outroPeriodo.inicio"
+                                                            placeholder="Selecione a data"
+                                                            ng-model="outroPeriodo.inicio" format="DD/MM/YYYY"
+                                                            change="validaOutroPeriodoInicio()" locale="pt-br"
+                                                            start-view="month" ng-model-options="{ updateOn: 'blur' }">
+                                                    </md-input-container>
+                                                    <md-input-container flex>
+                                                        <label>Fim
+                                                        </label>
+                                                        <md-icon class="material-icons icon-momentpicker"
+                                                            ng-class="md-datepicker-calendar-icon"
+                                                            aria-label="md-calendar">date_range</md-icon>
+                                                        <input min-date="simuladorAposentadoria.dataNascimento"
+                                                            ng-disabled="simuAposForm.dataNascimento.$invalid"
+                                                            change="validaOutroPeriodoFim()"
+                                                            moment-picker="outroPeriodo.fim"
+                                                            placeholder="Selecione a data" ng-model="outroPeriodo.fim"
+                                                            format="DD/MM/YYYY" locale="pt-br" start-view="month"
+                                                            ng-model-options="{ updateOn: 'blur' }">
+                                                    </md-input-container>
+                                                    <md-input-container flex></md-input-container>
+                                                </div>
+
+                                                <div layout layout-sm="column" ng-show="outroPeriodo.tipo === 'TEMPO'">
+                                                    <md-input-container flex>
+                                                        <label>Ano
+                                                        </label>
+                                                        <input placeholder="Insira o Ano" type="number"
+                                                            name="outroPeriodoAno" min="0"
+                                                            ng-model="outroPeriodo.ano" />
+                                                    </md-input-container>
+                                                    <md-input-container flex>
+                                                        <label>Mês
+                                                        </label>
+                                                        <input placeholder="Insira o Mês" type="number"
+                                                            name="outroPeriodoMes" min="0" max="11"
+                                                            ng-model="outroPeriodo.mes" />
+                                                    </md-input-container>
+                                                    <md-input-container flex>
+                                                        <label>Dia</label>
+                                                        <input placeholder="Insira o Dia" type="number"
+                                                            name="outroPeriodoDia" min="0" max="30"
+                                                            ng-model="outroPeriodo.dia" />
+                                                    </md-input-container>
+                                                </div>
+
+                                                <section layout="row" layout-sm="column" layout-align="center center"
+                                                    layout-wrap>
+                                                    <md-button class="md-raised" ng-click="adicionarOutroPeriodo()">
+                                                        Adicionar
+                                                        outro período</md-button>
+                                                </section>
+
+                                                <div layout layout-sm="column"
+                                                    ng-show="simuladorAposentadoria.outrosPeriodos.length > 0">
+                                                    <md-table-container flex>
+                                                        <table md-table>
+                                                            <thead md-head>
+                                                                <tr md-row>
+                                                                    <th md-column>Período / Tempo</th>
+                                                                    <th md-column>Dias</th>
+                                                                    <th md-column>Ações</th>
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody md-body>
+                                                                <tr md-row
+                                                                    ng-repeat="outroPeriodo in simuladorAposentadoria.outrosPeriodos">
+                                                                    <td md-cell>
+                                                                        <span ng-show="outroPeriodo.tipo === 'PERIODO'">
+                                                                            Período: {{outroPeriodo.inicio | moment: 'format':
+                                                                            'DD/MM/YYYY'}} à {{outroPeriodo.fim | moment: 'format':
+                                                                            'DD/MM/YYYY'}}
+                                                                        </span>
+                                                                        <span ng-show="outroPeriodo.tipo === 'TEMPO'">
+                                                                            Tempo:
+                                                                            {{outroPeriodo.ano ? outroPeriodo.ano : 0 }}
+                                                                            ano(s),
+                                                                            {{outroPeriodo.mes ? outroPeriodo.mes : 0 }}
+                                                                            mês(es) e
+                                                                            {{outroPeriodo.dia ? outroPeriodo.dia : 0 }}
+                                                                            dia(s).
+                                                                        </span>
+                                                                    </td>
+                                                                    <td md-cell>{{outroPeriodo.totalDias}}
+                                                                        {{outroPeriodo.totalDias > 1 ?
+                                                                        'dias' :
+                                                                        'dia'}}</td>
+                                                                    <td md-cell>
+                                                                        <a href=""
+                                                                            ng-click="removeItemOutrosPeriodos($index)">
+                                                                            <md-tooltip md-direction="top">Remover
+                                                                            </md-tooltip>
+                                                                            <i class="fa fa-times fa-lg"></i>
+                                                                        </a>
+                                                                    </td>
+                                                                </tr>
+                                                            </tbody>
+                                                        </table>
+                                                    </md-table-container>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-12">
+                            <div class="panel panel-default">
+                                <div class="panel-body">
+
+                                    <div class="row">
+                                        <div class="col-lg-12">
+
+                                            <div layout="column" ng-cloak class="md-inline-form inputdemoBasicUsage">
+                                                <div layout layout-sm="column">
+                                                    <md-input-container flex>
+                                                        <h4 class="nome-usuario-label">Outros períodos de contribuição
+                                                            no
+                                                            serviço público</h4>
+                                                        <md-radio-group ng-model="outroPeriodoPublico.tipo">
+                                                            <md-radio-button value="PERIODO" class="md-primary">
+                                                                Por Período </md-radio-button>
+                                                            <md-radio-button value="TEMPO" class="md-primary">
+                                                                Por Tempo
+                                                            </md-radio-button>
+                                                        </md-radio-group>
+                                                    </md-input-container>
+                                                </div>
+                                                <div layout layout-sm="column"
+                                                    ng-show="outroPeriodoPublico.tipo === 'PERIODO'">
+                                                    <md-input-container flex>
+                                                        <label>Início
+                                                        </label>
+                                                        <md-icon class="material-icons icon-momentpicker"
+                                                            ng-class="md-datepicker-calendar-icon"
+                                                            aria-label="md-calendar">date_range</md-icon>
+                                                        <input min-date="simuladorAposentadoria.dataNascimento"
+                                                            ng-disabled="simuAposForm.dataNascimento.$invalid"
+                                                            moment-picker="outroPeriodoPublico.inicio"
+                                                            placeholder="Selecione a data"
+                                                            ng-model="outroPeriodoPublico.inicio" format="DD/MM/YYYY"
+                                                            change="validaOutroPeriodoPublicoInicio()" locale="pt-br"
+                                                            start-view="month" ng-model-options="{ updateOn: 'blur' }">
+                                                    </md-input-container>
+                                                    <md-input-container flex>
+                                                        <label>Fim
+                                                        </label>
+                                                        <md-icon class="material-icons icon-momentpicker"
+                                                            ng-class="md-datepicker-calendar-icon"
+                                                            aria-label="md-calendar">date_range</md-icon>
+                                                        <input min-date="simuladorAposentadoria.dataNascimento"
+                                                            ng-disabled="simuAposForm.dataNascimento.$invalid"
+                                                            change="validaOutroPeriodoPublicoFim()"
+                                                            moment-picker="outroPeriodoPublico.fim"
+                                                            placeholder="Selecione a data"
+                                                            ng-model="outroPeriodoPublico.fim" format="DD/MM/YYYY"
+                                                            locale="pt-br" start-view="month"
+                                                            ng-model-options="{ updateOn: 'blur' }">
+                                                    </md-input-container>
+                                                    <md-input-container flex>
+                                                        <label>Atividade
+                                                        </label>
+                                                        <md-select ng-model="outroPeriodoPublico.atividade">
+                                                            <md-option ng-value="atividade"
+                                                                ng-repeat="atividade in modalidadesAposentadorias">
+                                                                {{atividade}}</md-option>
+                                                        </md-select>
+                                                    </md-input-container>
+                                                </div>
+
+                                                <div layout layout-sm="column"
+                                                    ng-show="outroPeriodoPublico.tipo === 'TEMPO'">
+                                                    <md-input-container flex>
+                                                        <label>Ano
+                                                        </label>
+                                                        <input placeholder="Insira o Ano" type="number"
+                                                            name="outroPeriodoPublicoAno" min="0"
+                                                            ng-model="outroPeriodoPublico.ano" />
+                                                    </md-input-container>
+                                                    <md-input-container flex>
+                                                        <label>Mês
+                                                        </label>
+                                                        <input placeholder="Insira o Mês" type="number"
+                                                            name="outroPeriodoPublicoMes" min="0" max="11"
+                                                            ng-model="outroPeriodoPublico.mes" />
+                                                    </md-input-container>
+                                                    <md-input-container flex>
+                                                        <label>Dia</label>
+                                                        <input placeholder="Insira o Dia" type="number"
+                                                            name="outroPeriodoPublicoDia" min="0" max="30"
+                                                            ng-model="outroPeriodoPublico.dia" />
+                                                    </md-input-container>
+                                                    <md-input-container flex>
+                                                        <label>Atividade
+                                                        </label>
+                                                        <md-select ng-model="outroPeriodoPublico.atividade">
+                                                            <md-option ng-value="atividade"
+                                                                ng-repeat="atividade in modalidadesAposentadorias">
+                                                                {{atividade}}</md-option>
+                                                        </md-select>
+                                                    </md-input-container>
+                                                </div>
+
+                                                <section layout="row" layout-sm="column" layout-align="center center"
+                                                    layout-wrap>
+                                                    <md-button class="md-raised"
+                                                        ng-click="adicionarOutroPeriodoPublico()">Adicionar
+                                                        outro período público</md-button>
+                                                </section>
+
+                                                <div layout layout-sm="column"
+                                                    ng-show="simuladorAposentadoria.outrosPeriodosPublicos.length > 0">
+                                                    <md-table-container flex>
+                                                        <table md-table>
+                                                            <thead md-head>
+                                                                <tr md-row>
+                                                                    <th md-column>Período / Tempo</th>
+                                                                    <th md-column>Dias</th>
+                                                                    <th md-column>Atividade</th>
+                                                                    <th md-column>Ações</th>
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody md-body>
+                                                                <tr md-row
+                                                                    ng-repeat="outroPeriodoPublico in simuladorAposentadoria.outrosPeriodosPublicos">
+                                                                    <td md-cell>
+                                                                        <span
+                                                                            ng-show="outroPeriodoPublico.tipo === 'PERIODO'">
+                                                                            Período: {{outroPeriodoPublico.inicio | moment: 'format':
+                                                                            'DD/MM/YYYY'}} à {{outroPeriodoPublico.fim | moment: 'format':
+                                                                            'DD/MM/YYYY'}}
+                                                                        </span>
+                                                                        <span
+                                                                            ng-show="outroPeriodoPublico.tipo === 'TEMPO'">
+                                                                            Tempo:
+                                                                            {{outroPeriodoPublico.ano ? outroPeriodoPublico.ano : 0 }}
+                                                                            ano(s),
+                                                                            {{outroPeriodoPublico.mes ? outroPeriodoPublico.mes : 0 }}
+                                                                            mês(es) e
+                                                                            {{outroPeriodoPublico.dia ? outroPeriodoPublico.dia : 0 }}
+                                                                            dia(s).
+                                                                        </span>
+                                                                    </td>
+                                                                    <td md-cell>{{outroPeriodoPublico.totalDias}}
+                                                                        {{outroPeriodoPublico.totalDias > 1 ? 'dias'
+                                                                        :
+                                                                        'dia'}}</td>
+                                                                    <td md-cell>{{outroPeriodoPublico.atividade}}</td>
+                                                                    <td md-cell>
+                                                                        <a href=""
+                                                                            ng-click="removeItemOutrosPeriodosPublicos($index)">
+                                                                            <md-tooltip md-direction="top">Remover
+                                                                            </md-tooltip>
+                                                                            <i class="fa fa-times fa-lg"></i>
+                                                                        </a>
+                                                                    </td>
+                                                                </tr>
+                                                            </tbody>
+                                                        </table>
+                                                    </md-table-container>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-12">
+                            <div class="panel panel-default">
+                                <div class="panel-body">
+                                    <div class="row">
+                                        <div class="col-lg-12">
+                                            <div layout="column" ng-cloak class="md-inline-form inputdemoBasicUsage">
+                                                <div layout layout-sm="column">
+                                                    <md-input-container flex>
+                                                        <h4 class="nome-usuario-label">Averbações de tempo de
+                                                            contribuição
+                                                            (INSS)</h4>
+                                                        <md-radio-group ng-model="averbacao.tipo">
+                                                            <md-radio-button value="PERIODO" class="md-primary">
+                                                                Por Período </md-radio-button>
+                                                            <md-radio-button value="TEMPO" class="md-primary">
+                                                                Por Tempo
+                                                            </md-radio-button>
+                                                        </md-radio-group>
+                                                    </md-input-container>
+                                                </div>
+                                                <div layout layout-sm="column" ng-show="averbacao.tipo === 'PERIODO'">
+                                                    <md-input-container flex>
+                                                        <label>Início
+                                                        </label>
+                                                        <md-icon class="material-icons icon-momentpicker"
+                                                            ng-class="md-datepicker-calendar-icon"
+                                                            aria-label="md-calendar">date_range</md-icon>
+                                                        <input min-date="simuladorAposentadoria.dataNascimento"
+                                                            ng-disabled="simuAposForm.dataNascimento.$invalid"
+                                                            moment-picker="averbacao.inicio"
+                                                            placeholder="Selecione a data" ng-model="averbacao.inicio"
+                                                            format="DD/MM/YYYY" change="validaAverbacaoInicio()"
+                                                            locale="pt-br" start-view="month"
+                                                            ng-model-options="{ updateOn: 'blur' }">
+                                                    </md-input-container>
+                                                    <md-input-container flex>
+                                                        <label>Fim
+                                                        </label>
+                                                        <md-icon class="material-icons icon-momentpicker"
+                                                            ng-class="md-datepicker-calendar-icon"
+                                                            aria-label="md-calendar">date_range</md-icon>
+                                                        <input min-date="simuladorAposentadoria.dataNascimento"
+                                                            ng-disabled="simuAposForm.dataNascimento.$invalid"
+                                                            change="validaAverbacaoFim()" moment-picker="averbacao.fim"
+                                                            placeholder="Selecione a data" ng-model="averbacao.fim"
+                                                            format="DD/MM/YYYY" locale="pt-br" start-view="month"
+                                                            ng-model-options="{ updateOn: 'blur' }">
+                                                    </md-input-container>
+                                                    <md-input-container flex>
+                                                        <label>Atividade
+                                                        </label>
+                                                        <md-select ng-model="averbacao.atividade">
+                                                            <md-option ng-value="atividade"
+                                                                ng-repeat="atividade in modalidadesAposentadorias">
+                                                                {{atividade}}</md-option>
+                                                        </md-select>
+                                                    </md-input-container>
+                                                </div>
+
+                                                <div layout layout-sm="column" ng-show="averbacao.tipo === 'TEMPO'">
+                                                    <md-input-container flex>
+                                                        <label>Ano
+                                                        </label>
+                                                        <input placeholder="Insira o Ano" type="number"
+                                                            name="averbacaoAno" min="0" ng-model="averbacao.ano" />
+                                                    </md-input-container>
+                                                    <md-input-container flex>
+                                                        <label>Mês
+                                                        </label>
+                                                        <input placeholder="Insira o Mês" type="number"
+                                                            name="averbacaoMes" min="0" max="11"
+                                                            ng-model="averbacao.mes" />
+                                                    </md-input-container>
+                                                    <md-input-container flex>
+                                                        <label>Dia</label>
+                                                        <input placeholder="Insira o Dia" type="number"
+                                                            name="averbacaoDia" min="0" max="30"
+                                                            ng-model="averbacao.dia" />
+                                                    </md-input-container>
+                                                    <md-input-container flex>
+                                                        <label>Atividade
+                                                        </label>
+                                                        <md-select ng-model="averbacao.atividade">
+                                                            <md-option ng-value="atividade"
+                                                                ng-repeat="atividade in modalidadesAposentadorias">
+                                                                {{atividade}}</md-option>
+                                                        </md-select>
+                                                    </md-input-container>
+                                                </div>
+
+                                                <section layout="row" layout-sm="column" layout-align="center center"
+                                                    layout-wrap>
+                                                    <md-button class="md-raised" ng-click="adicionarAverbacao()">
+                                                        Adicionar
+                                                        averbação</md-button>
+                                                </section>
+
+                                                <div layout layout-sm="column"
+                                                    ng-show="simuladorAposentadoria.averbacoes.length > 0">
+                                                    <md-table-container flex>
+                                                        <table md-table>
+                                                            <thead md-head>
+                                                                <tr md-row>
+                                                                    <th md-column>Período / Tempo</th>
+                                                                    <th md-column>Dias</th>
+                                                                    <th md-column>Atividade</th>
+                                                                    <th md-column>Ações</th>
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody md-body>
+                                                                <tr md-row
+                                                                    ng-repeat="averbacao in simuladorAposentadoria.averbacoes">
+                                                                    <td md-cell>
+                                                                        <span ng-show="averbacao.tipo === 'PERIODO'">
+                                                                            Período: {{averbacao.inicio | moment: 'format':
+                                                                            'DD/MM/YYYY'}} à {{averbacao.fim | moment: 'format':
+                                                                            'DD/MM/YYYY'}}
+                                                                        </span>
+                                                                        <span ng-show="averbacao.tipo === 'TEMPO'">
+                                                                            Tempo:
+                                                                            {{averbacao.ano ? averbacao.ano : 0 }}
+                                                                            ano(s),
+                                                                            {{averbacao.mes ? averbacao.mes : 0 }}
+                                                                            mês(es) e
+                                                                            {{averbacao.dia ? averbacao.dia : 0 }}
+                                                                            dia(s).
+                                                                        </span>
+                                                                    </td>
+                                                                    <td md-cell>{{averbacao.totalDias}}
+                                                                        {{averbacao.totalDias > 1 ? 'dias' :
+                                                                        'dia'}}</td>
+                                                                    <td md-cell>{{averbacao.atividade}}</td>
+                                                                    <td md-cell>
+                                                                        <a href=""
+                                                                            ng-click="removeItemAverbacoes($index)">
+                                                                            <md-tooltip md-direction="top">Remover
+                                                                            </md-tooltip>
+                                                                            <i class="fa fa-times fa-lg"></i>
+                                                                        </a>
+                                                                    </td>
+                                                                </tr>
+                                                            </tbody>
+                                                        </table>
+                                                    </md-table-container>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row" style="margin: 50px 0">
+                            <div class="col-md-12 text-center" style="margin-top: 25px;">
+                                <button ng-click="submitted=true;simular();" ui-wave
+                                    class="btn btn-primary btn-w-md">Simular</button>
+                                <button class="btn btn-default btn-w-md" ui-wave ng-click="submitted=false;reset()"
+                                    type="reset">Limpar</button>
+                            </div>
+                        </div>
+                    </form>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

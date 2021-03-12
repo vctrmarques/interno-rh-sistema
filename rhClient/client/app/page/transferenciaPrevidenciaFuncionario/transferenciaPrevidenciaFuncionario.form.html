@@ -1,0 +1,227 @@
+<div class="page" ng-controller="transferenciaPrevidenciaFuncionarioFormCtrl">
+    <div class="row ui-section">
+        <div class="col-lg-8 clearfix">
+            <h2 class="section-header">{{!detalhes ? 'Formulário de Transferência' : 'Detalhes da Transferência'}}</h2>
+        </div>
+        <div class="col-md-12">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <form ng-disabled="detalhes" name="transferenciaForm">
+                        <div class="row">
+                            <div class="col-lg-6">
+                                <fieldset>
+                                    <legend>Origem</legend>
+                                    <div class="row">
+                                        <div class="col-lg-12">
+                                            <md-autocomplete ng-disabled="detalhes" md-no-cache="noCache"
+                                                md-floating-label="Funcionário" md-selected-item="funcionario"
+                                                md-search-text="searchFuncionario"
+                                                md-items="funcionario in querySearchFuncionario(searchFuncionario)"
+                                                md-item-text="funcionario.nome" md-delay="100" md-min-length="3"
+                                                md-selected-item-change="adicionarFuncionario()">
+                                                <md-item-template> <span md-highlight-text="searchFuncionario"
+                                                        md-highlight-flags="^i"> {{funcionario.nome}}</span>
+                                                </md-item-template>
+                                                <md-not-found> Item "{{search}}" não
+                                                    encontrado. </md-not-found>
+                                            </md-autocomplete>
+                                            <div ng-messages="funcionario.nome.$error">
+                                                <div ng-message="required">Campo de preenchimento obrigatório.</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-lg-6">
+                                            <md-input-container class="md-block">
+                                                <label>Empresa</label>
+                                                <md-select name="empresa" ng-model="transferencia.empresaFilialId"
+                                                    required ng-disabled="true">
+                                                    <md-option ng-repeat="empresa in list.empresa"
+                                                        value="{{empresa.id}}">
+                                                        {{empresa.nomeFilial}}
+                                                    </md-option>
+                                                </md-select>
+                                                <div multiple ng-messages="transferenciaForm.empresa.$error"
+                                                    role="alert">
+                                                    <div ng-message="required">Campo de preenchimento obrigatório.</div>
+                                                </div>
+                                            </md-input-container>
+                                        </div>
+                                        <div class="col-lg-6">
+                                            <md-input-container class="md-block">
+                                                <label>Filial</label>
+                                                <md-select name="filial" ng-change="changeFilial();" ng-disabled="true"
+                                                    ng-model="transferencia.filialId" required>
+                                                    <md-option ng-repeat="item in list.filial " ng-value="item.id">
+                                                        {{item.nomeFilial}}
+                                                    </md-option>
+                                                </md-select>
+                                                <div multiple ng-messages="transferenciaForm.filial.$error"
+                                                    role="alert">
+                                                    <div ng-message="required">Campo de preenchimento obrigatório.</div>
+                                                </div>
+                                            </md-input-container>
+                                        </div>
+                                        <div class="col-lg-6">
+                                            <md-input-container class="md-block">
+                                                <label>Lotação</label>
+                                                <input required ng-disabled="true" name="proporcao" ng-model="funcionario.lotacao.descricao">
+                                            </md-input-container>
+                                        </div>
+                                    </div>
+                                </fieldset>
+                            </div>
+                            <div class="col-lg-6">
+                                <fieldset>
+                                    <legend>Destino</legend>
+                                    <div class="row">
+                                        <div class="col-lg-12">
+                                            <md-input-container class="md-block">
+                                                <label>Situação Funcional</label>
+                                                <md-select name="situacaoFuncional" ng-disabled="detalhes"
+                                                    ng-change="changeSituacaoFuncional(transferencia.situacaoFuncionalId)"
+                                                    ng-model="transferencia.situacaoFuncionalId" required>
+                                                    <md-option ng-repeat="item in list.situacaoFuncional "
+                                                        ng-value="item.id">{{item.descricao}}
+                                                    </md-option>
+                                                </md-select>
+                                                <div ng-messages="transferenciaForm.situacaoFuncional.$error" multiple>
+                                                    <div ng-message="required">Campo de preenchimento obrigatório.</div>
+                                                </div>
+                                            </md-input-container>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-lg-6">
+                                            <md-input-container class="md-block">
+                                                <label>Filial Destino</label>
+                                                <md-select name="filialDestino" ng-disabled="detalhes"
+                                                    ng-change="changeFilialDestino()"
+                                                    ng-model="transferencia.filialDestinoId" required>
+                                                    <md-option ng-value="null">Selecione</md-option>
+                                                    <md-option ng-repeat="item in list.filial " ng-value="item.id">
+                                                        {{item.nomeFilial}}
+                                                    </md-option>
+                                                </md-select>
+                                                <div ng-messages="transferenciaForm.filialDestino.$error" multiple>
+                                                    <div ng-message="required">Campo de preenchimento obrigatório.</div>
+                                                </div>
+                                            </md-input-container>
+                                        </div>
+                                        <div class="col-lg-6">
+                                            <md-input-container class="md-block">
+                                                <label>Lotação Destino</label>
+                                                <md-select name="lotacaoDestino" ng-disabled="detalhes"
+                                                    ng-model="transferencia.lotacaoDestinoId" required>
+                                                    <md-option ng-repeat="item in list.lotacoes " ng-value="item.id">
+                                                        {{item.descricao}}
+                                                    </md-option>
+                                                </md-select>
+                                                <div ng-messages="transferenciaForm.lotacaoDestino.$error" multiple>
+                                                    <div ng-message="required">Campo de preenchimento obrigatório.</div>
+                                                </div>
+                                            </md-input-container>
+                                        </div>
+                                        <div class="col-lg-6">
+                                            <md-input-container class="md-block" flex> <label>Data Solicitação</label>
+                                                <md-icon class="material-icons icon-momentpicker"
+                                                    ng-class="md-datepicker-calendar-icon" aria-label="md-calendar">
+                                                    date_range</md-icon> <input name="dataSolicitacao"
+                                                    ng-required="situacaoFuncional.modalidade == 'Aposentadoria'"
+                                                    moment-picker="transferencia.dataInicio"
+                                                    placeholder="Selecione a data"
+                                                    ng-model="transferencia.dataSolicitacao" format="DD/MM/YYYY"
+                                                    locale="pt-br" start-view="month" ng-disabled="detalhes">
+                                                <div ng-messages="transferenciaForm.dataSolicitacao.$error" multiple>
+                                                    <div ng-message="required">Campo de preenchimento obrigatório.</div>
+                                                </div>
+                                            </md-input-container>
+                                        </div>
+                                        <div class="col-lg-6">
+                                            <md-input-container class="md-block" flex> <label>Data Aposentadoria</label>
+                                                <md-icon class="material-icons icon-momentpicker"
+                                                    ng-class="md-datepicker-calendar-icon" aria-label="md-calendar">
+                                                    date_range</md-icon> <input name="dataAposentadoria"
+                                                    ng-required="situacaoFuncional.modalidade == 'Aposentadoria'"
+                                                    moment-picker="transferencia.dataAposentadoria"
+                                                    placeholder="Selecione a data"
+                                                    ng-model="transferencia.dataAposentadoria" format="DD/MM/YYYY"
+                                                    locale="pt-br" start-view="month" ng-disabled="detalhes">
+                                                <div ng-messages="transferenciaForm.dataAposentadoria.$error" multiple>
+                                                    <div ng-message="required">Campo de preenchimento obrigatório.</div>
+                                                </div>
+                                            </md-input-container>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-lg-12">
+                                            <md-input-container class="md-block">
+                                                <label>Motivo Aposentadoria</label>
+                                                <md-select name="tipoAposentadoriaId" ng-disabled="detalhes"
+                                                    ng-model="transferencia.tipoAposentadoriaId">
+                                                    <md-option ng-repeat="item in list.tipoAposentadoria "
+                                                        ng-value="item.id">{{item.descricao}}
+                                                    </md-option>
+                                                </md-select>
+                                            </md-input-container>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-lg-4">
+                                            <md-input-container class="md-block">
+                                                <label>Tipo de Proporção</label>
+                                                <md-select name="tipoProporcao" ng-disabled="detalhes"
+                                                    ng-model="transferencia.tipoProporcao" required>
+                                                    <md-option ng-repeat="item in list.tipoProporcao "
+                                                        ng-value="item.label">{{item.value}}
+                                                    </md-option>
+                                                </md-select>
+                                                <div ng-messages="transferenciaForm.tipoProporcao.$error" multiple>
+                                                    <div ng-message="required">Campo de preenchimento obrigatório.</div>
+                                                </div>
+                                            </md-input-container>
+                                        </div>
+                                        <div class="col-lg-4">
+                                            <md-input-container class="md-block">
+                                                <label>Proporção</label>
+                                                <input name="proporcao" ng-model="transferencia.proporcao">
+                                            </md-input-container>
+                                        </div>
+                                        <div class="col-lg-4">
+                                            <md-input-container class="md-block">
+                                                <label>Processo</label>
+                                                <input name="processo" ng-model="transferencia.processo" required>
+                                                <div multiple ng-messages="transferenciaForm.processo.$error"
+                                                    role="alert">
+                                                    <div ng-message="required">Campo de preenchimento obrigatório.</div>
+                                                </div>
+                                            </md-input-container>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-lg-12">
+                                            <md-input-container class="md-block">
+                                                <label>Observação</label>
+                                                <input name="avaliacao" type="text" ng-model="transferencia.observacao">
+                                            </md-input-container>
+                                        </div>
+                                    </div>
+                                </fieldset>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12 text-center">
+                                <button ng-if="!detalhes" ng-click="save()" ui-wave
+                                ng-disabled="transferenciaForm.$invalid" 
+                                    class="btn btn-primary btn-w-md">
+                                    <md-tooltip ng-if="transferenciaForm.$invalid" md-direction="top">Preencha todos os campos obrigatórios.</md-tooltip>
+                                    Transferir</button>
+                                <p class="btn btn-default btn-w-md" ui-wave data-ng-click="goBack()">Voltar</p>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

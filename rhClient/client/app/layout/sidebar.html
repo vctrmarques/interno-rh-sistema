@@ -1,0 +1,22 @@
+<div class="nav-wrapper" ng-controller="sidebarCtrl">
+    <ul id="nav" class="nav" data-slim-scroll data-collapse-nav data-highlight-active>
+        <li class="nav-title">
+            <span data-translate="Navegação"></span>
+        </li>
+        <li ng-repeat="menu in menus">
+            <a md-button aria-label="menu" href="" ng-click="collapseNav($index);">
+                <i class="fa {{menu.faIcon}} fa-lg"></i>
+                <span data-translate="{{menu.nome}}"></span>
+                <i class="fa  icon-has-ul" ng-class="{'fa-angle-up' : menu.exibirFilhos,'fa-angle-down' : !menu.exibirFilhos}"></i>
+            </a>
+            <ul id="ul-{{$index}}">
+                <li ng-repeat="subMenu in menu.subMenus">
+                    <a md-button aria-label="menu" href="#!{{subMenu.url}}">
+                        <i class="fa fa-circle"></i>
+                        <span data-translate="{{subMenu.nome}}"></span>
+                    </a>
+                </li>
+            </ul>
+        </li>
+    </ul>
+</div>

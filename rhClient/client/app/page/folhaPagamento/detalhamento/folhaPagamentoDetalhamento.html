@@ -1,0 +1,217 @@
+<div class="page" ng-controller="folhaPagamentoDetalhamentoCtrl">
+    <div class="row ui-section">
+        <div class="col-lg-12 clearfix">
+            <h2 class="section-header" style="float: left;">Detalhes da Folha de Pagamento</h2>
+            <div style="float: right">
+            </div>
+        </div>
+        <div class="col-md-12">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <article class="article">
+                        <div class="row">
+                            <div layout="column" ng-cloak class="md-inline-form inputdemoBasicUsage">
+                                <div layout-padding class="col-md-12">
+                                    <form id="folha-pag" ng-disabled="detalhes" name="folhaPagamentoForm"
+                                        ng-submit="save()">
+                                        <div class="panel panel-default">
+                                            <div class="panel-body">
+                                                <div class="center row">
+                                                    <h4>{{folha.tipoProcessamento.descricao}}</h4>
+                                                </div>
+                                                <div ng-if="!detalhes" class="row" style="padding: 10px;">
+                                                    <div class="col-md-12 text-center">
+                                                        <p class="btn btn-info btn-w-md" ui-wave style="margin: 0 10px;"
+                                                            ng-disabled="folha && folha.status === 'Bloqueado'"
+                                                            ui-sref="folhaPagamentoAdicionarFuncionario({ id: folha.id })">
+                                                            Adicionar Funcionário</p>
+                                                        <p class="btn btn-info btn-w-md" ui-wave style="margin: 0 10px;"
+                                                            ng-disabled="folha && folha.status === 'Bloqueado'"
+                                                            ui-sref="folhaPagamentoAdicionarLancamento({ id: folha.id})">
+                                                            Adicionar Lançamento
+                                                        </p>
+                                                        <p class="btn btn-warning btn-w-md" ui-wave
+                                                            style="margin: 0 10px;" ng-if="!loadingDownload"
+                                                            ng-click="downloadAllContrachequesFilial($event, folha.id)">
+                                                            Imprimir Contracheques
+                                                        </p>
+                                                        <md-progress-circular ng-if="loadingDownload"
+                                                            md-mode="indeterminate"></md-progress-circular>
+                                                        <p class="btn btn-info btn-w-md" ui-wave style="margin: 0 10px;"
+                                                            ng-disabled="folha.status === 'Bloqueado' || folha.situacao.value === 'PENDENTE'"
+                                                            ng-click="showRecalculo($event)">
+                                                            Recalcular
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <article class="article">
+                                                    <md-card class="no-margin-h">
+                                                        <div layout="column">
+                                                            <div layout-padding>
+                                                                <div layout layout-sm="column">
+                                                                    <md-input-container flex>
+                                                                        <label>Nome</label>
+                                                                        <input ng-model="filtro.nome"
+                                                                            placeholder="Buscar por nome, Matrícula ou CPF...">
+                                                                    </md-input-container>
+                                                                    <md-input-container flex>
+                                                                        <label>Lotação</label>
+                                                                        <md-select ng-disabled="detalhes"
+                                                                            name="tipoFolha" ng-model="filtro.lotacao"
+                                                                            placeholder="Lotação">
+                                                                            <md-option ng-repeat="lotacao in lotacoes"
+                                                                                ng-value="lotacao.descricao">
+                                                                                {{lotacao.descricao}}
+                                                                            </md-option>
+                                                                        </md-select>
+                                                                    </md-input-container>
+                                                                    <md-input-container flex>
+                                                                        <label>Situação Funcional</label>
+                                                                        <md-select ng-disabled="detalhes"
+                                                                            ng-model="filtro.situacaoFuncional"
+                                                                            placeholder="Situação Funcional">
+                                                                            <md-option
+                                                                                ng-repeat="item in situacaoFuncionalList"
+                                                                                ng-value="item">
+                                                                                {{item}}
+                                                                            </md-option>
+                                                                        </md-select>
+                                                                    </md-input-container>
+                                                                    <md-input-container flex>
+                                                                        <label>Situação</label>
+                                                                        <md-select ng-disabled="detalhes"
+                                                                            ng-model="filtro.situacao"
+                                                                            placeholder="Situação">
+                                                                            <md-option ng-repeat="item in situacaoList"
+                                                                                ng-value="item.value">
+                                                                                {{item.label}}
+                                                                            </md-option>
+                                                                        </md-select>
+                                                                    </md-input-container>
+                                                                    <md-button class="md-icon-button"
+                                                                        ng-click="limpaFiltro()">
+                                                                        <md-tooltip md-direction="top">Limpar Filtros
+                                                                        </md-tooltip>
+                                                                        <md-icon>autorenew</md-icon>
+                                                                    </md-button>
+                                                                    <md-button class="md-icon-button"
+                                                                        ng-click="loadList()">
+                                                                        <md-tooltip md-direction="top">Atualizar
+                                                                        </md-tooltip>
+                                                                        <md-icon>refresh</md-icon>
+                                                                    </md-button>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <md-table-container>
+                                                            <table md-table ng-model="selected"
+                                                                md-row-select="folha.status !== 'Bloqueado' && folha.situacao.value !== 'PENDENTE'"
+                                                                multiple="true" md-progress="promise">
+                                                                <thead md-head md-order="query.order"
+                                                                    md-on-reorder="loadList">
+                                                                    <tr md-row>
+                                                                        <th md-column md-order-by="matricula">
+                                                                            <span>Matrícula</span>
+                                                                        </th>
+                                                                        <th md-column md-order-by="nome">
+                                                                            <span>Nome</span>
+                                                                        </th>
+                                                                        <th md-column
+                                                                            md-order-by="tipoSituacaoFuncional">
+                                                                            <span>Situação Funcional</span>
+                                                                        </th>
+                                                                        <th md-column>
+                                                                            <span>Filial</span>
+                                                                        </th>
+                                                                        <th md-column>
+                                                                            <span>Lotação</span>
+                                                                        </th>
+                                                                        <th md-column ng-if="!detalhes">
+                                                                            <span>Situação</span>
+                                                                        </th>
+                                                                        <th md-column style="width: 80px;">
+                                                                            <span>Ações</span>
+                                                                        </th>
+                                                                    </tr>
+                                                                </thead>
+                                                                <tbody md-body>
+                                                                    <tr md-row md-select="item.id"
+                                                                        md-select-id="item.id"
+                                                                        ng-repeat="item in list.data">
+                                                                        <td md-cell>
+                                                                            {{item.matricula}}
+                                                                        </td>
+                                                                        <td md-cell>
+                                                                            {{item.nome}}
+                                                                        </td>
+                                                                        <td md-cell>
+                                                                            {{item.tipoSituacaoFuncional}}
+                                                                        </td>
+                                                                        <td md-cell>
+                                                                            {{item.orgaoPagador}}
+                                                                        </td>
+                                                                        <td md-cell>
+                                                                            {{item.lotacao}}
+                                                                        </td>
+                                                                        <td md-cell>
+                                                                            {{item.situacao}}
+                                                                        </td>
+                                                                        <td md-cell>
+                                                                            <a href="" ng-if="!detalhes"
+                                                                                ng-show="!(folha && folha.status === 'Bloqueado')"
+                                                                                ng-click="showDeleteContracheque($event, item)">
+                                                                                <md-tooltip md-direction="top">
+                                                                                    Remover Funcionário
+                                                                                </md-tooltip>
+                                                                                <i class="fa fa-trash-o fa-lg"></i>
+                                                                            </a>
+                                                                            <a href="" target="_blank"
+                                                                                ng-click="showContrachequeFuncionario($event, item)">
+                                                                                <md-tooltip md-direction="top">
+                                                                                    Contracheque do
+                                                                                    Funcionário
+                                                                                </md-tooltip>
+                                                                                <i class="fa fa-money fa-lg"></i>
+                                                                            </a>
+                                                                            <a href="" target="_blank"
+                                                                                ng-click="downloadContrachequeFuncionario($event, item)">
+                                                                                <md-tooltip md-direction="top">
+                                                                                    Download do contracheque
+                                                                                </md-tooltip>
+                                                                                <i class="fa fa-download fa-lg"></i>
+                                                                            </a>
+                                                                        </td>
+                                                                    </tr>
+                                                                </tbody>
+                                                            </table>
+                                                        </md-table-container>
+                                                        <md-table-pagination
+                                                            md-label="{page: 'Página:', rowsPerPage: 'Registros por página:', of: 'de'}"
+                                                            md-limit="query.limit" md-limit-options="limitOptions"
+                                                            md-page="query.page" md-total="{{list.count}}"
+                                                            md-on-paginate="loadList" md-page-select>
+                                                        </md-table-pagination>
+                                                    </md-card>
+                                                </article>
+                                                <div class="row">
+                                                    <div class="col-md-12 text-center">
+                                                        <p class="btn btn-default btn-w-md" ui-wave
+                                                            data-ng-click="goBack()">Voltar</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </article>
+                </div>
+            </div>
+        </div>
+    </div>

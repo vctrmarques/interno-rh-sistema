@@ -1,0 +1,148 @@
+<md-dialog style="min-width:50%;max-height:810px; ">
+    <form ng-cloak>
+        <md-toolbar>
+            <div style="background-color: #01722c" class="md-toolbar-tools">
+                <h2>Customização do relatório - {{nome}}</h2>
+                <span flex></span>
+                <a ng-click="cancel()">
+                    <i class="fa fa-close"></i>
+                </a>
+            </div>
+        </md-toolbar>
+
+        <md-dialog-content>
+            <md-tabs md-dynamic-height md-border-bottom>
+              <md-tab label="Contracheque" md-on-select="abaAtual('CC')" flex>
+                <md-content>
+                    <div class="col-md-6">
+                        <md-switch ng-model="contraCheque.dadosBancarios"  class="md-primary">
+                            Exibir banco, agência e conta corrente
+                        </md-switch>
+                        <md-switch ng-model="contraCheque.matricula"  class="md-primary">
+                            Exibir matrícula
+                        </md-switch>
+                        <md-switch ng-model="contraCheque.funcionario"  class="md-primary">
+                            Exibir funcionário
+                        </md-switch>
+                        <md-switch ng-model="contraCheque.lotacao"  class="md-primary">
+                            Exibir lotação
+                        </md-switch>
+                        <md-switch ng-model="contraCheque.funcao"  class="md-primary">
+                            Exibir função
+                        </md-switch>
+                        <md-switch ng-model="contraCheque.dependenteIR"  class="md-primary">
+                            Exibir dependente de IR
+                        </md-switch>
+                        <md-switch ng-model="contraCheque.dependenteSalarioFamilia"  class="md-primary">
+                            Exibir dependente de salário família
+                        </md-switch>
+                    </div>
+                    <div class="col-md-6">
+                        <md-switch ng-model="contraCheque.dataAdmissao"  class="md-primary">
+                            Exibir data de admissão
+                        </md-switch>
+                        <md-switch ng-model="contraCheque.situacaoFuncional"  class="md-primary">
+                            Exibir situação funcional
+                        </md-switch>
+                        <md-switch ng-model="contraCheque.cargaHoraria"  class="md-primary">
+                            Exibir carga horária
+                        </md-switch>
+                        <md-switch ng-model="contraCheque.verbasVantagem"  class="md-primary">
+                            Exibir verbas de vantagem
+                        </md-switch>
+                        <md-switch ng-model="contraCheque.verbasDesconto"  class="md-primary">
+                            Exibir verbas de desconto
+                        </md-switch>
+                        <md-switch ng-model="contraCheque.totalizadoresVerbas"  class="md-primary">
+                            Exibir totalizadores das verbas
+                        </md-switch>
+                        
+                    </div>
+                    
+                </md-content>
+              </md-tab>
+              <md-tab label="Verbas - Situação" md-on-select="abaAtual('VS')" flex>
+                <md-content class="col-md-12">
+                    <md-switch ng-model="verbasSituacao.resumoLotacao"  class="md-primary">
+                        Exibir resumo por lotação
+                    </md-switch>
+                    <md-switch ng-model="verbasSituacao.resumoFilial"  class="md-primary">
+                        Exibir resumo por filial
+                    </md-switch>
+                    <md-switch ng-model="verbasSituacao.resumoEmpresa"  class="md-primary">
+                        Exibir resumo por empresa
+                    </md-switch>
+                    <md-switch ng-model="verbasSituacao.vantagens"  class="md-primary">
+                        Exibir vantagens
+                    </md-switch>
+                    <md-switch ng-model="verbasSituacao.descontos"  class="md-primary">
+                        Exibir descontos
+                    </md-switch>
+                    <md-switch ng-model="verbasSituacao.totaisFuncionarios"  class="md-primary">
+                        Exibir totais de funcionários
+                    </md-switch>
+                    <md-switch ng-model="verbasSituacao.totalizadoresVerbas"  class="md-primary">
+                        Exibir totalizadores das verbas
+                    </md-switch>
+                </md-content>
+              </md-tab>
+              <md-tab label="Verbas - Lotação" md-on-select="abaAtual('VL')">
+                <md-content class="col-md-12">
+                    <md-switch ng-model="verbasLotacao.vantagens"  class="md-primary">
+                        Exibir vantagens
+                    </md-switch>
+                    <md-switch ng-model="verbasLotacao.descontos"  class="md-primary">
+                        Exibir descontos
+                    </md-switch>
+                    <md-switch ng-model="verbasLotacao.totalizadoresVerbas"  class="md-primary">
+                        Exibir totais de funcionários
+                    </md-switch>
+                    <md-switch ng-model="verbasLotacao.totaisFuncionarios"  class="md-primary">
+                        Exibir totalizadores das verbas
+                    </md-switch>
+                </md-content>
+              </md-tab>
+              <md-tab label="Verbas - Filial" md-on-select="abaAtual('VF')">
+                <md-content class="col-md-12">
+                    <md-switch ng-model="verbasFilial.vantagens"  class="md-primary">
+                        Exibir vantagens
+                    </md-switch>
+                    <md-switch ng-model="verbasFilial.descontos"  class="md-primary">
+                        Exibir descontos
+                    </md-switch>
+                    <md-switch ng-model="verbasFilial.totalizadoresVerbas"  class="md-primary">
+                        Exibir totais de funcionários
+                    </md-switch>
+                    <md-switch ng-model="verbasFilial.totaisFuncionarios"  class="md-primary">
+                        Exibir totalizadores das verbas
+                    </md-switch>
+                </md-content>
+              </md-tab>
+              <md-tab label="Verbas - Empresa" ng-if="customizacao.orgao" md-on-select="abaAtual('VE')">
+                <md-content class="col-md-12">
+                    <md-switch ng-model="verbasEmpresa.vantagens"  class="md-primary">
+                        Exibir vantagens
+                    </md-switch>
+                    <md-switch ng-model="verbasEmpresa.descontos"  class="md-primary">
+                        Exibir descontos
+                    </md-switch>
+                    <md-switch ng-model="verbasEmpresa.totalizadoresVerbas"  class="md-primary">
+                        Exibir totais de funcionários
+                    </md-switch>
+                    <md-switch ng-model="verbasEmpresa.totaisFuncionarios"  class="md-primary">
+                        Exibir totalizadores das verbas
+                    </md-switch>
+                </md-content>
+              </md-tab>
+            </md-tabs>
+        </md-dialog-content>
+
+        <md-dialog-actions layout="row">
+            <button class="btn btn-primary btn-w-md" ng-click="imprimir(true)">Imprimir</button>
+            <!--<button class="btn btn-default btn-w-md" ng-click="imprimir(false)">Exportar</button>-->
+            <span flex></span>
+            <button class="btn btn-w-md" ng-class="classeBotao" ng-click="selecionarDesmarcarTodos(aba)">{{nomeBotaoSelecionar}}</button>
+            <button class="btn btn-default btn-w-md" ng-click="cancel()">Cancelar</button>
+        </md-dialog-actions>
+    </form>
+</md-dialog>

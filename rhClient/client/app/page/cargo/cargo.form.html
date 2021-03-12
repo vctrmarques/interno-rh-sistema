@@ -1,0 +1,564 @@
+<div class="page" ng-controller="cargoFormCtrl">
+    <div class="row ui-section">
+        <div class="col-lg-8 clearfix">
+            <h2 class="section-header">{{!detalhes ? 'Formulário de Cargo' : 'Detalhes de Cargo'}}</h2>
+        </div>
+        <div class="col-md-12">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div layout="column" ng-cloak class="md-inline-form inputdemoBasicUsage">
+                                <div layout-padding>
+                                    <form ng-disabled="detalhes" name="cargoForm" ng-submit="save()">
+                                        <md-tabs md-dynamic-height md-border-bottom>
+                                            <md-tab label="Principal">
+                                                <md-content class="md-padding">
+                                                    <div layout layout-sm="column" style="padding-top: 30px">
+                                                        <md-input-container class="md-block" flex>
+                                                            <label>Código</label>
+                                                            <input required ng-disabled="detalhes"
+                                                                ng-model="cargo.codigo" name="codigo">
+                                                            <div ng-messages="cargoForm.codigo.$error"
+                                                                role="alert" multiple
+                                                                ng-if='cargoForm.codigo.$dirty'>
+                                                                <div ng-message="required">Campo de preenchimento
+                                                                    obrigatório.</div>
+                                                            </div>
+                                                        </md-input-container>
+                                                        <md-input-container class="md-block">
+                                                            <label>Nome</label>
+                                                            <input ng-required="true" ng-disabled="detalhes"
+                                                                ng-model="cargo.nome" name="nome">
+                                                            <div ng-messages="cargoForm.nome.$error" role="alert"
+                                                                multiple>
+                                                                <div ng-message="required">Campo de preenchimento
+                                                                    obrigatório.</div>
+                                                            </div>
+                                                        </md-input-container>
+                                                        <md-input-container flex>
+                                                            <label>Descrição</label>
+                                                            <input ng-disabled="detalhes" ng-model="cargo.descricao"
+                                                                name="descricao">
+                                                        </md-input-container>
+                                                    </div>
+
+                                                    <div layout layout-sm="column">
+                                                        <md-input-container flex>
+                                                            <div class="col-md-2">
+                                                                <label>Dedicação Exclusiva</label>
+                                                            </div>
+                                                            <div class="col-md-10">
+                                                                <md-switch ng-disabled="detalhes"
+                                                                    ng-model="cargo.dedicacaoExclusiva"
+                                                                    aria-label="Ativo">{{ cargo.dedicacaoExclusiva
+                                                                ?
+                                                                'Sim':'Não'}} </md-switch>
+                                                            </div>
+                                                        </md-input-container>
+                                                    </div>
+
+                                                    <div class="row">
+                                                        <div class="col-md-6">
+                                                            <md-autocomplete ng-disabled="detalhes"
+                                                                md-no-cache="cargoForm.noCache"
+                                                                md-selected-item="cargo.cbo"
+                                                                md-search-text="cargoForm.searchBuscaCbo"
+                                                                md-items="item in querySearch(cargoForm.searchBuscaCbo,'/cbo')"
+                                                                md-item-text="item.nome" md-delay="100"
+                                                                md-min-length="3" md-floating-label="CBO"
+                                                                md-require-match>
+                                                                <md-item-template>
+                                                                    <span md-highlight-text="cargoForm.searchBuscaCbo"
+                                                                        md-highlight-flags="^i">
+                                                                        {{item.nome}}</span>
+                                                                </md-item-template>
+                                                                <md-not-found>
+                                                                    Item
+                                                                    "{{cargoForm.searchBuscaCbo}}"
+                                                                    não
+                                                                    encontrado.
+                                                                </md-not-found>
+                                                            </md-autocomplete>
+                                                        </div>
+                                                        <div class="col-md-6">
+                                                            <md-autocomplete ng-disabled="detalhes"
+                                                                md-no-cache="cargoForm.noCache"
+                                                                md-selected-item="cargo.naturezaFuncao"
+                                                                md-search-text="cargoForm.searchBuscaNaturezaFuncao"
+                                                                md-items="item in querySearch(cargoForm.searchBuscaNaturezaFuncao,'/naturezaFuncao')"
+                                                                md-item-text="item.descricao" md-delay="100"
+                                                                md-min-length="3" md-floating-label="Natureza de Função"
+                                                                md-require-match>
+                                                                <md-item-template>
+                                                                    <span
+                                                                        md-highlight-text="cargoForm.searchBuscaNaturezaFuncao"
+                                                                        md-highlight-flags="^i">
+                                                                        {{item.descricao}}</span>
+                                                                </md-item-template>
+                                                                <md-not-found>
+                                                                    Item
+                                                                    "{{cargoForm.searchBuscaNaturezaFuncao}}"
+                                                                    não
+                                                                    encontrado.
+                                                                </md-not-found>
+                                                            </md-autocomplete>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="row">
+                                                        <div class="col-md-6">
+                                                            <md-autocomplete ng-disabled="detalhes"
+                                                                md-no-cache="cargoForm.noCache"
+                                                                md-selected-item="cargo.processoFuncao"
+                                                                md-search-text="cargoForm.searchBuscaProcessoFuncao"
+                                                                md-items="item in querySearch(cargoForm.searchBuscaProcessoFuncao,'/processoFuncao')"
+                                                                md-item-text="item.descricao" md-delay="100"
+                                                                md-min-length="3" md-floating-label="Processo de Função"
+                                                                md-require-match>
+                                                                <md-item-template>
+                                                                    <span
+                                                                        md-highlight-text="cargoForm.searchBuscaProcessoFuncao"
+                                                                        md-highlight-flags="^i">
+                                                                        {{item.descricao}}</span>
+                                                                </md-item-template>
+                                                                <md-not-found>
+                                                                    Item
+                                                                    "{{cargoForm.searchBuscaProcessoFuncao}}"
+                                                                    não
+                                                                    encontrado.
+                                                                </md-not-found>
+                                                            </md-autocomplete>
+                                                        </div>
+                                                        <div class="col-md-6">
+                                                            <md-autocomplete ng-disabled="detalhes"
+                                                                md-no-cache="cargoForm.noCache"
+                                                                md-selected-item="cargo.categoriaProfissional"
+                                                                md-search-text="cargoForm.searchBuscaCategoriaProfissional"
+                                                                md-items="item in querySearch(cargoForm.searchBuscaCategoriaProfissional,'/categoriaProfissional')"
+                                                                md-item-text="item.descricao" md-delay="100"
+                                                                md-min-length="3"
+                                                                md-floating-label="Categoria Profissional"
+                                                                md-require-match>
+                                                                <md-item-template>
+                                                                    <span
+                                                                        md-highlight-text="cargoForm.searchBuscaCategoriaProfissional"
+                                                                        md-highlight-flags="^i">
+                                                                        {{item.descricao}}</span>
+                                                                </md-item-template>
+                                                                <md-not-found>
+                                                                    Item
+                                                                    "{{cargoForm.searchBuscaCategoriaProfissional}}"
+                                                                    não
+                                                                    encontrado.
+                                                                </md-not-found>
+                                                            </md-autocomplete>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="row">
+                                                        <div class="col-md-6">
+                                                            <md-autocomplete ng-disabled="detalhes"
+                                                                md-no-cache="cargoForm.noCache"
+                                                                md-selected-item="cargo.sindicato"
+                                                                md-search-text="cargoForm.searchBuscaSindicato"
+                                                                md-items="item in querySearch(cargoForm.searchBuscaSindicato,'/sindicato')"
+                                                                md-item-text="item.descricao" md-delay="100"
+                                                                md-min-length="3" md-floating-label="Sindicato"
+                                                                md-require-match>
+                                                                <md-item-template>
+                                                                    <span
+                                                                        md-highlight-text="cargoForm.searchBuscaSindicato"
+                                                                        md-highlight-flags="^i">
+                                                                        {{item.descricao}}</span>
+                                                                </md-item-template>
+                                                                <md-not-found>
+                                                                    Item
+                                                                    "{{cargoForm.searchBuscaSindicato}}"
+                                                                    não
+                                                                    encontrado.
+                                                                </md-not-found>
+                                                            </md-autocomplete>
+                                                        </div>
+                                                        <div class="col-md-6">
+                                                            <md-input-container class="md-block">
+                                                                <label>Contagem de tempo especial</label>
+                                                                <md-select ng-disabled="detalhes" required
+                                                                    placeholder="Selecione a contagem de tempo especial"
+                                                                    name="contagemTempoEspecial"
+                                                                    ng-model="cargo.contagemTempoEspecial">
+                                                                    <md-option ng-value="item.value"
+                                                                        ng-repeat="item in contagemTempoEspecialList">
+                                                                        {{item.label}}</md-option>
+                                                                </md-select>
+                                                                <div ng-messages="cargoForm.contagemTempoEspecial.$error"
+                                                                    role="alert" multiple
+                                                                    ng-if='cargoForm.contagemTempoEspecial.$touched'>
+                                                                    <div ng-message="required">Campo de preenchimento
+                                                                        obrigatório.</div>
+                                                                </div>
+                                                            </md-input-container>
+                                                        </div>
+                                                    </div>
+
+                                                    <h2 class="md-title">Respaldo legal</h2>
+                                                    <div class="row">
+                                                        <div class="col-md-6">
+                                                            <md-input-container class="md-block">
+                                                                <label>Motivo da lei</label>
+                                                                <md-select ng-disabled="detalhes" required
+                                                                    placeholder="Selecione o motivo da lei"
+                                                                    name="motivoLei" ng-model="cargo.motivoLei">
+                                                                    <md-option ng-value="item.value"
+                                                                        ng-repeat="item in motivoLeiList">{{item.label}}
+                                                                    </md-option>
+                                                                </md-select>
+                                                                <div ng-messages="cargoForm.motivoLei.$error"
+                                                                    role="alert" multiple
+                                                                    ng-if='cargoForm.motivoLei.$touched'>
+                                                                    <div ng-message="required">Campo de preenchimento
+                                                                        obrigatório.</div>
+                                                                </div>
+                                                            </md-input-container>
+                                                        </div>
+                                                        <div class="col-md-6">
+                                                            <md-input-container class="md-block">
+                                                                <label>Lei de Respaldo</label>
+                                                                <input ng-required="true" ng-disabled="detalhes"
+                                                                    ng-model="cargo.leiRespaldo" name="leiRespaldo">
+                                                            </md-input-container>
+                                                        </div>
+                                                    </div>
+
+                                                    <h2 class="md-title">Vínculos</h2>
+                                                    <div class="row">
+                                                        <div class="col-md-12">
+                                                            <md-table-container>
+                                                                <table md-table md-row-select="true" multiple="true"
+                                                                    ng-model="cargo.vinculosIds">
+                                                                    <thead md-head md-order="name">
+                                                                        <tr md-row>
+                                                                            <th md-column md-order-by="name">
+                                                                                <span>Vínculo</span></th>
+                                                                        </tr>
+                                                                    </thead>
+                                                                    <tbody md-body>
+                                                                        <tr md-row md-select="item.id"
+                                                                            ng-repeat="item in vinculos">
+                                                                            <td md-cell>{{item.descricao}}</td>
+                                                                        </tr>
+                                                                    </tbody>
+                                                                </table>
+                                                            </md-table-container>
+                                                        </div>
+                                                    </div>
+                                                </md-content>
+                                            </md-tab>
+
+                                            <md-tab label="Atividades">
+                                                <md-content class="md-padding">
+                                                    <div class="row">
+                                                        <div class="col-md-11">
+                                                            <md-input-container class="md-block">
+                                                                <label>Atividades</label>
+                                                                <input ng-model="descricaoAtivBusca"
+                                                                    placeholder="Buscar por descrição...">
+                                                            </md-input-container>
+                                                        </div>
+                                                        <div class="col-md-1" style="padding-top: 1%;">
+                                                            <md-button class="md-icon-button"
+                                                                ng-click="loadAtividades()" class="md-block">
+                                                                <md-tooltip md-direction="top">Atualizar</md-tooltip>
+                                                                <md-icon>refresh</md-icon>
+                                                            </md-button>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-md-12">
+                                                            <md-table-container>
+                                                                <table md-table md-row-select="true" multiple="true"
+                                                                    ng-model="cargo.atividadesIds">
+                                                                    <thead md-head md-order="name">
+                                                                        <tr md-row>
+                                                                            <th md-column md-order-by="name">
+                                                                                <span>Atividade</span></th>
+                                                                        </tr>
+                                                                    </thead>
+                                                                    <tbody md-body>
+                                                                        <tr md-row md-select="item.id"
+                                                                            ng-repeat="item in atividades">
+                                                                            <td md-cell>{{item.descricao}}</td>
+                                                                        </tr>
+                                                                    </tbody>
+                                                                </table>
+                                                            </md-table-container>
+                                                        </div>
+                                                    </div>
+                                                </md-content>
+                                            </md-tab>
+
+                                            <md-tab label="Habilidades">
+                                                <md-content class="md-padding">
+                                                    <div class="row">
+                                                        <div class="col-md-11">
+                                                            <md-input-container class="md-block">
+                                                                <label>Habilidades</label>
+                                                                <input ng-model="descricaoHabBusca"
+                                                                    placeholder="Buscar por descrição...">
+                                                            </md-input-container>
+                                                        </div>
+                                                        <div class="col-md-1" style="padding-top: 1%;">
+                                                            <md-button class="md-icon-button"
+                                                                ng-click="loadHabilidades()" class="md-block">
+                                                                <md-tooltip md-direction="top">Atualizar</md-tooltip>
+                                                                <md-icon>refresh</md-icon>
+                                                            </md-button>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-md-12">
+                                                            <md-table-container>
+                                                                <table md-table md-row-select="true" multiple="true"
+                                                                    ng-model="cargo.habilidadesIds">
+                                                                    <thead md-head md-order="name">
+                                                                        <tr md-row>
+                                                                            <th md-column md-order-by="name">
+                                                                                <span>Habilidade</span></th>
+                                                                        </tr>
+                                                                    </thead>
+                                                                    <tbody md-body>
+                                                                        <tr md-row md-select="item.id"
+                                                                            ng-repeat="item in habilidades">
+                                                                            <td md-cell>{{item.descricao}}</td>
+                                                                        </tr>
+                                                                    </tbody>
+                                                                </table>
+                                                            </md-table-container>
+                                                        </div>
+                                                    </div>
+                                                </md-content>
+                                            </md-tab>
+
+                                            <md-tab label="Cursos">
+                                                <md-content class="md-padding">
+                                                    <div class="row">
+                                                        <div class="col-md-11">
+                                                            <md-input-container class="md-block">
+                                                                <label>Nome do Curso</label>
+                                                                <input ng-model="nomeCursoBusca"
+                                                                    placeholder="Buscar por nome...">
+                                                            </md-input-container>
+                                                        </div>
+                                                        <div class="col-md-1" style="padding-top: 1%;">
+                                                            <md-button class="md-icon-button" ng-click="loadCursos()"
+                                                                class="md-block">
+                                                                <md-tooltip md-direction="top">Atualizar</md-tooltip>
+                                                                <md-icon>refresh</md-icon>
+                                                            </md-button>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-md-12">
+                                                            <md-table-container>
+                                                                <table md-table md-row-select="true" multiple="true"
+                                                                    ng-model="cargo.cursosIds">
+                                                                    <thead md-head md-order="name">
+                                                                        <tr md-row>
+                                                                            <th md-column md-order-by="name">
+                                                                                <span>Curso</span></th>
+                                                                        </tr>
+                                                                    </thead>
+                                                                    <tbody md-body>
+                                                                        <tr md-row md-select="item.id"
+                                                                            ng-repeat="item in cursos">
+                                                                            <td md-cell>{{item.nomeCurso}}</td>
+                                                                        </tr>
+                                                                    </tbody>
+                                                                </table>
+                                                            </md-table-container>
+                                                        </div>
+                                                    </div>
+                                                </md-content>
+                                            </md-tab>
+
+                                            <md-tab label="Verbas">
+                                                <div layout-padding>
+                                                    <div layout layout-sm="column">
+                                                        <md-input-container flex>
+                                                            <label>Descricão</label>
+                                                            <input ng-disabled="detalhes || list.verbas.length === 0"
+                                                                ng-model="descricaoVerbaBusca.descricaoVerba"
+                                                                placeholder="Buscar por nome...">
+                                                        </md-input-container>
+                                                    </div>
+
+                                                    <div layout layout-sm="column">
+                                                        <md-table-container flex ng-show="verbas.length > 0">
+                                                            <table md-table md-row-select="true" multiple="true"
+                                                                ng-model="cargo.verbasIds">
+                                                                <thead md-head>
+                                                                    <tr md-row>
+                                                                        <th md-column>Descrição</th>
+                                                                    </tr>
+                                                                </thead>
+                                                                <tbody md-body>
+                                                                    <tr md-row md-select="verba.id"
+                                                                        md-select-id="verba.id"
+                                                                        ng-repeat="verba in verbas | filter:descricaoVerbaBusca">
+                                                                        <td md-cell>{{verba.descricaoVerba}}</td>
+                                                                    </tr>
+                                                                </tbody>
+                                                            </table>
+                                                        </md-table-container>
+                                                    </div>
+                                                </div>
+                                            </md-tab>
+                                            <md-tab label="Faixa Salarial">
+                                                <md-content class="md-padding">
+                                                    <div layout-padding>
+                                                        <div layout layout-sm="column">
+                                                            <md-input-container flex>
+                                                                <label>Grupo Salarial</label>
+                                                                <md-select ng-disabled="detalhes"
+                                                                    ng-change="carregarFaixasSalariais()"
+                                                                    name="grupoSalarial"
+                                                                    ng-model="cargo.grupoSalarialId">
+                                                                    <md-option ng-value=null><em>-- Selecione --</em>
+                                                                    </md-option>
+                                                                    <md-option ng-repeat="grupo in list.grupoSalarial"
+                                                                        value="{{grupo.id}}">
+                                                                        {{grupo.nome}}
+                                                                    </md-option>
+                                                                </md-select>
+                                                            </md-input-container>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-md-12">
+                                                            <div class="panel panel-default">
+                                                                <div class="panel-body">
+                                                                    <article class="article">
+                                                                        <md-card class="no-margin-h">
+                                                                            <md-table-container>
+                                                                                <div
+                                                                                    ng-repeat="item in faixasSalariais">
+                                                                                    <div class="accordion" accordion>
+                                                                                            {{item.classeSalarial.nome}}
+                                                                                    </div>
+                                                                                    <div class="accordion-content">
+                                                                                        <md-table-container>
+                                                                                            <br>
+                                                                                            <div
+                                                                                                class="panel panel-default">
+                                                                                                <div class="panel-body">
+                                                                                                    <h5>Referências
+                                                                                                        Salariais</h5>
+                                                                                                    <table md-table
+                                                                                                        ng-model="selected"
+                                                                                                        md-progress="promise">
+                                                                                                        <thead
+                                                                                                            ng-if="!options.decapitate"
+                                                                                                            md-head
+                                                                                                            md-order="query.order"
+                                                                                                            md-on-reorder="loadList">
+                                                                                                            <tr md-row>
+                                                                                                                <th md-column
+                                                                                                                    md-order-by="nome">
+                                                                                                                    <span>Descrição</span>
+                                                                                                                </th>
+                                                                                                                <th
+                                                                                                                    md-column>
+                                                                                                                    <span>Valor</span>
+                                                                                                                </th>
+                                                                                                                <th
+                                                                                                                    md-column>
+                                                                                                                    <span>Código</span>
+                                                                                                                </th>
+                                                                                                            </tr>
+                                                                                                        </thead>
+                                                                                                        <tbody md-body>
+                                                                                                            <tr md-row
+                                                                                                                md-select="nivel"
+                                                                                                                md-select-id="nivel"
+                                                                                                                md-auto-select
+                                                                                                                ng-repeat="nivel in item.niveisSalariais">
+                                                                                                                <td
+                                                                                                                    md-cell>
+                                                                                                                    {{nivel.descricao}}
+                                                                                                                </td>
+                                                                                                                <td
+                                                                                                                    md-cell>
+                                                                                                                    {{nivel.valor}}
+                                                                                                                </td>
+                                                                                                                <td
+                                                                                                                    md-cell>
+                                                                                                                    {{nivel.codigo}}
+                                                                                                                </td>
+                                                                                                            </tr>
+                                                                                                        </tbody>
+                                                                                                    </table>
+                                                                                                </div>
+                                                                                            </div>
+                                                                                        </md-table-container>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </md-table-container>
+                                                                        </md-card>
+                                                                    </article>
+
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                            </md-tab>
+                                            </md-content>
+                                        </md-tabs>
+                                        <div ng-if="detalhes" layout layout-sm="column">
+                                            <table md-table md-progress="promise">
+                                                <thead md-head>
+                                                    <tr md-row>
+                                                        <th md-column>
+                                                            <span>Criado em:</span>
+                                                        </th>
+                                                        <th md-column>
+                                                            <span>Atualizado em:</span>
+                                                        </th>
+                                                        <th md-column>
+                                                            <span>Criado por:</span>
+                                                        </th>
+                                                        <th md-column>
+                                                            <span>Atualizado por:</span>
+                                                        </th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody md-body>
+                                                    <tr md-row>
+                                                        <td md-cell>{{cargo.criadoEm | date:'dd/MM/yy -
+                                                                HH:mm'}}</td>
+                                                        <td md-cell>{{cargo.alteradoEm | date:'dd/MM/yy -
+                                                                HH:mm'}}</td>
+                                                        <td md-cell>{{cargo.criadoPor}}</td>
+                                                        <td md-cell>{{cargo.alteradoPor}}</td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+
+                                        <div class="row">
+                                            <div class="col-md-12 text-center">
+                                                <button ng-if="!detalhes" ng-disabled="cargoForm.$invalid" type="submit"
+                                                    ui-wave class="btn btn-primary btn-w-md">Salvar</button>
+                                                <p class="btn btn-default btn-w-md" ui-wave data-ng-click="goBack()">
+                                                    Voltar</p>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

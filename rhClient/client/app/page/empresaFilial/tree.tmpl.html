@@ -1,0 +1,29 @@
+
+<div class="tree" class="page">
+    <div class="md-toolbar-tools">
+        <h2>Árvore Da Empresa</h2>
+        <span flex></span>
+        <a href="" ng-click="cancel()">
+            <i class="fa fa-close"></i>
+        </a>
+    </div>
+    <div class="panel-body">
+        <div>
+            <ul>
+                <li>
+                    <a ng-repeat="tree in list.data" ng-show="tree.empresaMatriz ? true : false ">{{tree.sigla}}</a>
+                    <ul>
+                        <li ng-repeat="tree in listForTree.data">
+                            <a>{{tree.sigla}}</a>
+                            <ul>
+                                <li ng-repeat="tree in tree.lotacoes">
+                                    <a ng-show="tree.descricao ? true :false ">{{tree.descricao}}</a>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>

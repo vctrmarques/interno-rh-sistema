@@ -1,0 +1,274 @@
+<div class="page" ng-controller="consignadoFormCtrl">
+    <div class="row ui-section">
+        <div class="col-lg-8 clearfix">
+            <h2 class="section-header">{{!detalhes ? 'Formulário Consignado' : 'Detalhes Consignado'}}</h2>
+        </div>
+        <div class="col-md-12">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div layout="column" ng-cloak class="md-inline-form inputdemoBasicUsage">
+                                <div layout-padding>
+                                    <form ng-disabled="detalhes" name="consignadoForm" ng-submit="save()">
+                                        <div layout layout-sm="column">
+                                            <md-input-container flex>
+                                                <label>Descrição Consignado</label>
+                                                <input required ng-disabled="detalhes" ng-model="consignado.descricao" name="descricao">
+                                                <div ng-messages="consignadoForm.descricao.$error" role="alert" multiple>
+                                                    <div ng-message="required">Campo de preenchimento obrigatório.</div>
+                                                </div>
+                                                <md-input-container>
+                                        </div>
+                                        <h4>Endereço</h4>
+                                        <div layout layout-sm="column">
+                                            <md-input-container class="md-block">
+                                                <label>Centro de Custos</label>
+                                                <md-select ng-disabled="detalhes" name="centrosCustos" ng-model="consignado.centroCustoId" required>
+                                                    <md-option ng-repeat="centroCusto in listCentroCusto.data" ng-value="centroCusto.id">
+                                                        {{centroCusto.descricao}}
+                                                    </md-option>
+                                                </md-select>
+                                                <div ng-messages="consignadoForm.centrosCustos.$error" role="alert" multiple>
+                                                    <div ng-message="required">Campo de preenchimento obrigatório.</div>
+                                                </div>
+                                            </md-input-container>
+                                            <md-input-container flex>
+                                                <label>Logradouro</label>
+                                                <input ng-disabled="detalhes" ng-model="consignado.endereco.logradouro" name="logradouro">
+                                            </md-input-container>
+                                            <md-input-container class="md-block">
+                                                <label>Número</label>
+                                                <input ng-disabled="detalhes" ng-model="consignado.endereco.numero" name="numero">
+                                            </md-input-container>
+                                            <md-input-container flex>
+                                                <label>Complemento</label>
+                                                <input ng-disabled="detalhes" ng-model="consignado.endereco.complemento" name="complento">
+                                            </md-input-container>
+                                        </div>
+                                        <div layout layout-sm="column">
+                                            <md-input-container flex>
+                                                <label>Bairro</label>
+                                                <input ng-disabled="detalhes" ng-model="consignado.endereco.bairro" name="bairro">
+                                            </md-input-container>
+                                            <md-input-container flex>
+                                                <label>Cidade</label>
+                                                <input ng-disabled="detalhes" ng-model="consignado.endereco.cidade" name="cidade">
+                                            </md-input-container>
+                                            <md-input-container class="md-block">
+                                                <label>Telefone</label>
+                                                <input  ng-disabled="detalhes" ng-model="consignado.telefone" name="telefone" ui-br-phone-number-mask>
+                                                <div ng-messages="consignadoForm.telefone.$error" multiple ng-if='consignadoForm.telefone.$dirty'>
+                                                    <div ng-message="brPhoneNumber">Informe um número de telefone válido.</div>
+                                                </div>
+                                            </md-input-container>
+                                            <md-input-container class="md-block">
+                                                <label>UF</label>
+                                                <md-select ng-disabled="detalhes" ng-model="consignado.endereco.estado" name="estado">
+                                                    <md-option ng-repeat="state in states" value="{{state.value}}">
+                                                        {{state.label}}
+                                                    </md-option>
+                                                </md-select>
+                                            </md-input-container>
+                                            <md-input-container class="md-block">
+                                                <label>CEP</label>
+                                                <input ng-disabled="detalhes" ng-model="consignado.endereco.cep" name="cep" ui-br-cep-mask>
+                                                <div ng-messages="consignadoForm.cep.$error" role="alert" multiple>
+                                                    <div ng-message="cep">CEP Inválido.</div>
+                                                </div>
+                                            </md-input-container>
+                                        </div>
+
+                                        <h4>Consignatário</h4>
+                                        <div layout layout-sm="column">
+                                                <md-input-container flex>
+                                                        <label>Modalidade</label>
+                                                        <md-select  ng-disabled="detalhes" ng-model="consignado.modalidade" name="modalidade">
+                                                            <md-option value={{null}}><em>-- Selecione --</em></md-option>
+                                                            <md-option ng-repeat="modalidade in modalidades" value="{{modalidade.nome}}">
+                                                                {{modalidade.nome}}
+                                                            </md-option>
+                                                        </md-select>
+                                                    </md-input-container>
+                                            <md-input-container flex>
+                                                <label>CNPJ</label>
+                                                <input ng-disabled="detalhes" ng-model="consignado.cnpj" name="cnpj" ui-br-cnpj-mask  required>
+                                                <div ng-messages="consignadoForm.cnpj.$error" multiple ng-if='consignadoForm.cnpj.$dirty'>
+                                                    <div ng-message="cnpj">Informe um CNPJ válido.</div>
+                                                </div>
+                                            </md-input-container>
+                                            <md-input-container flex>
+                                                    <label>Margem Consignavel</label>
+                                                    <input ng-disabled="detalhes" ng-model="consignado.margemConsignavel" name="margemConsignavel" ui-number-mask="2" ui-hide-group-sep>
+                                            </md-input-container>
+                                        </div>
+                                        <div layout layout-sm="column">
+                                            <md-input-container flex>
+                                                <label>Identidade</label>
+                                                <input ng-disabled="detalhes" ng-model="consignado.rg" name="rg">
+                                            </md-input-container>
+
+                                            <md-input-container flex>
+                                                <label>Órgão Expedidor</label>
+                                                <input ng-disabled="detalhes" ng-model="consignado.orgaoExpedidor" name="orgaoExpedidor">
+                                                <div ng-messages="consignadoForm.orgaoExpedidor.$error" role="alert" multiple></div>
+                                            </md-input-container>
+
+                                            <md-input-container flex>
+                                                <label>UF</label>
+                                                <md-select ng-disabled="detalhes" name="unidadesFederativas" ng-model="consignado.unidadeFederativaId">
+                                                    <md-option value={{null}}><em>-- Selecione --</em></md-option>
+                                                    <md-option ng-repeat="unidadeFederativa in listUnidadeFederativa.data" ng-value="unidadeFederativa.id">
+                                                        {{unidadeFederativa.estado}}
+                                                    </md-option>
+                                                </md-select>
+                                                <div ng-messages="consignadoForm.unidadesFederativas.$error" role="alert" multiple></div>
+                                            </md-input-container>
+                                        </div>
+
+                                        <h4>Banco</h4>
+                                        <div layout layout-sm="column">
+                                            <md-input-container flex>
+                                                <label>Banco</label>
+                                                <md-select ng-disabled="detalhes" ng-disabled="detalhes" name="banco" ng-model="consignado.bancoId">
+                                                    <md-option value={{null}}><em>-- Selecione --</em></md-option>
+                                                    <md-option ng-repeat="banco in listBanco.data" ng-value="{{banco.id}}">
+                                                        {{banco.nome}}
+                                                    </md-option>
+                                                </md-select>
+                                            </md-input-container>
+                                            <md-input-container flex>
+                                                <label>Agência</label>
+                                                <input ng-disabled="detalhes" ng-model="consignado.agencia" name="agencia">
+                                            </md-input-container>
+                                            <md-input-container flex>
+                                                <label>Conta Corrente</label>
+                                                <input ng-disabled="detalhes" ng-model="consignado.contaCorrente" name="contaCorrente">
+                                            </md-input-container>
+                                            <md-input-container flex>
+                                                <label>Contrato</label>
+                                                <input required ng-disabled="detalhes" ng-model="consignado.contrato" name="contrato" >
+                                            </md-input-container>
+                                            <md-input-container flex>
+                                                <label>T. Cálculo</label>
+                                                <input ng-disabled="detalhes" ng-model="consignado.tipoCalculo" name="tipoCalculo" ui-number-mask="2" >
+                                            </md-input-container>
+                                            <md-input-container flex>
+                                                <label>Verba Desconto</label>
+                                                <input ng-disabled="detalhes" ng-model="consignado.verbaDesconto" name="verbaDesconto" ui-number-mask="0" >
+                                            </md-input-container>
+                                        </div>
+
+                                        <h4>Outros</h4>
+                                        <div layout layout-sm="column">
+                                            <md-input-container flex>
+                                                <label>E-Mail</label>
+                                                <input ng-disabled="detalhes" type="email" name="email" ng-model="consignado.email" ng-pattern="/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/"
+                                                />
+                                                <div ng-messages="consignadoForm.email.$error" multiple ng-if='consignadoForm.email.$dirty'>
+                                                    <div ng-message="pattern">Formato de e-mail inválido.</div>
+                                                </div>
+                                            </md-input-container>
+                                            <md-input-container flex>
+                                                <label>Taxa Operacional</label>
+                                                <input ng-disabled="detalhes" ng-model="consignado.taxaOperacional" name="taxaOperacional" ui-number-mask="2" >
+                                            </md-input-container>
+                                            <md-input-container flex>
+                                                <label>TAC</label>
+                                                <input ng-disabled="detalhes" ng-model="consignado.tac" name="tac" ui-number-mask="2" >
+                                            </md-input-container>
+                                            <md-input-container flex>
+                                                <label>Taxa Cad.</label>
+                                                <input ng-disabled="detalhes" ng-model="consignado.taxaCadastroSiglaConsignado" name="taxaCadastroSiglaConsignado" ui-number-mask="0" >
+                                            </md-input-container>
+                                            <md-input-container flex>
+                                                <label>Sigla Cons.</label>
+                                                <input ng-disabled="detalhes" ng-model="consignado.siglaConsignado" name="siglaConsignado">
+                                            </md-input-container>
+                                            <md-input-container flex>
+                                                <label>Registro ANS</label>
+                                                <input ng-disabled="detalhes" ng-model="consignado.registroAns" name="registroAns" ui-number-mask="0" >
+                                            </md-input-container>
+                                        </div>
+                                        <div layout layout-sm="column">
+                                            <md-input-container flex>
+                                                <label>Código Convergente</label>
+                                                <input ng-disabled="detalhes" ng-model="consignado.codigoConvergencia" name="codigoConvergencia" ui-number-mask="0" >
+                                            </md-input-container>
+                                            <md-input-container>
+                                                <label>Dígito</label>
+                                                <input ng-disabled="detalhes" ng-disabled="detalhes" ng-model="consignado.digitoConvergencia" name="digitoConvergencia" ui-number-mask="0" >
+                                            </md-input-container>
+                                            <div layout layout-sm="column">
+                                                <md-input-container class="md-block">
+                                                    <label>Data da Competência</label>
+                                                    <md-icon class="material-icons icon-momentpicker" ng-class="md-datepicker-calendar-icon"
+                                                        aria-label="md-calendar">date_range</md-icon>
+                                                    <input name="dataCompetenciaProcessamento" moment-picker="consigando.dataCompetenciaProcessamento" placeholder="Selecione a data" ng-model="consignado.dataCompetenciaProcessamento" format="DD/MM/YYYY" locale="pt-br" start-view="month"
+                                                        ng-model-options="{ updateOn: 'blur' }" ng-disabled="detalhes">
+                                                </md-input-container>
+                                            </div>
+                                        </div>
+                                        <div layout layout-sm="column">
+                                            <md-input-container>
+                                                <label>Extrato Convenente</label>
+                                                <input ng-disabled="detalhes" ng-model="consignado.extratoConvenente" name="extratoConvenente" ui-number-mask="0" >
+                                            </md-input-container>
+                                            <md-input-container>
+                                                <label>Dígito</label>
+                                                <input ng-disabled="detalhes" ng-model="consignado.digitoConvenente" name="digitoConvenente" ui-number-mask="0" >
+                                            </md-input-container>
+                                            <md-input-container flex>
+                                                <label>Nome do Convenente</label>
+                                                <input ng-disabled="detalhes" ng-model="consignado.nomeConvenente" name="nomeConvenente">
+                                            </md-input-container>
+                                            <md-input-container>
+                                                <label>PV do Respon.</label>
+                                                <input ng-disabled="detalhes" ng-model="consignado.pvResponsavel" name="pvResponsavel">
+                                            </md-input-container>
+                                        </div>
+                                        <div ng-if="detalhes" layout layout-sm="column">
+                                            <table md-table md-progress="promise">
+                                                <thead md-head>
+                                                    <tr md-row>
+                                                        <th md-column>
+                                                            <span>Criado em:</span>
+                                                        </th>
+                                                        <th md-column>
+                                                            <span>Atualizado em:</span>
+                                                        </th>
+                                                        <th md-column>
+                                                            <span>Criado por:</span>
+                                                        </th>
+                                                        <th md-column>
+                                                            <span>Atualizado por:</span>
+                                                        </th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody md-body>
+                                                    <tr md-row>
+                                                        <td md-cell>{{consignado.criadoEm | date:'dd/MM/yy - HH:mm'}}</td>
+                                                        <td md-cell>{{consignado.alteradoEm | date:'dd/MM/yy - HH:mm'}}</td>
+                                                        <td md-cell>{{consignado.criadoPor}}</td>
+                                                        <td md-cell>{{consignado.alteradoPor}}</td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+
+                                        <div class="row">
+                                            <div class="col-md-12 text-center">
+                                                <button ng-if="!detalhes" ng-disabled="consignadoForm.$invalid" type="submit" ui-wave class="btn btn-primary btn-w-md">Salvar</button>
+                                                <p class="btn btn-default btn-w-md" ui-wave data-ng-click="goBack()">Voltar</p>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

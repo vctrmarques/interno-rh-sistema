@@ -1,0 +1,208 @@
+<div class="page" ng-controller="nivelSalarialHistoricoFormCtrl">
+    <div class="row ui-section">
+        <div class="col-lg-8 clearfix">
+            <h2 class="section-header">Detalhes de Ajuste de Referência Salarial</h2>
+        </div>
+        <div class="col-md-12">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div layout="column" ng-cloak class="md-inline-form inputdemoBasicUsage">
+                                <div layout-padding>
+                                    <div layout layout-sm="column">
+                                        <md-input-container flex>
+                                            <label>Código</label>
+                                            <input ng-disabled="true" ng-model="nivelSalarial.codigo">
+                                        </md-input-container>
+                                        <md-input-container flex>
+                                            <label>Descrição</label>
+                                            <input ng-disabled="true" ng-model="nivelSalarial.descricao">
+                                        </md-input-container>
+                                        <md-input-container flex>
+                                            <label>Origem dos Ajustes</label>
+                                            <md-select ng-change="loadList()" ng-model="origemAjusteSelecionado">
+                                                <md-option value="Todas">
+                                                    Todas
+                                                </md-option>
+                                                <md-option value="Ajuste Manual">
+                                                    Ajuste Manual
+                                                </md-option>
+                                                <md-option value="Ajuste Programado">
+                                                    Ajuste Programado
+                                                </md-option>
+                                            </md-select>
+                                        </md-input-container>
+                                    </div>
+
+                                    <md-card class="no-margin-h">
+                                        <md-table-container>
+                                            <table md-table md-progress="promise" md-row-select="true" multiple="false"
+                                                ng-model="nivelSalarialHistoricosSelecionados">
+                                                <thead md-head>
+                                                    <tr md-row>
+                                                        <th md-column md-order-by="nome">
+                                                            <span>Data do ajuste</span>
+                                                        </th>
+                                                        <th md-column md-order-by="codigo">
+                                                            <span>Origem do ajuste</span>
+                                                        </th>
+                                                        <th md-column md-order-by="codigo">
+                                                            <span>Valor original</span>
+                                                        </th>
+                                                        <th md-column md-order-by="codigo">
+                                                            <span>Valor ajustado</span>
+                                                        </th>
+                                                        <th md-column md-order-by="codigo">
+                                                            <span>Valor retroativo</span>
+                                                        </th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody md-body>
+                                                    <tr md-row md-select="item" md-on-select="carregarSimuladorNivelSalarial"
+                                                        ng-repeat="item in list.data">
+                                                        <td md-cell>{{item.dataAjuste | date:'dd/MM/yyyy'}}</td>
+                                                        <td md-cell>{{item.origemAjuste === 'AJUSTE_MANUAL'? 'Ajuste
+                                                            Manual':'Programação'}}</td>
+                                                        <td md-cell>{{item.valorOriginal | currency}}</td>
+                                                        <td md-cell>{{item.valorAjustado | currency}}</td>
+                                                        <td md-cell>{{item.valorRetroativo | currency}}</td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </md-table-container>
+                                        <md-table-pagination md-label="{page: 'Página:', rowsPerPage: 'Registros por página:', of: 'de'}"
+                                            md-limit="query.limit" md-limit-options="limitOptions" md-page="query.page"
+                                            md-total="{{list.count}}" md-on-paginate="loadList" md-page-select></md-table-pagination>
+                                    </md-card>
+
+                                    <div layout layout-sm="column" style="margin-top: 40px">
+                                        <md-input-container flex>
+                                            <label>Usuário gerador do ajusto</label>
+                                            <input ng-disabled="true" ng-model="nivelSalarialHistoricosSelecionados[0].criadoPor">
+                                        </md-input-container>
+                                        <md-input-container flex>
+                                            <label>Resultado da programação</label>
+                                            <input ng-disabled="true" ng-model="nivelSalarialHistoricosSelecionados[0].resultado">
+                                        </md-input-container>
+                                    </div>
+
+                                    <div ng-show="nivelSalarialHistoricosSelecionados[0].length > 0 && nivelSalarialHistoricosSelecionados[0].origemAjuste !== 'Ajuste Manual'">
+                                        <h4>Parâmetros do Ajuste</h4>
+                                        <div class="row">
+                                            <div class="col-md-3">
+                                                <md-input-container flex>
+                                                    <label>Motivo do Ajuste</label>
+                                                    <input ng-disabled="true" ng-model="simuladorNivelSalarial.motivoAjusteString">
+                                                </md-input-container>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <div>
+                                                    <md-radio-group ng-model="simuladorNivelSalarial.tipoAjusteString"
+                                                        ng-disabled="true">
+                                                        <md-radio-button value="Adição de valor" class="md-primary">Adição
+                                                            de valor</md-radio-button>
+                                                        <md-radio-button value="Percentual"> Percentual
+                                                        </md-radio-button>
+                                                    </md-radio-group>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <md-input-container flex>
+                                                    <label>Valor/Percentual</label>
+                                                    <input ng-disabled="true" ng-model="simuladorNivelSalarial.valorAjuste">
+                                                </md-input-container>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <md-input-container flex>
+                                                    <label>Ajuste retroativo</label>
+                                                    <md-icon class="material-icons icon-momentpicker" ng-class="md-datepicker-calendar-icon"
+                                                        aria-label="md-calendar">date_range</md-icon>
+                                                    <input ng-disabled="true" moment-picker="simuladorNivelSalarial.dataAjuste"
+                                                        placeholder="Selecione a data" ng-model="simuladorNivelSalarial.dataAjuste"
+                                                        format="DD/MM/YYYY" locale="pt-br" start-view="month"
+                                                        ng-model-options="{ updateOn: 'blur' }">
+                                                </md-input-container>
+                                            </div>
+                                        </div>
+
+                                        <h4>Acordo de Respaldo ao Ajuste</h4>
+                                        <p ng-hide="simuladorNivelSalarial.acordo">Acordo não disponível</p>
+                                        <div ng-show="simuladorNivelSalarial.acordo">
+                                            <div class="row">
+                                                <div class="col-md-4">
+                                                    <md-input-container flex>
+                                                        <label>Data do acordo</label>
+                                                        <md-icon class="material-icons icon-momentpicker" ng-class="md-datepicker-calendar-icon"
+                                                            aria-label="md-calendar">date_range</md-icon>
+                                                        <input ng-disabled="true" moment-picker="simuladorNivelSalarial.acordo.dataAcordo"
+                                                            placeholder="Selecione a data" ng-model="simuladorNivelSalarial.acordo.dataAcordo"
+                                                            format="DD/MM/YYYY" locale="pt-br" start-view="month"
+                                                            ng-model-options="{ updateOn: 'blur' }">
+                                                    </md-input-container>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <md-input-container flex>
+                                                        <label>Início da vigência</label>
+                                                        <md-icon class="material-icons icon-momentpicker" ng-class="md-datepicker-calendar-icon"
+                                                            aria-label="md-calendar">date_range</md-icon>
+                                                        <input ng-disabled="true" moment-picker="simuladorNivelSalarial.acordo.dataInicial"
+                                                            placeholder="Selecione a data" ng-model="simuladorNivelSalarial.acordo.dataInicial"
+                                                            format="DD/MM/YYYY" locale="pt-br" start-view="month"
+                                                            ng-model-options="{ updateOn: 'blur' }">
+                                                    </md-input-container>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <md-input-container flex>
+                                                        <label>Fim da vigência</label>
+                                                        <md-icon class="material-icons icon-momentpicker" ng-class="md-datepicker-calendar-icon"
+                                                            aria-label="md-calendar">date_range</md-icon>
+                                                        <input ng-disabled="true" moment-picker="simuladorNivelSalarial.acordo.dataFinal"
+                                                            placeholder="Selecione a data" ng-model="simuladorNivelSalarial.acordo.dataFinal"
+                                                            format="DD/MM/YYYY" locale="pt-br" start-view="month"
+                                                            ng-model-options="{ updateOn: 'blur' }">
+                                                    </md-input-container>
+                                                </div>
+                                            </div>
+                                            <div layout layout-sm="column">
+                                                <md-input-container flex>
+                                                    <label>Tipo do acordo</label>
+                                                    <md-select ng-disabled="true" ng-model="simuladorNivelSalarial.acordo.tipo">
+                                                        <md-option value="Acordo coletivo de trabalho">
+                                                            Acordo coletivo de trabalho
+                                                        </md-option>
+                                                        <md-option value="Legislação">
+                                                            Legislação
+                                                        </md-option>
+                                                        <md-option value="Verbas devidas após desligamento">
+                                                            Verbas devidas após desligamento
+                                                        </md-option>
+                                                        <md-option value="Outras verbas devidas">
+                                                            Outras verbas devidas
+                                                        </md-option>
+                                                    </md-select>
+                                                </md-input-container>
+                                            </div>
+                                            <div layout layout-sm="column">
+                                                <md-input-container flex>
+                                                    <label>Descrição</label>
+                                                    <textarea ng-model="simuladorNivelSalarial.acordo.descricao"
+                                                        ng-disabled="true" rows="5" md-select-on-focus></textarea>
+                                                </md-input-container>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-12 text-center">
+                                            <p class="btn btn-default btn-w-md" ui-wave data-ng-click="goBack()">Voltar</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

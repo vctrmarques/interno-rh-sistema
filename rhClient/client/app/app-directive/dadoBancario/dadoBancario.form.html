@@ -1,0 +1,42 @@
+<div layout layout-sm="column">
+    <md-input-container flex>
+        <label>Tipo de Conta</label>
+        <md-select style="margin: 20px 0" ng-disabled="show" name="tipoConta" ng-model="data.tipoConta"
+            ng-required="requiredTipoConta">
+            <md-option ng-repeat="item in dadoBancarioTipoContaEnumList" ng-value="item.label">
+                {{item.label}}
+            </md-option>
+        </md-select>
+    </md-input-container>
+    <md-input-container flex>
+        <label>Banco</label>
+        <md-select style="margin: 20px 0" ng-disabled="show" name="banco" ng-model-options="{trackBy: '$value.id' }"
+            ng-change="data.agencia = null;" ng-model="data.banco" ng-required="requiredBanco">
+            <md-option ng-repeat="item in bancoList" ng-value="item">
+                {{item.descricao}}
+            </md-option>
+        </md-select>
+    </md-input-container>
+</div>
+<div layout layout-sm="column">
+    <md-autocomplete flex ng-disabled="show || !data.banco" placeholder="Pesquise pelo nome"
+        ng-required="requiredAgencia" md-no-cache="true" md-floating-label="Agência" md-selected-item="data.agencia"
+        md-search-text="searchAgencia" md-items="item in querySearchAgencia(searchAgencia)"
+        md-item-text="item.descricao" md-delay="100" md-min-length="3">
+        <md-item-template>
+            <span md-highlight-text="searchAgencia" md-highlight-flags="^i">
+                {{item.descricao}}</span>
+        </md-item-template>
+        <md-not-found>
+            Item "{{searchAgencia}}" não encontrado.
+        </md-not-found>
+    </md-autocomplete>
+    <md-input-container flex>
+        <label>Conta</label>
+        <input ng-model="data.conta" max="255" name="conta" ng-disabled="show" ng-required="requiredConta">
+    </md-input-container>
+    <md-input-container flex>
+        <label>Dígito</label>
+        <input ng-model="data.digitoConta" max="255" name="digitoConta" ng-disabled="show" ng-required="requiredDigito">
+    </md-input-container>
+</div>

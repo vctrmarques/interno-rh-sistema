@@ -1,0 +1,271 @@
+<div class="page" ng-controller="simuladorNivelSalarialFormCtrl">
+    <div class="row ui-section">
+        <div class="col-lg-8 clearfix">
+            <h2 class="section-header">{{!detalhes ? 'Simulação de Ajuste de Nível Salarial' : 'Detalhes de Ajuste de
+                Nível Salarial'}}</h2>
+        </div>
+        <div class="col-md-12">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <div class="row">
+                        <div class="col-lg-8 col-lg-offset-2">
+                            <form ng-disabled="detalhes" name="nivelSalarialForm" ng-submit="save()">
+                                <div layout="column" ng-cloak class="md-inline-form inputdemoBasicUsage">
+                                    <div layout-padding>
+                                        <h4 style="margin-top: 40px">Dados principais</h4>
+                                        <div layout layout-sm="column">
+                                            <md-input-container flex>
+                                                <label>Descrição</label>
+                                                <input ng-disabled="detalhes" ng-model="simuladorNivelSalarial.descricao"
+                                                    name="descricao" maxlength="255" required>
+                                            </md-input-container>
+                                            <md-input-container class="md-block">
+                                                <label>Data da Competência</label>
+                                                <md-icon class="material-icons icon-momentpicker" aria-label="md-calendar">date_range</md-icon>
+                                                <input name="dataCompetencia" moment-picker="simuladorNivelSalarial.dataCompetencia"
+                                                    placeholder="Selecione a data" ng-model="simuladorNivelSalarial.dataCompetencia"
+                                                    format="DD/MM/YYYY" locale="pt-br" start-view="month"
+                                                    ng-model-options="{ updateOn: 'blur' }" ng-disabled="detalhes"
+                                                    ng-autocomplete="off" change="calcularValorAjustado(); carregarNiveis();"
+                                                    max-date="dataMaxCompetencia" min-date="dataMinCompetencia">
+                                            </md-input-container>
+                                        </div>
+                                        <div layout layout-sm="column">
+                                            <md-input-container flex>
+                                                <md-switch ng-disabled="detalhes" name="programarAjuste" ng-model="simuladorNivelSalarial.programarAjuste"
+                                                    aria-label="Programar Ajuste">
+                                                    Programar Ajuste
+                                                </md-switch>
+                                            </md-input-container>
+                                        </div>
+
+                                        <h4>Ajustes</h4>
+                                        <div layout layout-sm="column">
+                                            <md-input-container flex>
+                                                <label>Motivo do Ajuste</label>
+                                                <md-select ng-required="true" ng-disabled="detalhes" ng-model="simuladorNivelSalarial.motivoAjuste"
+                                                    name="motivoAjuste">
+                                                    <md-option value="Dissídio">Dissídio</md-option>
+                                                    <md-option value="Reajuste Salarial">Reajuste Salarial</md-option>
+                                                </md-select>
+                                            </md-input-container>
+                                            <md-input-container flex>
+                                                <label>Tipo do Ajuste</label>
+                                                <md-select ng-required="true" ng-disabled="detalhes" ng-model="simuladorNivelSalarial.tipoAjuste"
+                                                    name="tipoAjuste" ng-change="calcularValorAjustado();">
+                                                    <md-option value="Adição de Valor">Adição de Valor</md-option>
+                                                    <md-option value="Percentual">Percentual</md-option>
+                                                </md-select>
+                                            </md-input-container>
+                                        </div>
+
+                                        <div layout layout-sm="column">
+                                            <md-input-container flex>
+                                                <label>Valor</label>
+                                                <input ng-disabled="detalhes" ng-model="simuladorNivelSalarial.valorAjuste"
+                                                    name="valorAjuste" ui-number-mask="2" ui-hide-group-sep maxlength="10"
+                                                    required ng-blur="calcularValorAjustado();">
+                                            </md-input-container>
+                                            <md-input-container flex>
+                                                <label>Ajuste Retroativo</label>
+                                                <md-icon class="material-icons icon-momentpicker" aria-label="md-calendar">date_range</md-icon>
+                                                <input name="dataCompetencia" moment-picker="simuladorNivelSalarial.dataAjuste"
+                                                    placeholder="Selecione a data" ng-model="simuladorNivelSalarial.dataAjuste"
+                                                    format="DD/MM/YYYY" locale="pt-br" start-view="month"
+                                                    ng-model-options="{ updateOn: 'blur' }" ng-disabled="detalhes"
+                                                    max-date="simuladorNivelSalarial.dataCompetencia" autocomplete="off"
+                                                    ng-blur="calcularValorAjustado();">
+                                            </md-input-container>
+                                        </div>
+
+                                        <h4>Níveis Salarias</h4>
+                                        <div class="row" ng-show="!detalhes">
+                                            <div class="col-md-12 text-center">
+                                                <p class="btn btn-default btn-w-md" ui-wave ng-click="selecionarConcluirNiveis()">{{showSelecionarNiveis
+                                                    ? 'Concluir':'Selecionar Níveis Salariais'}}</p>
+                                            </div>
+                                        </div>
+
+                                        <md-table-container>
+                                            <table md-table md-progress="promise" md-row-select="true" multiple="true"
+                                                ng-show="showSelecionarNiveis" ng-model="niveisSalariaisSelecionados">
+                                                <thead md-head>
+                                                    <tr md-row>
+                                                        <th md-column>
+                                                            <span>Código</span>
+                                                        </th>
+                                                        <th md-column>
+                                                            <span>Descrição</span>
+                                                        </th>
+                                                        <th md-column>
+                                                            <span>Valor </span>
+                                                        </th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody md-body>
+                                                    <tr md-row md-select="nivelSalarial" ng-repeat="nivelSalarial in niveisSalariais">
+                                                        <td md-cell>{{nivelSalarial.codigo}}</td>
+                                                        <td md-cell>{{nivelSalarial.descricao}}</td>
+                                                        <td md-cell>{{nivelSalarial.valor | currency:''}} </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                            <table md-table md-progress="promise" ng-hide="showSelecionarNiveis || simuladorNivelSalarial.simuladorNivelSalarialValoresList.length === 0">
+                                                <thead md-head>
+                                                    <tr md-row>
+                                                        <th md-column>
+                                                            <span>Descrição</span>
+                                                        </th>
+                                                        <th md-column>
+                                                            <span>Valor Original</span>
+                                                        </th>
+                                                        <th md-column>
+                                                            <span>Valor Ajustado</span>
+                                                        </th>
+                                                        <th md-column>
+                                                            <span>Valor Retroativo</span>
+                                                        </th>
+                                                        <th md-column>
+                                                            <span>Ação</span>
+                                                        </th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody md-body>
+                                                    <tr md-row ng-repeat="simuladorNivelSalarialValor in simuladorNivelSalarial.simuladorNivelSalarialValoresList">
+                                                        <td md-cell>{{simuladorNivelSalarialValor.descricao}}</td>
+                                                        <td md-cell>{{simuladorNivelSalarialValor.valor |
+                                                            currency:''}} </td>
+                                                        <td md-cell>{{simuladorNivelSalarialValor.valorAjustado |
+                                                            currency:''}} </td>
+                                                        <td md-cell>{{simuladorNivelSalarialValor.valorRetroativo |
+                                                            currency:''}} </td>
+                                                        <td md-cell>
+                                                            <a href="" ng-click="excluirNivel($index)"
+                                                                ng-if="!detalhes">
+                                                                <md-tooltip md-direction="top">Excluir</md-tooltip>
+                                                                <i class="fa fa-trash-o fa-lg"></i>
+                                                            </a>
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </md-table-container>
+                                        <p ng-show="!showSelecionarNiveis && simuladorNivelSalarial.simuladorNivelSalarialValoresList.length === 0">
+                                            Sem níveis selecionados</p>
+
+
+                                        <h4 style="margin-top: 50px">Acordo</h4>
+                                        <div class="row" ng-show="!detalhes">
+                                            <div class="col-md-12 text-center">
+                                                <p class="btn btn-default btn-w-md" ui-wave data-ng-click="showHideAcordo()">
+                                                    {{showAcordo || simuladorNivelSalarial.acordo? 'Remover
+                                                    Acordo':'Adicionar Acordo'}}</p>
+                                            </div>
+                                        </div>
+                                        <p ng-show="!showAcordo && !simuladorNivelSalarial.acordo" style="margin-top: 20px">
+                                            Sem acordo adicionado</p>
+
+                                        <div layout layout-sm="column" ng-show="showAcordo || simuladorNivelSalarial.acordo">
+                                            <md-input-container flex>
+                                                <label>Data do Acordo</label>
+                                                <md-icon class="material-icons icon-momentpicker" aria-label="md-calendar">date_range</md-icon>
+                                                <input name="dataAcordo" moment-picker="simuladorNivelSalarial.acordo.dataAcordo"
+                                                    placeholder="Selecione a data" ng-model="simuladorNivelSalarial.acordo.dataAcordo"
+                                                    format="DD/MM/YYYY" locale="pt-br" start-view="month"
+                                                    ng-model-options="{ updateOn: 'blur' }" ng-disabled="detalhes"
+                                                    autocomplete="off">
+                                            </md-input-container>
+
+                                            <md-input-container flex>
+                                                <label>Tipo de Acordo</label>
+                                                <md-select ng-disabled="detalhes" ng-model="simuladorNivelSalarial.acordo.tipo"
+                                                    name="motivoAjuste">
+                                                    <md-option value="Acordo coletivo de trabalho">Acordo coletivo
+                                                        de
+                                                        trabalho</md-option>
+                                                    <md-option value="Legislação">Legislação</md-option>
+                                                    <md-option value="Verbas devidas após desligamento">Verbas
+                                                        devidas
+                                                        após desligamento</md-option>
+                                                    <md-option value="Outras verbas devidas">Outras verbas devidas</md-option>
+                                                </md-select>
+                                            </md-input-container>
+                                        </div>
+                                        <div layout layout-sm="column" ng-show="showAcordo || simuladorNivelSalarial.acordo">
+                                            <md-input-container flex>
+                                                <label>Início da vigência</label>
+                                                <md-icon class="material-icons icon-momentpicker" aria-label="md-calendar">date_range</md-icon>
+                                                <input name="dataAcordoInicial" moment-picker="simuladorNivelSalarial.acordo.dataInicial"
+                                                    placeholder="Selecione a data" ng-model="simuladorNivelSalarial.acordo.dataInicial"
+                                                    format="DD/MM/YYYY" locale="pt-br" start-view="month"
+                                                    ng-model-options="{ updateOn: 'blur' }" ng-disabled="detalhes"
+                                                    max-date="simuladorNivelSalarial.dataCompetencia" autocomplete="off">
+                                            </md-input-container>
+                                            <md-input-container flex>
+                                                <label>Fim da vigência</label>
+                                                <md-icon class="material-icons icon-momentpicker" aria-label="md-calendar">date_range</md-icon>
+                                                <input name="dataAcordoFinal" moment-picker="simuladorNivelSalarial.acordo.dataFinal"
+                                                    placeholder="Selecione a data" ng-model="simuladorNivelSalarial.acordo.dataFinal"
+                                                    format="DD/MM/YYYY" locale="pt-br" start-view="month"
+                                                    ng-model-options="{ updateOn: 'blur' }" ng-disabled="detalhes"
+                                                    min-date="simuladorNivelSalarial.dataCompetencia" autocomplete="off">
+                                            </md-input-container>
+                                        </div>
+                                        <div layout layout-sm="column" ng-show="showAcordo || simuladorNivelSalarial.acordo">
+                                            <md-input-container flex>
+                                                <label>Descrição</label>
+                                                <textarea ng-model="simuladorNivelSalarial.acordo.descricao"
+                                                    ng-disabled="detalhes" md-maxlength="255" rows="4"
+                                                    md-select-on-focus></textarea>
+                                            </md-input-container>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div ng-if="detalhes" layout layout-sm="column">
+                                    <table md-table md-progress="promise">
+                                        <thead md-head>
+                                            <tr md-row>
+                                                <th md-column>
+                                                    <span>Criado em:</span>
+                                                </th>
+                                                <th md-column>
+                                                    <span>Atualizado em:</span>
+                                                </th>
+                                                <th md-column>
+                                                    <span>Criado por:</span>
+                                                </th>
+                                                <th md-column>
+                                                    <span>Atualizado por:</span>
+                                                </th>
+                                            </tr>
+                                        </thead>
+                                        <tbody md-body>
+                                            <tr md-row>
+                                                <td md-cell>{{simuladorNivelSalarial.criadoEm | date:'dd/MM/yy -
+                                                    HH:mm'}}</td>
+                                                <td md-cell>{{simuladorNivelSalarial.alteradoEm | date:'dd/MM/yy -
+                                                    HH:mm'}}</td>
+                                                <td md-cell>{{simuladorNivelSalarial.criadoPor}}</td>
+                                                <td md-cell>{{simuladorNivelSalarial.alteradoPor}}</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+
+                                <div class="row" style="margin: 50px 0">
+                                    <br>
+                                    <div class="col-md-12 text-center">
+                                        <button ng-if="!detalhes" ng-disabled="nivelSalarialForm.$invalid || showBotaoConcluir"
+                                            type="submit" ui-wave class="btn btn-primary btn-w-md">Salvar</button>
+                                        <p class="btn btn-default btn-w-md" ui-wave data-ng-click="goBack()">Voltar</p>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

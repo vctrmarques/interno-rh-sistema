@@ -1,0 +1,270 @@
+<md-dialog aria-label="Visualização virtual de contracheque" flex="50">
+    <form ng-cloak>
+        <md-toolbar>
+            <div class="md-toolbar-tools">
+                <h2>Visualização virtual de contracheque</h2>
+                <span flex></span>
+                <a href="" ng-click="cancel()">
+                    <i class="fa fa-close"></i>
+                </a>
+            </div>
+        </md-toolbar>
+
+        <md-dialog-content>
+            <div class="page">
+                <div class="row">
+                    <div class="col-md-2" style="text-align: center;padding-top: 5px;">
+                        <img ng-src="assets/images/Brasao_Prefeitura_Goiania_Prev_vert.png" style="width: 80px;"
+                            src="assets/images/Brasao_Prefeitura_Goiania_Prev_vert.png">
+                    </div>
+                    <div class="col-md-10">
+                        <h5>INST.DE PREV.DOS SERV. DO MUNIC.DE GOIANIA- GOIANIAPREV</h5>
+                        <h5>100500 - CAMARA MUNICIPAL - FUNPREV</h5>
+                        <h5>31.711.157/0000-59</h5>
+                        <p class="pull-right">Demonstrativo de Pagamento</p>
+                    </div>
+                </div>
+                <div class="panel panel-default panel-minimal">
+                    <table class="table table-bordered">
+                        <tbody>
+                            <tr>
+                                <td class="td-paycheck" class="td-paycheck" colspan="4">
+                                    <p class="desc-paycheck-item">1. Nome do Servidor</p>
+                                    <p class="value-paycheck-item">
+                                        {{fPagContracheque.nome}}
+                                    </p>
+                                </td>
+                                <td class="td-paycheck">
+                                    <p class="desc-paycheck-item">2. Matrícula - Díg</p>
+                                    <p class="value-paycheck-item">{{fPagContracheque.matricula}}</p>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="td-paycheck" colspan="2">
+                                    <p class="desc-paycheck-item">4. Local de Trabalho</p>
+                                    <p class="value-paycheck-item">{{fPagContracheque.lotacao}}</p>
+                                </td>
+                                <td class="td-paycheck" colspan="2">
+                                    <p class="desc-paycheck-item">5. Município</p>
+                                    <p class="value-paycheck-item">{{fPagContracheque.municipio}}</p>
+                                </td>
+                                <td class="td-paycheck">
+                                    <p class="desc-paycheck-item">6. Data Admissão</p>
+                                    <p class="value-paycheck-item">
+                                        {{fPagContracheque.dataAdmissao | date:"dd/MM/yyyy"}}</p>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="td-paycheck" colspan="4">
+                                    <p class="desc-paycheck-item">7. Cargo Efetivo</p>
+                                    <p class="value-paycheck-item">{{fPagContracheque.cargoEfetivo}}</p>
+                                </td>
+                                <td class="td-paycheck">
+                                    <p class="desc-paycheck-item">8. Data Nascimento</p>
+                                    <p class="value-paycheck-item">
+                                        {{fPagContracheque.dataNascimento | date:"dd/MM/yyyy"}}</p>
+                                </td>
+                                <!-- <td class="td-paycheck">
+                                    <p class="desc-paycheck-item">9. Nivel</p>
+                                    <p class="value-paycheck-item">{{fPagContracheque.nivel}}</p>
+                                </td> -->
+                            </tr>
+                            <!-- <tr>
+                                <td class="td-paycheck" colspan="4">
+                                    <p class="desc-paycheck-item">10. Cargo Comissionado / Função Gratificada
+                                    </p>
+                                    <p class="value-paycheck-item">{{fPagContracheque.cargoFuncao}}</p>
+                                </td>
+                                <td class="td-paycheck">
+                                    <p class="desc-paycheck-item">11. Referencia</p>
+                                    <p class="value-paycheck-item">{{fPagContracheque.referencia}}</p>
+                                </td>
+                            </tr> -->
+                            <tr>
+                                <td class="td-paycheck" colspan="2">
+                                    <p class="desc-paycheck-item">12. Vínculo</p>
+                                    <p class="value-paycheck-item">{{fPagContracheque.vinculo}}</p>
+                                </td>
+                                <td class="td-paycheck">
+                                    <p class="desc-paycheck-item">13. Situação</p>
+                                    <p class="value-paycheck-item">{{fPagContracheque.tipoSituacaoFuncional}}</p>
+                                </td>
+                                <td class="td-paycheck">
+                                    <p class="desc-paycheck-item">14. Identidade</p>
+                                    <p class="value-paycheck-item">{{fPagContracheque.identidade}}</p>
+                                </td>
+                                <td class="td-paycheck">
+                                    <p class="desc-paycheck-item">15. CPF</p>
+                                    <p class="value-paycheck-item">{{fPagContracheque.cpf}}</p>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="td-paycheck">
+                                    <p class="desc-paycheck-item">16. Órgão Pagador</p>
+                                    <p class="value-paycheck-item">{{fPagContracheque.orgaoPagador}}</p>
+                                </td>
+                                <td class="td-paycheck">
+                                    <p class="desc-paycheck-item">17. Dep. S.F</p>
+                                    <p class="value-paycheck-item">{{fPagContracheque.depSf}}</p>
+                                </td>
+                                <td class="td-paycheck">
+                                    <p class="desc-paycheck-item">18. Dep. I.R</p>
+                                    <p class="value-paycheck-item">{{fPagContracheque.depIr}}</p>
+                                </td>
+                                <td class="td-paycheck">
+                                    <p class="desc-paycheck-item">19. Carga Horária</p>
+                                    <p class="value-paycheck-item">{{fPagContracheque.cargaHoraria}}</p>
+                                </td>
+                                <td class="td-paycheck" style="background-color: #ccc;">
+                                    <p class="desc-paycheck-item">20. Competência</p>
+                                    <p class="value-paycheck-item" style="font-weight: bold;">
+                                        {{fPagContracheque.folhaPagamento.folhaCompetencia.mesCompetencia}} /
+                                        {{fPagContracheque.folhaPagamento.folhaCompetencia.anoCompetencia}}</p>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="panel panel-default panel-minimal">
+                    <table class="table table-hover paycheck-items">
+                        <thead>
+                            <tr class="row">
+                                <th class="col-md-1">Código</th>
+                                <th class="col-md-6">Descrição</th>
+                                <th class="col-md-1">Referência</th>
+                                <th class="col-md-2">Proventos</th>
+                                <th class="col-md-2">Descontos</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="row" ng-repeat="lancamento in fPagContracheque.lancamentosVantagens">
+                                <td class="col-md-1">
+                                    {{lancamento.verba.codigo}}
+                                </td>
+                                <td class="col-md-6">
+                                    {{lancamento.verba.descricaoVerba}}
+                                </td>
+                                <td class="col-md-1">
+                                    {{lancamento.valorReferencia}}
+                                    {{lancamento.numeroParcela ? lancamento.numeroParcela : ''}}
+                                </td>
+                                <td class="col-md-2 border-left-paycheck">
+                                    <div class="pull-right">
+                                        {{lancamento.valor | currency}}
+                                    </div>
+                                </td>
+                                <td class="col-md-2 border-left-paycheck">
+                                </td>
+                                <!-- <td>
+                                                        <div ng-show="folha.adicionadoManualmente">
+                                                            <a href=""
+                                                                ng-click="removerVerbaFuncionario($event,folha.id, folha.folhaPagamento.id, folha.funcionario.id)">
+                                                                <md-tooltip md-direction="top">
+                                                                    Remover Verba
+                                                                </md-tooltip>
+                                                                <i class="fa fa-trash-o fa-lg"></i>
+                                                            </a>
+                                                        </div>
+                                                    </td> -->
+                            </tr>
+                            <tr class="row" ng-repeat="lancamento in fPagContracheque.lancamentosDescontos">
+                                <td class="col-md-1">
+                                    {{lancamento.verba.codigo}}
+                                </td>
+                                <td class="col-md-6">
+                                    {{lancamento.verba.descricaoVerba}}
+                                </td>
+                                <td class="col-md-1">
+                                    {{lancamento.valorReferencia}}
+                                    {{lancamento.numeroParcela ? lancamento.numeroParcela : ''}}
+                                </td>
+                                <td class="col-md-2 border-left-paycheck">
+                                </td>
+                                <td class="col-md-2 border-left-paycheck">
+                                    <div class="pull-right">
+                                        {{lancamento.valor | currency}}
+                                    </div>
+                                </td>
+                                <!-- <td>
+                                                        <div ng-show="folha.registroManual">
+                                                            <a href=""
+                                                                ng-click="removerVerbaFuncionario($event,folha.id, folha.folhaPagamento.id, folha.funcionario.id)">
+                                                                <md-tooltip md-direction="top">
+                                                                    Remover Verba
+                                                                </md-tooltip>
+                                                                <i class="fa fa-trash-o fa-lg"></i>
+                                                            </a>
+                                                        </div>
+                                                    </td> -->
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="panel panel-default panel-minimal">
+                    <table class="table table-bordered">
+                        <tbody>
+                            <tr class="row">
+                                <td class="col-md-6 td-paycheck" rowspan="2" colspan="4">
+                                    <p style="font-size: 10px;"></p>
+                                </td>
+                                <td class="col-md-2 td-paycheck">
+                                    <p class="desc-paycheck-item">29. Sal. Bruto</p>
+                                    <p class="value-paycheck-item">{{fPagContracheque.valorBruto | currency}}
+                                    </p>
+                                </td>
+                                <td class="col-md-2 td-paycheck">
+                                    <p class="desc-paycheck-item">30. Desconto</p>
+                                    <p class="value-paycheck-item">{{fPagContracheque.valorDesconto | currency}}
+                                    </p>
+                                </td>
+                            </tr>
+                            <tr class="row">
+                                <td class="col-md-2 td-paycheck">
+                                    <p class="desc-paycheck-item"></p>
+                                    <p class="value-paycheck-item"></p>
+                                </td>
+                                <td class="col-md-2 td-paycheck" style="background-color: #ccc;">
+                                    <p class="desc-paycheck-item">32. Líquido</p>
+                                    <p class="value-paycheck-item" style="font-weight: bold;">
+                                        {{fPagContracheque.valorLiquido | currency}}</p>
+                                </td>
+                            </tr>
+                            <tr class="row">
+                                <td class="col-md-2 td-paycheck">
+                                    <p class="desc-paycheck-item">31. FGTS</p>
+                                    <p class="value-paycheck-item"></p>
+                                </td>
+                                <td class="col-md-2 td-paycheck">
+                                    <p class="desc-paycheck-item">28. Sal. Base</p>
+                                    <p class="value-paycheck-item">{{salarioBase | currency}}</p>
+                                </td>
+                                <td class="col-md-2 td-paycheck">
+                                    <p class="desc-paycheck-item">33. Base Prev</p>
+                                    <p class="value-paycheck-item">{{basePrev | currency}}</p>
+                                </td>
+                                <td class="col-md-2 td-paycheck">
+                                    <p class="desc-paycheck-item">34. Base IRRF</p>
+                                    <p class="value-paycheck-item">{{baseIrrf | currency}}</p>
+                                </td>
+                                <td class="col-md-2 td-paycheck">
+                                    <p class="desc-paycheck-item"></p>
+                                    <p class="value-paycheck-item"></p>
+                                </td>
+                                <td class="col-md-2 td-paycheck">
+                                    <p class="desc-paycheck-item"></p>
+                                    <p class="value-paycheck-item"></p>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <a href="" ng-click="showFeedback = !showFeedback" ng-show="fPagContracheque.feedback">
+                    <i>{{showFeedback ? 'Ocultar':'Exibir'}} Feedback de Cálculo</i>
+                </a>
+                </br>
+                <p ng-show="showFeedback" data-ng-bind-html="trustAsHtml(fPagContracheque.feedback)"
+                    style="white-space: pre-wrap;"></p>
+            </div>
+        </md-dialog-content>
+    </form>
+</md-dialog>

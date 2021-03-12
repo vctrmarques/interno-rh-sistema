@@ -1,0 +1,36 @@
+<div class="page" ng-controller="notificacaoCtrl">
+    <div class="row ui-section">
+        <div class="col-lg-12 clearfix">
+            <h2 class="section-header" style="float: left;">Notificações</h2>
+        </div>
+        <div class="col-md-8 col-lg-offset-2">
+            <div class="panel panel-default">
+                <div class="panel-body">
+
+                    <md-list flex>
+                        <md-subheader ng-if="contadorNotificacao === 0  && items.length === 0" class="md-no-sticky">
+                            Não existem notificações a serem exibidas.</md-subheader>
+                        <md-subheader ng-show="contadorNotificacao >=1" class="md-no-sticky"> {{contadorNotificacao}}
+                            {{contadorNotificacao > 1 ?
+                            'notificações não lidas':'notificação não lida'}}...</md-subheader>
+                        <div infinite-scroll='nextPage()' infinite-scroll-disabled='busy' infinite-scroll-distance='0'>
+                            <md-list-item class="md-3-line" ng-repeat="item in items" ng-click="visualizarNotificacao(item)">
+                                <img ng-src="http://localhost:5000/api/publico/anexo/downloadFile/13_usuario_IMG_20180714_155511372.jpg"
+                                    class="md-avatar" alt="{{item.who}}" />
+                                <div class="md-list-item-text" layout="column">
+                                    <h3>{{ item.tipoNotificacao }}</h3>
+                                    <h4>{{ item.destinatario }}</h4>
+                                    <p>{{ item.descricao }}</p>
+                                    <p style="font-size: 12px">{{ item.criadoEm | date:'dd/MM/yyyy - HH:mm'}}</p>
+                                </div>
+                                <span ng-hide="item.visualizada" class="fa fa-circle" style="color: #008F7B"></span>
+                                <span ng-show="item.visualizada" class="fa fa-circle-o" style="color: #008F7B"></span>
+                            </md-list-item>
+                        </div>
+                    </md-list>
+                    <button class="material-scrolltop" type="button"></button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

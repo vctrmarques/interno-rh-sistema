@@ -1,0 +1,295 @@
+<div class="page" ng-controller="relatorioAposentadoPensionistaCtrl">
+	<div class="row ui-section">
+		<div class="col-lg-12 clearfix">
+			<h2 class="section-header" style="float: left;">{{titulo}}</h2>
+		</div>
+		<div class="col-md-12">
+			<div class="panel panel-default">
+				<div class="panel-body">
+					<article class="article">
+						<md-card class="no-margin-h">
+							<div layout="column">
+								<div layout-padding>
+									<div layout layout-sm="column">
+										<md-input-container flex>
+											<label>Filial</label>
+											<md-select ng-change="changeLotacao();" ng-model="filtro.filial">
+												<md-option ng-repeat="item in lista.filial" ng-value="item.id">
+													{{item.descricao}}
+												</md-option>
+											</md-select>
+										</md-input-container>
+										<md-input-container flex>
+											<label>Lotação</label>
+											<md-select ng-model="filtro.lotacoes" placeholder="Selecione a Lotacao" ng-disabled="disabledLotacao()"
+												data-md-container-class="selectdemoSelectHeader" multiple>
+												<md-select-header class="demo-select-header">
+												</md-select-header>
+												<md-optgroup label="Lotação">
+													<md-option ng-value="item.id" ng-repeat="item in lista.lotacao">
+														{{item.descricao}}
+													</md-option>
+												</md-optgroup>
+											</md-select>
+										</md-input-container>
+										<md-input-container flex>
+											<label>Situação funcional</label>
+											<md-select ng-model="filtro.situacaoFuncional" ng-disabled="disabledSituacaoFuncional()">
+												<md-option ng-repeat="item in lista.situacaoFuncional" ng-value="item">
+													{{item}}
+												</md-option>
+											</md-select>
+                                        </md-input-container>
+                                        <md-input-container flex>
+											<label>Pensionista status</label>
+											<md-select ng-disabled="filtro.situacaoFuncional != 'PENSIONISTA'"
+												ng-model="filtro.status">
+												<md-option ng-repeat="item in lista.status" ng-value="item">
+													{{item}}
+												</md-option>
+											</md-select>
+										</md-input-container>
+									</div>
+								</div>
+							</div>
+							<md-tabs md-dynamic-height md-border-bottom>
+								<md-tab label="Dados cadastrais">
+									<md-content class="md-padding">
+										<div ng-show="checkNotSituacaoFuncional()">Nenhuma situação funcional escolhida</div>
+										<div class="col-sm-6" ng-show="filtro.situacaoFuncional == 'APOSENTADO'">
+											<fieldset>
+												<legend style="font-size: 12pt;font-weight: bold">
+													<a style="cursor: pointer;" ng-click="selectOrToggle('DADOSPESSOAIS')">Pessoal <i ng-class="iconeOrLabel('DADOSPESSOAIS', true)"></i></a> 
+													<span style="font-size: 11pt;font-weight: normal;color: #bdb9b9;">({{iconeOrLabel('DADOSPESSOAIS', false)}})</span></legend>
+												<div class="demo-select-all-checkboxes" flex="100" ng-repeat="item in apo.dadosPessoais">
+													<div class="col-sm-6">
+														<md-checkbox ng-checked="exists(item.value, apo.selectedDadosPessoais)" ng-click="toggle(item.value, apo.selectedDadosPessoais)" ng-disabled="!filtro.situacaoFuncional">
+															{{ item.label }}
+														</md-checkbox>
+													</div>
+												</div>
+											</fieldset>
+										</div>
+										<div class="col-sm-6" ng-show="filtro.situacaoFuncional == 'APOSENTADO'">
+											<fieldset>
+												<legend style="font-size: 12pt;font-weight: bold">
+													<a style="cursor: pointer;" ng-click="selectOrToggle('DADOSPROFISSIONAIS')">Profissional <i ng-class="iconeOrLabel('DADOSPROFISSIONAIS', true)"></i></a>
+														<span style="font-size: 11pt;font-weight: normal;color: #bdb9b9;">({{iconeOrLabel('DADOSPROFISSIONAIS', false)}})</span></legend>
+												<div class="demo-select-all-checkboxes" flex="100" ng-repeat="item in apo.dadosProfissionais">
+													<div class="col-sm-6">
+														<md-checkbox ng-checked="exists(item.value, apo.selectedDadosProfissionais)" ng-click="toggle(item.value, apo.selectedDadosProfissionais)" ng-disabled="!filtro.situacaoFuncional">
+														 {{ item.label }}
+														</md-checkbox>
+													</div>
+												</div>
+											</fieldset>
+										</div>
+
+										<div class="col-sm-4" ng-show="filtro.situacaoFuncional == 'PENSIONISTA'">
+											<fieldset>
+												<legend style="font-size: 12pt;font-weight: bold">
+													<a style="cursor: pointer;" ng-click="selectOrToggle('DADOSPESSOAL')">Pessoal <i ng-class="iconeOrLabel('DADOSPESSOAL', true)"></i></a>
+														<span style="font-size: 11pt;font-weight: normal;color: #bdb9b9;">({{iconeOrLabel('DADOSPESSOAL', false)}})</span></legend>
+												<div class="demo-select-all-checkboxes" flex="100" ng-repeat="item in pen.dadosPessoais">
+													<div class="col-sm-6">
+														<md-checkbox ng-checked="exists(item.value, pen.selectedDadosPessoais)" ng-click="toggle(item.value, pen.selectedDadosPessoais)" ng-disabled="!filtro.situacaoFuncional">
+														 {{ item.label }}
+														</md-checkbox>
+													</div>
+												</div>
+											</fieldset>
+										</div>
+										<div class="col-sm-4" ng-show="filtro.situacaoFuncional == 'PENSIONISTA'">
+											<fieldset>
+												<legend style="font-size: 12pt;font-weight: bold">
+													<a style="cursor: pointer;" ng-click="selectOrToggle('DADOSEXSEGURADO')">Ex-Segurado <i ng-class="iconeOrLabel('DADOSEXSEGURADO', true)"></i></a>
+														<span style="font-size: 11pt;font-weight: normal;color: #bdb9b9;">({{iconeOrLabel('DADOSEXSEGURADO', false)}})</span></legend>
+												<div class="demo-select-all-checkboxes" flex="100" ng-repeat="item in pen.dadosExSegurado">
+													<div class="col-sm-6">
+														<md-checkbox ng-checked="exists(item.value, pen.selectedDadosExSegurado)" ng-click="toggle(item.value, pen.selectedDadosExSegurado)" ng-disabled="!filtro.situacaoFuncional">
+														 {{ item.label }}
+														</md-checkbox>
+													</div>
+												</div>
+											</fieldset>
+										</div>
+										<div class="col-sm-4" ng-show="filtro.situacaoFuncional == 'PENSIONISTA'">
+											<fieldset>
+												<legend style="font-size: 12pt;font-weight: bold">
+													<a style="cursor: pointer;" ng-click="selectOrToggle('DEPENDENTES')">Dependente <i ng-class="iconeOrLabel('DEPENDENTES', true)"></i></a>
+														<span style="font-size: 11pt;font-weight: normal;color: #bdb9b9;">({{iconeOrLabel('DEPENDENTES', false)}})</span></legend>
+												<div class="demo-select-all-checkboxes" flex="100" ng-repeat="item in pen.dadosDependente">
+													<div class="col-sm-6">
+														<md-checkbox ng-checked="exists(item.value, pen.selectedDadosDependente)" ng-click="toggle(item.value, pen.selectedDadosDependente)" ng-disabled="!filtro.situacaoFuncional">
+														 {{ item.label }}
+														</md-checkbox>
+													</div>
+												</div>
+											</fieldset>
+										</div>
+									</md-content>
+								</md-tab>
+								<md-tab label="Documentação" ng-disabled="checkNotSituacaoFuncional()">
+									<md-content class="md-padding">
+										<div class="col-sm-9" ng-show="filtro.situacaoFuncional == 'APOSENTADO'">
+											<fieldset>
+												<legend style="font-size: 12pt;font-weight: bold">
+													<a style="cursor: pointer;" ng-click="selectOrToggle('DOCSPESSOAIS')">Pessoal <i ng-class="iconeOrLabel('DOCSPESSOAIS', true)"></i></a>
+														<span style="font-size: 11pt;font-weight: normal;color: #bdb9b9;">({{iconeOrLabel('DOCSPESSOAIS', false)}})</span></legend>
+												<div class="demo-select-all-checkboxes" flex="100" ng-repeat="item in apo.docsPessoais">
+													<div class="col-sm-4">
+														<md-checkbox ng-checked="exists(item.value, apo.selectedDocsPessoais)" ng-click="toggle(item.value, apo.selectedDocsPessoais)" ng-disabled="!filtro.situacaoFuncional">
+														 {{ item.label }}
+														</md-checkbox>
+													</div>
+												</div>
+											</fieldset>
+										</div>
+										<div class="col-sm-3" ng-show="filtro.situacaoFuncional == 'APOSENTADO'">
+											<fieldset>
+												<legend style="font-size: 12pt;font-weight: bold">
+													<a style="cursor: pointer;" ng-click="selectOrToggle('DOCSNOMEACAO')">Nomeação <i ng-class="iconeOrLabel('DOCSNOMEACAO', true)"></i></a>
+														<span style="font-size: 11pt;font-weight: normal;color: #bdb9b9;">({{iconeOrLabel('DOCSNOMEACAO', false)}})</span></legend>
+												<div class="demo-select-all-checkboxes" flex="100" ng-repeat="item in apo.docsNomeacao">
+														<md-checkbox ng-checked="exists(item.value, apo.selectedDocsNomeacao)" ng-click="toggle(item.value, apo.selectedDocsNomeacao)" ng-disabled="!filtro.situacaoFuncional">
+														 {{ item.label }}
+														</md-checkbox>
+												</div>
+											</fieldset>
+										</div>
+
+										<div class="col-sm-12" ng-show="filtro.situacaoFuncional == 'PENSIONISTA'">
+											<fieldset>
+												<legend style="font-size: 12pt;font-weight: bold">
+													<a style="cursor: pointer;" ng-click="selectOrToggle('DOCUMENTOS')">Pessoal <i ng-class="iconeOrLabel('DOCUMENTOS', true)"></i></a>
+														<span style="font-size: 11pt;font-weight: normal;color: #bdb9b9;">({{iconeOrLabel('DOCUMENTOS', false)}})</span></legend>
+												<div class="demo-select-all-checkboxes" flex="100" ng-repeat="item in pen.docsPessoal">
+													<md-checkbox ng-checked="exists(item.value, pen.selectedDocsPessoal)" ng-click="toggle(item.value, pen.selectedDocsPessoal)" ng-disabled="!filtro.situacaoFuncional">
+														{{ item.label }}
+													</md-checkbox>
+												</div>
+											</fieldset>
+										</div>
+										
+									</md-content>
+								</md-tab>
+								<md-tab label="Contato & Endereço" ng-disabled="checkNotSituacaoFuncional()">
+									<md-content class="md-padding">
+										<div class="col-sm-12" ng-show="filtro.situacaoFuncional == 'APOSENTADO'">
+											<fieldset>
+												<legend style="font-size: 12pt;font-weight: bold">
+													<a style="cursor: pointer;" ng-click="selectOrToggle('CONTATOENDERECO')">Pessoal <i ng-class="iconeOrLabel('CONTATOENDERECO', true)"></i></a>
+														<span style="font-size: 11pt;font-weight: normal;color: #bdb9b9;">({{iconeOrLabel('CONTATOENDERECO', false)}})</span></legend>
+												<div class="demo-select-all-checkboxes" flex="100" ng-repeat="item in apo.contatoEndereco">
+													<div class="col-sm-3">
+														<md-checkbox ng-checked="exists(item.value, apo.selectedContatoEndereco)" ng-click="toggle(item.value, apo.selectedContatoEndereco)" ng-disabled="!filtro.situacaoFuncional">
+														 {{ item.label }}
+														</md-checkbox>
+													</div>
+												</div>
+											</fieldset>
+										</div>
+
+										<div class="col-sm-12" ng-show="filtro.situacaoFuncional == 'PENSIONISTA'">
+											<fieldset>
+												<legend style="font-size: 12pt;font-weight: bold">
+													<a style="cursor: pointer;" ng-click="selectOrToggle('CONTATOENDERECOPENSIONISTA')">Pessoal <i ng-class="iconeOrLabel('CONTATOENDERECOPENSIONISTA', true)"></i></a>
+														<span style="font-size: 11pt;font-weight: normal;color: #bdb9b9;">({{iconeOrLabel('CONTATOENDERECOPENSIONISTA', false)}})</span></legend>
+												<div class="demo-select-all-checkboxes" flex="100" ng-repeat="item in pen.contatoEndereco">
+													<div class="col-sm-3">
+														<md-checkbox ng-checked="exists(item.value, pen.selectedContatoEndereco)" ng-click="toggle(item.value, pen.selectedContatoEndereco)" ng-disabled="!filtro.situacaoFuncional">
+															{{ item.label }}
+														</md-checkbox>
+													</div>
+												</div>
+											</fieldset>
+										</div>
+									</md-content>
+								</md-tab>
+								<md-tab label="Dados de pagamento" ng-disabled="checkNotSituacaoFuncional()">
+									<md-content class="md-padding">
+										<div class="col-sm-6" ng-show="filtro.situacaoFuncional == 'APOSENTADO'">
+											<fieldset>
+												<legend style="font-size: 12pt;font-weight: bold">
+													<a style="cursor: pointer;" ng-click="selectOrToggle('BANCOPESSOAL')">Pessoal <i ng-class="iconeOrLabel('BANCOPESSOAL', true)"></i></a>
+														<span style="font-size: 11pt;font-weight: normal;color: #bdb9b9;">({{iconeOrLabel('BANCOPESSOAL', false)}})</span></legend>
+												<div class="demo-select-all-checkboxes" flex="100" ng-repeat="item in apo.dadosBancoPessoal">
+													<div class="col-sm-6">
+														<md-checkbox ng-checked="exists(item.value, apo.selectedDadosBancoPessoal)" ng-click="toggle(item.value, apo.selectedDadosBancoPessoal)" ng-disabled="!filtro.situacaoFuncional">
+														 {{ item.label }}
+														</md-checkbox>
+													</div>
+												</div>
+											</fieldset>
+										</div>
+										<div class="col-sm-6" ng-show="filtro.situacaoFuncional == 'APOSENTADO'">
+											<fieldset>
+												<legend style="font-size: 12pt;font-weight: bold">
+													<a style="cursor: pointer;" ng-click="selectOrToggle('DADOSBANCARIOS')">Bancário <i ng-class="iconeOrLabel('DADOSBANCARIOS', true)"></i></a>
+														<span style="font-size: 11pt;font-weight: normal;color: #bdb9b9;">({{iconeOrLabel('DADOSBANCARIOS', false)}})</span></legend>
+												<div class="demo-select-all-checkboxes" flex="100" ng-repeat="item in apo.dadosBancarios">
+													<div class="col-sm-6">
+														<md-checkbox ng-checked="exists(item.value, apo.selectedDadosBancarios)" ng-click="toggle(item.value, apo.selectedDadosBancarios)" ng-disabled="!filtro.situacaoFuncional">
+														 {{ item.label }}
+														</md-checkbox>
+													</div>
+												</div>
+											</fieldset>
+										</div>
+										<div class="col-sm-4" ng-show="filtro.situacaoFuncional == 'PENSIONISTA'">
+											<fieldset>
+												<legend style="font-size: 12pt;font-weight: bold">
+													<a style="cursor: pointer;" ng-click="selectOrToggle('BENEFICIO')">Benefício <i ng-class="iconeOrLabel('BENEFICIO', true)"></i></a>
+														<span style="font-size: 11pt;font-weight: normal;color: #bdb9b9;">({{iconeOrLabel('BENEFICIO', false)}})</span></legend>
+												<div class="demo-select-all-checkboxes" flex="100" ng-repeat="item in pen.beneficio">
+													<div class="col-sm-6">
+														<md-checkbox ng-checked="exists(item.value, pen.selectedDadosBeneficio)" ng-click="toggle(item.value, pen.selectedDadosBeneficio)" ng-disabled="!filtro.situacaoFuncional">
+															{{ item.label }}
+														</md-checkbox>
+													</div>
+												</div>
+											</fieldset>
+										</div>
+										<div class="col-sm-4" ng-show="filtro.situacaoFuncional == 'PENSIONISTA'">
+											<fieldset>
+												<legend style="font-size: 12pt;font-weight: bold">
+													<a style="cursor: pointer;" ng-click="selectOrToggle('CONTACREDITO')">Conta para crédito <i ng-class="iconeOrLabel('CONTACREDITO', true)"></i></a>
+														<span style="font-size: 11pt;font-weight: normal;color: #bdb9b9;">({{iconeOrLabel('CONTACREDITO', false)}})</span></legend>
+												<div class="demo-select-all-checkboxes" flex="100" ng-repeat="item in pen.contaCredito">
+													<div class="col-sm-6">
+														<md-checkbox ng-checked="exists(item.value, pen.selectedDadosContaCredito)" ng-click="toggle(item.value, pen.selectedDadosContaCredito)" ng-disabled="!filtro.situacaoFuncional">
+															{{ item.label }}
+														</md-checkbox>
+													</div>
+												</div>
+											</fieldset>
+										</div>
+										<div class="col-sm-4" ng-show="filtro.situacaoFuncional == 'PENSIONISTA'">
+											<fieldset>
+												<legend style="font-size: 12pt;font-weight: bold">
+													<a style="cursor: pointer;" ng-click="selectOrToggle('ISENCAO')">Isenção <i ng-class="iconeOrLabel('ISENCAO', true)"></i></a>
+														<span style="font-size: 11pt;font-weight: normal;color: #bdb9b9;">({{iconeOrLabel('ISENCAO', false)}})</span></legend>
+												<div class="demo-select-all-checkboxes" flex="100" ng-repeat="item in pen.isencao">
+													<div class="col-sm-6">
+														<md-checkbox ng-checked="exists(item.value, pen.selectedDadosIsencao)" ng-click="toggle(item.value, pen.selectedDadosIsencao)" ng-disabled="!filtro.situacaoFuncional">
+															{{ item.label }}
+														</md-checkbox>
+													</div>
+												</div>
+											</fieldset>
+										</div>
+									</md-content>
+								</md-tab>
+							</md-tabs>
+						</md-card>
+					</article>
+					<div class="row text-center">
+						<button ng-click="gerarRelatorio()" ui-wave class="btn btn-primary btn-w-md" ng-disabled="disabledGerarRelatorio()">Gerar relatório</button>
+						<p class="btn btn-default btn-w-md" ui-wave ng-click="limpaFiltro()">Limpar filtros</p>
+					</div>
+
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

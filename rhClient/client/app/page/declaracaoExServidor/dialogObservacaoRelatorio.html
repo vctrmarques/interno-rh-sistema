@@ -1,0 +1,27 @@
+<md-dialog>
+    <form ng-cloak>
+        <md-toolbar>
+            <div style="background-color: #01722c" class="md-toolbar-tools">
+                <h2>Observação / Ocorrência</h2>
+                <span flex></span>
+                <a ng-click="cancel()">
+                    <i class="fa fa-close"></i>
+                </a>
+            </div>
+        </md-toolbar>
+
+        <md-dialog-content>
+            <div class="page">
+                <md-input-container flex>
+                    <label>OBSERVAÇÃO / OCORRÊNCIA</label>
+                    <textarea ng-model="observacaoOcorrencia" cols="50"></textarea>
+                </md-input-container>
+            </div>
+
+            <div class="md-dialog-content text-center">
+               	<button class="btn btn-primary btn-w-md" ng-click="imprimir()">Imprimir Declaração</button>
+				<button class="btn btn-default btn-w-md" ng-click="cancel()">Voltar</button>
+            </div>
+        </md-dialog-content>
+    </form>
+</md-dialog>

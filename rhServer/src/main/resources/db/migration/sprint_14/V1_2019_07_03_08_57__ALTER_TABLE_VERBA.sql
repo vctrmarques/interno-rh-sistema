@@ -1,0 +1,1 @@
+alter table verba add referencia FLOAT null;

@@ -1,0 +1,409 @@
+<section class="page-form-ele page" ng-controller="pensaoAlimenticia2FormCtrl">
+    <div class="row ui-section">
+        <div class="col-lg-8 clearfix">
+            <h2 class="section-header">
+                {{!detalhes ? 'Formulário de Pensão Alimentícia' : 'Detalhes da Pensão Alimentícia'}}</h2>
+        </div>
+        <div class="col-md-12">
+            <section class="panel panel-default">
+                <div class="panel-body">
+                    <div class="row">
+                        <div class="col-lg-8 col-lg-offset-2">
+
+                            <div layout="column" ng-cloak class="md-inline-form inputdemoBasicUsage">
+                                <div layout-padding>
+                                    <form name="formPensaoAlimenticia" ng-disabled="detalhes" ng-submit="save()">
+
+                                        <h4>Dados do Funcionário</h4>
+                                        <div layout layout-sm="column">
+                                            <md-autocomplete ng-disabled="detalhes" flex ng-required="true"
+                                                md-no-cache="true" md-floating-label="Nome"
+                                                md-selected-item="pensaoAlimenticia.funcionario"
+                                                md-search-text="searchFuncionario"
+                                                md-items="item in querySearchFuncionario(searchFuncionario)"
+                                                placeholder="Pesquise pelo nome ou matrícula" md-item-text="item.nome"
+                                                md-delay="100" md-min-length="3">
+                                                <md-item-template>
+                                                    <span md-highlight-text="searchFuncionario" md-highlight-flags="^i">
+                                                        {{item.nome}}</span>
+                                                </md-item-template>
+                                                <md-not-found>
+                                                    Item "{{searchFuncionario}}" não encontrado.
+                                                </md-not-found>
+                                            </md-autocomplete>
+                                            <md-input-container>
+                                                <label>Matrícula</label>
+                                                <input ng-model="pensaoAlimenticia.funcionario.matricula"
+                                                    ng-disabled="true">
+                                            </md-input-container>
+                                            <md-input-container>
+                                                <label>Filial</label>
+                                                <input ng-model="pensaoAlimenticia.funcionario.filial"
+                                                    ng-disabled="true">
+                                            </md-input-container>
+                                        </div>
+
+                                        <h4>Dados do Alimentando</h4>
+                                        <div layout layout-sm="column">
+                                            <md-input-container flex>
+                                                <label>Nome</label>
+                                                <input ng-model="pensaoAlimenticia.nomeAlimentando" max="255"
+                                                    ng-disabled="detalhes" ng-required="true">
+                                            </md-input-container>
+                                            <md-input-container>
+                                                <label>Data de Nascimento</label>
+                                                <md-icon class="material-icons icon-momentpicker"
+                                                    ng-class="md-datepicker-calendar-icon" aria-label="md-calendar">
+                                                    date_range
+                                                </md-icon>
+                                                <input moment-picker="pensaoAlimenticia.nascimentoAlimentando"
+                                                    placeholder="Selecione a data"
+                                                    ng-model="pensaoAlimenticia.nascimentoAlimentando"
+                                                    ng-required="true" format="DD/MM/YYYY" locale="pt-br"
+                                                    start-view="month" ng-disabled="detalhes"
+                                                    ng-model-options="{ updateOn: 'blur' }">
+                                            </md-input-container>
+                                            <md-input-container>
+                                                <label>Tipo de Pensão</label>
+                                                <md-select ng-disabled="detalhes" name="tipoPensao"
+                                                    ng-model="pensaoAlimenticia.tipoPensao" ng-required="true">
+                                                    <md-option ng-repeat="item in tipoPensaoEnumList"
+                                                        ng-value="item.label">
+                                                        {{item.label}}
+                                                    </md-option>
+                                                </md-select>
+                                            </md-input-container>
+                                        </div>
+                                        <div layout layout-sm="column">
+                                            <md-input-container flex>
+                                                <label>RG</label>
+                                                <input ng-model="pensaoAlimenticia.rg" max="255" ng-disabled="detalhes"
+                                                    name="rg" ng-required="true">
+                                            </md-input-container>
+                                            <md-input-container flex>
+                                                <label>Órgão</label>
+                                                <input ng-model="pensaoAlimenticia.orgao" max="255" name="orgao"
+                                                    ng-disabled="detalhes" ng-required="true">
+                                            </md-input-container>
+                                            <md-input-container flex>
+                                                <label>UF</label>
+                                                <md-select ng-disabled="detalhes" name="estadoDocumento"
+                                                    ng-model-options="{trackBy: '$value.id' }"
+                                                    ng-model="pensaoAlimenticia.estadoDocumento" ng-required="true">
+                                                    <md-option ng-repeat="item in unidadeFederativaList"
+                                                        ng-value="item">
+                                                        {{item.descricao}}
+                                                    </md-option>
+                                                </md-select>
+                                            </md-input-container>
+                                        </div>
+                                        <div layout layout-sm="column">
+                                            <md-input-container flex>
+                                                <label>CPF</label>
+                                                <input ng-model="pensaoAlimenticia.cpf" ng-disabled="detalhes"
+                                                    name="cpf" ui-br-cpf-mask ng-required="true">
+                                                <div ng-messages="formPensaoAlimenticia.cpf.$error" multiple>
+                                                    <div ng-message="cpf">O Cpf informado é inválido.</div>
+                                                    <div ng-message="required">Campo de preenchimento obrigatório.</div>
+                                                </div>
+                                            </md-input-container>
+                                            <md-input-container flex>
+                                                <label>Telefone</label>
+                                                <input ng-model="pensaoAlimenticia.numeroTelefone" name="numeroTelefone"
+                                                    ui-br-phone-number-mask ng-disabled="detalhes">
+                                                <div ng-messages="formPensaoAlimenticia.numeroTelefone.$error" multiple>
+                                                    <div ng-message="brPhoneNumber">Informe um número de
+                                                        telefone válido.</div>
+                                                </div>
+                                            </md-input-container>
+                                        </div>
+
+
+                                        <!-- MODULARIZAR COM UM DIRETIVA DE ENDEREÇO -->
+                                        <h4>Endereço do Alimentando</h4>
+                                        <div layout layout-sm="column">
+                                            <md-input-container flex>
+                                                <label>Logradouro</label>
+                                                <input ng-model="pensaoAlimenticia.enderecoAlimentando.logradouro"
+                                                    max="255" name="logradouro" ng-disabled="detalhes"
+                                                    ng-required="true">
+                                            </md-input-container>
+                                            <md-input-container style="width: 100px;">
+                                                <label>Número</label>
+                                                <input ng-model="pensaoAlimenticia.enderecoAlimentando.numero" max="255"
+                                                    name="numero" ng-disabled="detalhes" ng-required="true">
+                                            </md-input-container>
+                                            <md-input-container style="width: 100px;">
+                                                <label>CEP</label>
+                                                <input ng-model="pensaoAlimenticia.enderecoAlimentando.cep"
+                                                    ng-disabled="detalhes" ui-br-cep-mask name="cep" ng-required="true">
+                                                <div ng-messages="formPensaoAlimenticia.cep.$error" multiple>
+                                                    <div ng-message="cep">O CEP informado é inválido.</div>
+                                                    <div ng-message="required">Campo de preenchimento obrigatório.</div>
+                                                </div>
+                                            </md-input-container>
+                                        </div>
+                                        <div layout layout-sm="column">
+                                            <md-input-container flex>
+                                                <label>Complemento</label>
+                                                <input ng-model="pensaoAlimenticia.enderecoAlimentando.complemento"
+                                                    ng-disabled="detalhes" name="complemento" max="255">
+                                            </md-input-container>
+                                        </div>
+                                        <div layout layout-sm="column">
+                                            <md-input-container flex>
+                                                <label>UF</label>
+                                                <md-select ng-disabled="detalhes" name="enderecoAlimentandoUf"
+                                                    ng-model-options="{trackBy: '$value.id' }"
+                                                    ng-change="changeEnderecoAlimentandoUf();"
+                                                    ng-model="pensaoAlimenticia.enderecoAlimentando.uf"
+                                                    ng-required="true">
+                                                    <md-option ng-repeat="item in unidadeFederativaList"
+                                                        ng-value="item">
+                                                        {{item.descricao}}
+                                                    </md-option>
+                                                </md-select>
+                                            </md-input-container>
+                                            <md-autocomplete
+                                                ng-disabled="detalhes || !pensaoAlimenticia.enderecoAlimentando.uf" flex
+                                                placeholder="Pesquise pelo nome" ng-required="true" md-no-cache="true"
+                                                md-floating-label="Município"
+                                                md-selected-item="pensaoAlimenticia.enderecoAlimentando.municipio"
+                                                md-search-text="searchMunicipio"
+                                                md-items="item in querySearchMunicipio(searchMunicipio)"
+                                                md-item-text="item.descricao" md-delay="100" md-min-length="3">
+                                                <md-item-template>
+                                                    <span md-highlight-text="searchMunicipio" md-highlight-flags="^i">
+                                                        {{item.descricao}}</span>
+                                                </md-item-template>
+                                                <md-not-found>
+                                                    Item "{{searchMunicipio}}" não encontrado.
+                                                </md-not-found>
+                                            </md-autocomplete>
+                                            <md-input-container flex>
+                                                <label>Bairro</label>
+                                                <input ng-model="pensaoAlimenticia.enderecoAlimentando.bairro"
+                                                    ng-required="true" ng-disabled="detalhes" name="bairro" max="255">
+                                            </md-input-container>
+                                        </div>
+
+                                        <h4>Responsável Legal</h4>
+                                        <div layout layout-sm="column">
+                                            <md-autocomplete ng-disabled="detalhes" flex md-no-cache="true"
+                                                md-floating-label="Nome"
+                                                md-selected-item="pensaoAlimenticia.responsavel"
+                                                md-search-text="searchResponsavel"
+                                                md-items="item in querySearchResponsavel(searchResponsavel)"
+                                                md-selected-item-change="onSelectedResponsavel()"
+                                                placeholder="Pesquise pelo nome" md-item-text="item.nome" md-delay="100"
+                                                md-min-length="3">
+                                                <md-item-template>
+                                                    <span md-highlight-text="searchResponsavel" md-highlight-flags="^i">
+                                                        {{item.nome}}</span>
+                                                </md-item-template>
+                                                <md-not-found>
+                                                    Item "{{searchResponsavel}}" não encontrado.
+                                                </md-not-found>
+                                            </md-autocomplete>
+                                            <md-input-container>
+                                                <label>Código</label>
+                                                <input ng-model="pensaoAlimenticia.responsavel.codigo"
+                                                    ng-disabled="true">
+                                            </md-input-container>
+                                            <md-input-container>
+                                                <label>Tipo</label>
+                                                <input ng-model="pensaoAlimenticia.responsavel.tipo.label"
+                                                    ng-disabled="true">
+                                            </md-input-container>
+                                        </div>
+                                        <div layout layout-sm="column">
+                                            <md-input-container flex>
+                                                <label>Número do Processo de Representação</label>
+                                                <input ng-model="pensaoAlimenticia.numeroProcessoResponsavel" max="255"
+                                                    ng-disabled="detalhes">
+                                            </md-input-container>
+                                            <md-input-container style="width: 190px;">
+                                                <label>Início da Vigência</label>
+                                                <md-icon class="material-icons icon-momentpicker"
+                                                    ng-class="md-datepicker-calendar-icon" aria-label="md-calendar">
+                                                    date_range
+                                                </md-icon>
+                                                <input moment-picker="pensaoAlimenticia.dataInicial"
+                                                    placeholder="Selecione a data"
+                                                    ng-model="pensaoAlimenticia.dataInicial" format="DD/MM/YYYY"
+                                                    locale="pt-br" start-view="month" ng-disabled="detalhes"
+                                                    ng-model-options="{ updateOn: 'blur' }">
+                                            </md-input-container>
+                                            <md-input-container style="width: 190px;">
+                                                <label>Final da Vigência</label>
+                                                <md-icon class="material-icons icon-momentpicker"
+                                                    ng-class="md-datepicker-calendar-icon" aria-label="md-calendar">
+                                                    date_range
+                                                </md-icon>
+                                                <input moment-picker="pensaoAlimenticia.dataFinal"
+                                                    placeholder="Selecione a data"
+                                                    ng-model="pensaoAlimenticia.dataFinal" format="DD/MM/YYYY"
+                                                    locale="pt-br" start-view="month" ng-disabled="detalhes"
+                                                    ng-model-options="{ updateOn: 'blur' }">
+                                            </md-input-container>
+                                        </div>
+
+                                        <h4>Dados de Pagamento</h4>
+                                        <div layout layout-sm="column">
+                                            <md-input-container flex>
+                                                <label>Período de Desconto Inicial</label>
+                                                <md-icon class="material-icons icon-momentpicker"
+                                                    ng-class="md-datepicker-calendar-icon" aria-label="md-calendar">
+                                                    date_range
+                                                </md-icon>
+                                                <input moment-picker="pensaoAlimenticia.dataInicialPagamento"
+                                                    placeholder="Selecione o período" ng-required="true"
+                                                    ng-model="pensaoAlimenticia.dataInicialPagamento"
+                                                    format="DD/MM/YYYY" locale="pt-br" start-view="month"
+                                                    ng-disabled="detalhes" ng-model-options="{ updateOn: 'blur' }">
+                                            </md-input-container>
+                                            <md-input-container flex>
+                                                <label>Período de Desconto Final</label>
+                                                <md-icon class="material-icons icon-momentpicker"
+                                                    ng-class="md-datepicker-calendar-icon" aria-label="md-calendar">
+                                                    date_range
+                                                </md-icon>
+                                                <input moment-picker="pensaoAlimenticia.dataFinalPagamento"
+                                                    placeholder="Selecione o período"
+                                                    ng-model="pensaoAlimenticia.dataFinalPagamento" format="DD/MM/YYYY"
+                                                    locale="pt-br" start-view="month" ng-disabled="detalhes"
+                                                    ng-model-options="{ updateOn: 'blur' }">
+                                            </md-input-container>
+
+                                        </div>
+                                        <div layout layout-sm="column">
+                                            <md-input-container flex>
+                                                <label>Verba</label>
+                                                <md-select style="margin: 20px 0" ng-disabled="detalhes" name="verba"
+                                                    ng-model-options="{trackBy: '$value.id' }"
+                                                    ng-model="pensaoAlimenticia.verba" ng-required="true">
+                                                    <md-option ng-repeat="item in verbaList" ng-value="item">
+                                                        {{item.descricao}}
+                                                    </md-option>
+                                                </md-select>
+                                            </md-input-container>
+                                            <md-input-container flex>
+                                                <label>Centro de Custo</label>
+                                                <md-select style="margin: 20px 0" ng-disabled="detalhes"
+                                                    name="centroCusto" ng-model-options="{trackBy: '$value.id' }"
+                                                    ng-model="pensaoAlimenticia.centroCusto" ng-required="true">
+                                                    <md-option ng-repeat="item in centroCustoList" ng-value="item">
+                                                        {{item.descricao}}
+                                                    </md-option>
+                                                </md-select>
+                                            </md-input-container>
+                                        </div>
+
+                                        <dado-bancario-form show="detalhes" required-tipo-conta="true"
+                                            required-banco="true" required-agencia="true" required-conta="true"
+                                            required-digito="true" data="pensaoAlimenticia.dadoBancario">
+                                        </dado-bancario-form>
+
+                                        <div layout layout-sm="column">
+                                            <md-input-container>
+                                                <label>Número do Processo</label>
+                                                <input ng-model="pensaoAlimenticia.numeroProcessoPagamento" max="255"
+                                                    name="numeroProcessoPagamento" ng-disabled="detalhes"
+                                                    ng-required="true">
+                                            </md-input-container>
+                                            <md-input-container>
+                                                <label>Vencimento</label>
+                                                <md-icon class="material-icons icon-momentpicker"
+                                                    ng-class="md-datepicker-calendar-icon" aria-label="md-calendar">
+                                                    date_range
+                                                </md-icon>
+                                                <input moment-picker="pensaoAlimenticia.vencimento"
+                                                    placeholder="Selecione o vencimento" ng-required="true"
+                                                    ng-model="pensaoAlimenticia.vencimento" format="DD/MM/YYYY"
+                                                    locale="pt-br" start-view="month" ng-disabled="detalhes"
+                                                    ng-model-options="{ updateOn: 'blur' }">
+                                            </md-input-container>
+                                            <md-input-container flex>
+                                                <label>Tipo de Desconto</label>
+                                                <md-select ng-disabled="detalhes" name="tipoValor"
+                                                    ng-model="pensaoAlimenticia.tipoValor" ng-required="true">
+                                                    <md-option ng-repeat="item in tipoValorEnumList"
+                                                        ng-value="item.label">
+                                                        {{item.label}}
+                                                    </md-option>
+                                                </md-select>
+                                            </md-input-container>
+                                        </div>
+                                        <div layout layout-sm="column">
+                                            <md-input-container flex>
+                                                <label>Valor</label> <input ng-disabled="detalhes"
+                                                    ng-model="pensaoAlimenticia.valor" name="valor" ui-money-mask
+                                                    ui-hide-group-sep>
+                                            </md-input-container>
+                                            <md-input-container flex>
+                                                <label>Salário Família</label> <input ng-disabled="detalhes"
+                                                    ng-model="pensaoAlimenticia.salarioFamilia" name="salarioFamilia"
+                                                    ui-number-mask="0" ui-hide-group-sep>
+                                            </md-input-container>
+                                            <md-input-container flex>
+                                                <label>Incidência Principal</label>
+                                                <md-select
+                                                    ng-disabled="detalhes || pensaoAlimenticia.tipoValor === 'Moeda'"
+                                                    name="tipoIncidenciaPrincipalPensao"
+                                                    ng-model="pensaoAlimenticia.tipoIncidenciaPrincipalPensao">
+                                                    <md-option ng-repeat="item in tipoIncidenciaPrincipalPensaoEnumList"
+                                                        ng-value="item.label">
+                                                        {{item.label}}
+                                                    </md-option>
+                                                </md-select>
+                                            </md-input-container>
+                                        </div>
+
+                                        <h4>Incidência Adicional</h4>
+                                        <div layout layout-sm="column">
+                                            <md-input-container flex>
+                                                <md-checkbox
+                                                    ng-disabled="detalhes || pensaoAlimenticia.tipoValor === 'Moeda'"
+                                                    ng-model="pensaoAlimenticia.salario13" aria-label="salario13">
+                                                    <strong>13ª
+                                                        Salário</strong></md-checkbox>
+                                            </md-input-container>
+                                            <md-input-container flex>
+                                                <md-checkbox
+                                                    ng-disabled="detalhes || pensaoAlimenticia.tipoValor === 'Moeda'"
+                                                    ng-model="pensaoAlimenticia.ferias" aria-label="ferias">
+                                                    <strong>Férias</strong></md-checkbox>
+                                            </md-input-container>
+                                            <md-input-container flex>
+                                                <md-checkbox
+                                                    ng-disabled="detalhes || pensaoAlimenticia.tipoValor === 'Moeda'"
+                                                    ng-model="pensaoAlimenticia.recisao" aria-label="recisao">
+                                                    <strong>Recisão</strong></md-checkbox>
+                                            </md-input-container>
+                                        </div>
+
+                                        <audit-data show="detalhes" data="pensaoAlimenticia"></audit-data>
+
+                                        <div class="row">
+                                            <div class="col-md-12 text-center">
+                                                <button ng-if="!detalhes" type="submit" ui-wave
+                                                    ng-disabled="formPensaoAlimenticia.$invalid || !podeCadastrar || !podeAtualizar"
+                                                    class="btn btn-primary btn-w-md">Salvar</button>
+                                                <p class="btn btn-default btn-w-md" ui-wave data-ng-click="goBack()">
+                                                    Voltar
+                                                </p>
+                                            </div>
+                                        </div>
+
+                                    </form>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div>
+
+</section>

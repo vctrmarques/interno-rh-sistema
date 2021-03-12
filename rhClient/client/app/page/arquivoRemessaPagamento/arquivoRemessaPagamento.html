@@ -1,0 +1,146 @@
+<div class="page" ng-controller="arquivoRemessaPagamentoCtrl">
+    <div class="row ui-section">
+        <div class="col-lg-12 clearfix">
+            <h2 class="section-header" style="float: left;">Gestão de Pagamento - Arquivo de Remessa</h2>
+            <div style="float: right">
+                <md-button class="md-fab md-accent" ng-href="#!/arquivoRemessaPagamento/formulario">
+					<md-tooltip md-direction="bottom">Novo Arquivo</md-tooltip>
+					<span class="fa fa-plus"></span>
+				</md-button>
+                <span class="space"></span>
+            </div>
+        </div>
+        <div class="col-md-12">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <article class="article">
+                        <md-card class="no-margin-h">
+                            <div layout="column">
+                                <div layout-padding>
+                                    <form autocomplete="off" ng-submit="loadList()">
+                                        <div layout layout-sm="column">
+                                            <md-autocomplete flex md-no-cache="noCache" md-floating-label="Filtro tipo de processamento" md-selected-item="tipoProcessamento" md-search-text="searchProcessamento"
+                                                    md-items="item in querySearchProcessamento(searchProcessamento)" md-item-text="tipoProcessamento.descricao" md-delay="1000" md-min-length="3" md-selected-item-change="tipoProcessamentoSelecionado()">
+                                                <md-item-template> <span md-highlight-text="searchProcessamento" md-highlight-flags="^i">{{item.descricao}}</span> </md-item-template> 
+                                                <md-not-found> Item "{{searchProcessamento}}" não encontrado. </md-not-found> 
+                                            </md-autocomplete>
+                                            
+                                            <md-input-container flex>
+												<label>Situação</label>
+												<md-select ng-model="selectedSituacoes" placeholder="Selecione a Situação"
+                                                    data-md-container-class="selectdemoSelectHeader" multiple
+                                                    ng-keypress="($event.keyCode === 13) && loadList()">
+													<md-select-header class="demo-select-header">
+													</md-select-header>
+													<md-optgroup label="Situação">
+                                                        <md-option ng-value="obj" ng-repeat="obj in lista.situacao"
+                                                        ng-keypress="($event.keyCode === 13) && loadList()">
+															{{obj.label}}
+														</md-option>
+													</md-optgroup>
+												</md-select>
+											</md-input-container>
+                                            <md-button class="md-icon-button" ng-click="limpaFiltro()">
+                                                <md-tooltip md-direction="top">Limpar Filtros</md-tooltip>
+                                                <md-icon>autorenew</md-icon>
+                                            </md-button>
+                                            <md-button class="md-icon-button" ng-click="loadList()">
+                                                <md-tooltip md-direction="top">Atualizar</md-tooltip>
+                                                <md-icon>refresh</md-icon>
+                                            </md-button>
+                                            <input style="display: none;" type='submit' />
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                            <md-table-container>
+                                <table md-table ng-model="selected" md-progress="promise">
+                                    <thead ng-if="!options.decapitate" md-head md-order="query.order"
+                                        md-on-reorder="loadList">
+                                        <tr md-row>
+                                            <th md-column>
+                                                <span>Competência</span>
+                                            </th>
+                                            <th md-column>
+                                                <span>Tipo de processamento</span>
+                                            </th>
+                                            <th md-column>
+                                                <span>Filial</span>
+                                            </th>
+                                            <th md-column>
+                                                <span>Data criação</span>
+                                            </th>
+                                            <th md-column>
+                                                <span>Data pagamento</span>
+                                            </th>
+                                            <th md-column>
+                                                <span>Situação</span>
+                                            </th>
+                                            <th md-column>
+                                                <span>Motivo</span>
+                                            </th>
+                                            <th md-column>
+                                                <span>Ações</span>
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody md-body>
+                                        <tr md-row md-select="item" md-select-id="item" md-auto-select
+                                            ng-repeat="item in list.data">
+                                            <td md-cell>{{item.folhaPagamento.folhaCompetencia.mesCompetencia}}/{{item.folhaPagamento.folhaCompetencia.anoCompetencia}}</td>
+                                            <td md-cell>{{item.folhaPagamento.tipoProcessamento.descricao}}</td>
+                                            <td md-cell>{{item.folhaPagamento.filial.nomeFilial}}</td>
+                                            <td md-cell>{{convertDate(item.dataCriacao, false)}}</td>
+                                            <td md-cell>{{convertDate(item.dataPagamento, false)}}</td>
+                                            <td md-cell>{{item.situacao}}</td>
+                                            <td md-cell>{{item.motivo}}</td>
+                                            <td md-cell>
+                                                <a href="" ui-sref="arquivoRemessaPagamentoFormularioDetalhes({ id: item.id, detalhes: true })">
+                                                    <md-tooltip md-direction="top">Detalhes Cadastrais</md-tooltip> 
+                                                    <i class="fa fa-eye fa-lg"></i>
+												</a>
+                                                <a href="" ng-show="botoesGestao && item.situacao == 'Em aberto'"
+                                                    ui-sref="arquivoRemessaPagamentoFormularioEdit({ id: item.id })">
+                                                    <md-tooltip md-direction="top">Editar</md-tooltip> 
+                                                    <i class="fa fa-pencil fa-lg"></i>
+                                                </a> 
+
+                                                <a href="" ng-show="botoesGestao" ng-click="gerarArquivoRemessa(item.id)">
+                                                    <md-tooltip md-direction="top">Gerar arquivo de remessa</md-tooltip> 
+                                                    <i class="fa fa-floppy-o fa-lg"></i>
+                                                </a> 
+
+                                                <a href="" ng-show="botoesGestao"
+                                                    ng-click="showRelatorioLiquidos(item.id)">
+                                                    <md-tooltip md-direction="top">Gerar relatório de líquidos</md-tooltip> 
+                                                    <i class="fa fa-file-text-o fa-lg"></i>
+                                                </a> 
+
+                                                <a href="" ng-show="botoesGestao" ng-click="showConfirmAlterarSituacao($event, item)">
+                                                    <md-tooltip md-direction="top">Mudar situação</md-tooltip> 
+                                                    <i class="fa fa-refresh fa-lg"></i>
+                                                </a> 
+                                                
+                                                <a href="" ng-show="botoesGestao" ng-click="historicoSituacoes(item.id)">
+                                                    <md-tooltip md-direction="top">Histórico situação</md-tooltip> 
+                                                    <i class="fa fa-history fa-lg"></i>
+                                                </a> 
+                                                
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </md-table-container>
+                            <md-table-pagination
+                                md-label="{page: 'Página:', rowsPerPage: 'Registros por página:', of: 'de'}"
+                                md-limit="query.limit" md-limit-options="limitOptions" md-page="query.page"
+                                md-total="{{list.count}}" md-on-paginate="loadList" md-page-select>
+                            </md-table-pagination>
+                        </md-card>
+                    </article>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

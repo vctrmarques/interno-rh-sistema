@@ -1,0 +1,483 @@
+<div class="page" ng-controller="verbaFormCtrl">
+	<div class="row ui-section">
+		<div class="col-lg-8 clearfix">
+			<h2 class="section-header">{{!detalhes ? 'Formulário Verba' : 'Detalhes Verba'}}</h2>
+		</div>
+		<div class="col-md-12">
+			<div class="panel panel-default">
+				<div class="panel-body">
+					<div class="row">
+						<div class="col-lg-12">
+							<form ng-disabled="detalhes" name="verbaForm" ng-submit="save()">
+								<div layout="column" ng-cloak class="md-inline-form inputdemoBasicUsage">
+									<div layout-padding>
+										<md-tabs md-dynamic-height md-border-bottom>
+											<md-tab label="Dados Cadastrais">
+												<md-content class="md-padding">
+													<div class="divider divider"></div>
+													<div layout layout-sm="column">
+														<md-input-container flex> <label>Código</label> <input
+																ng-disabled="detalhes" ng-required="true"
+																ng-model="verba.codigo" name="codigo">
+														</md-input-container>
+														<md-input-container flex> <label>Descrição</label> <input
+																ng-disabled="detalhes" ng-required="true"
+																ng-model="verba.descricaoVerba" name="descricaoVerba">
+														</md-input-container>
+														<md-input-container flex> <label>Descrição Resumida</label>
+															<input ng-disabled="detalhes" ng-required="true"
+																ng-model="verba.descricaoResumida"
+																name="descricaoResumida">
+														</md-input-container>
+													</div>
+
+													<div layout layout-sm="column">
+														<div class="col-sm-6 p-l-0">
+															<div class="col-sm-6 p-l-0">
+
+																<md-input-container class="md-block"> <label>Tipo de
+																		Verba</label>
+																	<md-select ng-disabled="detalhes"
+																		ng-model="verba.tipoVerba" name="tipoVerba"
+																		required>
+																		<md-option ng-repeat="tipoVerba in tipoVerbas"
+																			value="{{tipoVerba.value}}">
+																			{{tipoVerba.label}} </md-option>
+																	</md-select>
+																	<div ng-messages="verbaForm.tipoVerba.$error"
+																		role="alert" multiple>
+																		<div ng-message="required">Campo de
+																			preenchimento obrigatório.</div>
+																	</div>
+																</md-input-container>
+																<md-input-container class="md-block"> <label>Tipo
+																		Valor</label>
+																	<md-select ng-disabled="detalhes"
+																		ng-model="verba.tipoValor" name="tipoValor"
+																		required>
+																		<md-option ng-repeat="tipoValor in tipoValores"
+																			value="{{tipoValor.value}}">
+																			{{tipoValor.label}} </md-option>
+																	</md-select>
+																	<div ng-messages="verbaForm.tipoValor.$error"
+																		role="alert" multiple>
+																		<div ng-message="required">Campo de
+																			preenchimento obrigatório.</div>
+																	</div>
+																</md-input-container>
+																<md-input-container class="md-block"> 
+																	<label>Identificação da Verba</label>
+																	<md-select ng-disabled="detalhes"
+																		ng-model="verba.identificadorVerba" name="identificadorVerba">
+																		<md-option ng-value=null><em>-- Selecione --</em></md-option>
+																		<md-option ng-repeat="identificadorVerba in identificadorVerbas"
+																			value="{{identificadorVerba.value}}">
+																			{{identificadorVerba.label}} </md-option>
+																	</md-select>
+																</md-input-container>
+																<md-autocomplete ng-required="true"
+																	ng-disabled="detalhes"
+																	md-input-name="autocompleteField"
+																	md-no-cache="noCache"
+																	md-floating-label="Conta Débito"
+																	md-selected-item="verba.contaDebito"
+																	md-search-text="buscaCD" md-min-length="1"
+																	md-items="conta in querySearchConta(buscaCD,'Débito')"
+																	md-item-text="conta.conta.toString()" md-delay="100"
+																	md-selected-item-change="contaDebitoSelecionada(verba.contaDebito)">
+																	<md-item-template>
+																		<div>{{conta.conta}}</div>
+																	</md-item-template>
+																</md-autocomplete>
+																<md-input-container flex class="md-block  m-b-0">
+																	<label>Conta Auxiliar Primária</label> <input
+																		ng-disabled="detalhes"
+																		ng-model="verba.contaAuxiliarPrimaria"
+																		name="contaAuxiliarPrimaria" ui-number-mask="0"
+																		ui-hide-group-sep> </md-input-container>
+																<md-input-container flex class="m-t-0 md-block  m-b-0">
+																	<label>Valor Máximo</label> <input
+																		ng-disabled="detalhes"
+																		ng-model="verba.valorMaximo" name="valorMaximo"
+																		ui-number-mask="2" ui-hide-group-sep>
+																</md-input-container>
+
+															</div>
+															<div class="col-sm-6 p-l-0">
+																<md-input-container class="md-block"> <label>Destinação
+																		Externa</label>
+																	<md-select
+																		ng-disabled="detalhes || verba.tipoVerba != 'DESCONTO'"
+																		ng-required="verba.tipoVerba == 'DESCONTO'"
+																		ng-model="verba.destinacaoExterna"
+																		name="destinacaoExterna">
+																		<md-option
+																			ng-repeat="destinacaoExterna in destinacaoExternas"
+																			value="{{destinacaoExterna.value}}">
+																			{{destinacaoExterna.label}} </md-option>
+																	</md-select>
+																	<div ng-messages="verbaForm.destinacaoExterna.$error"
+																		role="alert" multiple>
+																		<div ng-message="required">Campo de
+																			preenchimento obrigatório.</div>
+																	</div>
+																</md-input-container>
+																<md-input-container class="md-block"> <label>Centro de
+																		Custo</label>
+																	<md-select ng-disabled="detalhes"
+																		ng-model="verba.centroCustoId"
+																		name="centroCustoId" required>
+																		<md-option ng-repeat="centro in centros"
+																			ng-value="centro.id"> {{centro.descricao}}
+																		</md-option>
+																	</md-select>
+																	<div ng-messages="verbaForm.centroCustoId.$error"
+																		role="alert" multiple>
+																		<div ng-message="required">Campo de
+																			preenchimento obrigatório.</div>
+																	</div>
+																</md-input-container>
+																<md-autocomplete flex
+																	ng-disabled="!verba.identificadorVerba"
+																	md-no-cache="noCache"
+																	md-floating-label="Verba Associada"
+																	md-selected-item="verba.verbaAssociadaId.descricaoVerba"
+																	md-search-text="searchVerbaAssociada"
+																	md-items="verbaAssociada in querySearchVerbaAssociada(searchVerbaAssociada)"
+																	md-item-text="verbaAssociada.descricao" md-delay="1000"
+																	md-min-length="3" name="verbaAssociada"
+																	ng-required="verba.identificadorVerba == 'DIFERENCA' || verba.identificadorVerba == 'DEVOLUCAO'"
+																	md-selected-item-change="verbaAssociadaSelecionada()">
+																	<md-item-template>
+																		<span md-highlight-text="searchVerbaAssociada"
+																			md-highlight-flags="^i">{{verbaAssociada.descricao}}</span>
+																	</md-item-template>
+																</md-autocomplete>
+																<md-input-container class="md-block p-t-0"
+																	style="margin-top: -3px;">
+																	<label>Recorrência</label>
+																	<md-select ng-disabled="detalhes"
+																		ng-model="verba.recorrencia" name="recorrencia"
+																		required>
+																		<md-option
+																			ng-repeat="recorrencia in recorrencias"
+																			value="{{recorrencia.value}}">
+																			{{recorrencia.label}} </md-option>
+																	</md-select>
+																	<div ng-messages="verbaForm.recorrencia.$error"
+																		role="alert" multiple>
+																		<div ng-message="required">Campo de
+																			preenchimento obrigatório.</div>
+																	</div>
+																</md-input-container>
+																<md-autocomplete ng-disabled="detalhes"
+																	ng-required="true" md-input-name="autocompleteField"
+																	md-no-cache="noCache"
+																	md-floating-label="Conta Crédito"
+																	md-selected-item="verba.contaCredito"
+																	md-search-text="buscaCC" md-min-length="1"
+																	md-items="contaCredito in querySearchConta(buscaCC,'Crédito')"
+																	md-item-text="contaCredito.conta.toString()"
+																	md-delay="100"
+																	md-selected-item-change="contaCreditoSelecionada(verba.contaCredito)">
+																	<md-item-template>
+																		<div>{{contaCredito.conta}}</div>
+																	</md-item-template>
+																</md-autocomplete>
+																<md-input-container flex class=" md-block m-b-0">
+																	<label>Conta Auxiliar Secundária</label> <input
+																		ng-disabled="detalhes"
+																		ng-model="verba.contaAuxiliarSecundaria"
+																		name="contaAuxiliarSecundaria"
+																		ui-number-mask="0" ui-hide-group-sep>
+																</md-input-container>
+																<md-input-container flex class="m-t-0 md-block  m-b-0">
+																	<label>Referência Padrão</label> <input
+																		ng-disabled="detalhes"
+																		ng-model="verba.referencia" name="referencia"
+																		ui-number-mask="2" ui-hide-group-sep>
+																</md-input-container>
+															</div>
+														</div>
+														<div class="col-sm-6 p-r-0">
+															<div class="panel panel-default">
+																<div class="panel-body">
+																	<div layout="column" ng-cloak
+																		class="md-inline-form inputdemoBasicUsage">
+																		<h5 class="nome-usuario-label">Vigência</h5>
+																		<div layout layout-sm="column">
+																			<div layout layout-sm="column">
+																				<md-input-container class="md-block">
+																					<label>Inicial</label>
+																					<md-icon
+																						class="material-icons icon-momentpicker"
+																						ng-class="md-datepicker-calendar-icon"
+																						aria-label="md-calendar">
+																						date_range </md-icon> <input
+																						name="vigenciaInicial"
+																						moment-picker="verba.vigenciaInicial"
+																						placeholder="Selecione a data"
+																						ng-model="verba.vigenciaInicial"
+																						format="DD/MM/YYYY"
+																						locale="pt-br"
+																						start-view="month"
+																						ng-model-options="{ updateOn: 'blur' }"
+																						ng-disabled="detalhes">
+																				</md-input-container>
+																			</div>
+																			<div layout layout-sm="column">
+																				<md-input-container class="md-block">
+																					<label>Final</label>
+																					<md-icon
+																						class="material-icons icon-momentpicker"
+																						ng-class="md-datepicker-calendar-icon"
+																						aria-label="md-calendar">
+																						date_range </md-icon> <input
+																						name="vigenciaFinal"
+																						moment-picker="verba.vigenciaFinal"
+																						min-date="verba.vigenciaInicial"
+																						placeholder="Selecione a data"
+																						ng-model="verba.vigenciaFinal"
+																						format="DD/MM/YYYY"
+																						locale="pt-br"
+																						start-view="month"
+																						ng-model-options="{ updateOn: 'blur' }"
+																						ng-disabled="detalhes">
+																				</md-input-container>
+																			</div>
+																		</div>
+																	</div>
+																</div>
+															</div>
+															<div class="panel panel-default">
+																<div class="panel-body">
+																	<div layout="column" ng-cloak
+																		class="md-inline-form inputdemoBasicUsage">
+																		<h5 class="nome-usuario-label">Comentário *</h5>
+																		<div text-angular class="ui-editor"
+																			ta-toolbar="[]" required
+																			ta-disabled="detalhes"
+																			ng-model="verba.comentario"></div>
+																	</div>
+																</div>
+															</div>
+														</div>
+													</div>
+
+												</md-content>
+											</md-tab>
+											<md-tab label="Incidências">
+												<md-content class="md-padding">
+													<div class="divider divider"></div>
+													<div layout layout-sm="column">
+														<div class="col-sm-12">
+															<h4>Verbas</h4>
+															<div layout layout-sm="column">
+																<div class="col-lg-3">
+																	<md-select ng-model="verbaIncidencia"
+																		placeholder="Selecione uma verba" flex>
+																		<md-option ng-repeat="verba in list.listaVerbas"
+																			ng-value="verba"> {{verba.codigo}} -
+																			{{verba.descricaoVerba}} </md-option>
+																	</md-select>
+																</div>
+																<div class="col-lg-1">
+																	<md-input-container class="md-block">
+																		<a ng-click="adicionarVerbaIncidente()"><i
+																				class="fa fa-plus fa-md"></i></a>
+																		</md-intput-container>
+																</div>
+															</div>
+															<div class="col-md-12 text-center" style="margin-top: 20px">
+																<p ng-if="!detalhes" ng-show="verifyPermission"
+																	ng-click="adicionarLicencaPremio()" ui-wave
+																	class="btn btn-primary btn-w-md">Inserir</p>
+															</div>
+															<div class="col-md-12 text-center" style="margin-top: 20px">
+																<md-table-container>
+																	<table md-table ng-model="selected"
+																		ng-if="incidencias.length > 0"
+																		md-progress="promise" style="margin-top: 20px">
+																		<thead md-head md-on-reorder="loadList">
+																			<tr md-row>
+																				<th md-column><span>Código</span></th>
+																				<th md-column><span>Descrição da
+																						Verba</span></th>
+																				<th md-column><span>Tipo</span></th>
+																				<th md-column ng-if="!detalhes">
+																					<span>Ações</span></th>
+																			</tr>
+																		</thead>
+																		<tbody md-body>
+																			<tr md-row md-select="item"
+																				md-select-id="item" md-auto-select
+																				ng-repeat="verba in incidencias">
+																				<td md-cell>{{verba.codigo}}</td>
+																				<td md-cell>{{verba.descricaoVerba}}
+																				</td>
+																				<td md-cell>{{verba.tipoVerba}}</td>
+																				<td md-cell><a
+																						ng-if="!botoesGestao && !detalhes"
+																						ng-click="removerVerbaIncidente($index)">
+																						<md-tooltip md-direction="top">
+																							Excluir</md-tooltip> <i
+																							class="fa fa-trash-o fa-lg"></i>
+																					</a></td>
+																			</tr>
+																		</tbody>
+																	</table>
+																</md-table-container>
+															</div>
+														</div>
+													</div>
+												</md-content>
+											</md-tab>
+											<md-tab label="Fórmula">
+												<md-content class="md-padding">
+													<div class="divider divider"></div>
+													<div layout layout-sm="column">
+														<div class="col-sm-12">
+															<md-input-container class="md-block"> <label>Descrição da
+																	fórmula</label> <input ng-disabled="detalhes"
+																	ng-model="verba.descricaoFormula"
+																	name="descricaoFormula">
+															</md-input-container>
+														</div>
+													</div>
+													<div layout layout-sm="column">
+														<div class="col-sm-6">
+															<h4>Adicionar Atributos</h4>
+															<md-input-container class="md-block">
+																<label>Atributos</label>
+																<md-select ng-disabled="detalhes" name="addAtributo"
+																	ng-model="addAtributo">
+																	<md-option
+																		ng-repeat="atributo in list.listaAtributos"
+																		ng-click="montaFormula(atributo)">
+																		{{atributo.valor}} </md-option>
+																</md-select>
+															</md-input-container>
+														</div>
+														<div class="col-sm-6">
+															<h4>Adicionar Rotinas</h4>
+															<md-input-container class="md-block">
+																<label>Rotinas</label>
+																<md-select ng-disabled="detalhes" name="addRotina"
+																	ng-model="addRotina">
+																	<md-option ng-repeat="rotina in list.listRotinas"
+																		ng-click="montaFormula(rotina)">
+																		{{rotina.valor}} </md-option>
+																</md-select>
+															</md-input-container>
+														</div>
+													</div>
+													<div layout layout-sm="column">
+														<div class="col-sm-12" style="text-align: center;">
+															<apan ng-repeat="ol in operadoresFormula"
+																ng-if="$index <= 10" ng-click="montaFormula(ol)"
+																class="spanTag">
+																{{ol.valor}}</apan>
+															<br>
+															<apan ng-repeat="ol in operadoresFormula"
+																ng-if="$index > 10" ng-click="montaFormula(ol)"
+																class="spanTag">
+																{{ol.valor}}</apan>
+														</div>
+													</div>
+													<div class="divider divider"></div>
+													<div layout layout-sm="column">
+														<div class="col-sm-12">
+															<div class="panel panel-default">
+																<div class="panel-body">
+																	<div layout="column" ng-cloak
+																		class="md-inline-form inputdemoBasicUsage">
+																		<h5 class="nome-usuario-label">Fórmula *</h5>
+																		<div class="form-group">
+																			<textarea mentio mentio-trigger-char="'@'"
+																				mentio-items="choices"
+																				mentio-template-url="/mentions.tpl"
+																				mentio-search="searchAttribuites(term)"
+																				mentio-select="getAttribuiteTextRaw(item)"
+																				mentio-typed-term="typedTerm2"
+																				class="editor form-control"
+																				ng-model="verba.formula" ng-trim="false"
+																				ng-disabled="detalhes" required>
+																			</textarea>
+																		</div>
+																		<script type="text/ng-template"
+																			id="/mentions.tpl">
+																			<ul class="list-group user-search">
+																				<li mentio-menu-item="item" ng-repeat="item in items" class="list-group-item">
+																					<span class="text-primary" ng-bind-html="item.valor | mentioHighlight:typedTerm:'menu-highlighted' | unsafe"></span>
+																				</li>
+																			</ul>
+																		</script>
+																	</div>
+																</div>
+															</div>
+
+															<div class="col-sm-12">
+																<button type="button" ui-wave class="btn btn-wanning"
+																	ng-click="validarFormula()">Validar
+																	Fórmula</button>
+																<!-- <button type="button" ui-wave class="btn btn-primary" ng-click="editarMontaListaFormulas()" ng-if="verba.id">Alterar</button> -->
+																<!-- <button type="button" ui-wave class="btn btn-primary" ng-click="montaListaFormulas()" ng-if="!verba.id">Adicionar</button> -->
+																<button type="button" ui-wave class="btn btn-wanning"
+																	ng-click="extrairVariaveis()">Preencher
+																	Variáveis</button>
+															</div>
+															<!--Preencher valores para modificar as chaves-->
+															<div class="col-sm-12">
+																<div ng-repeat="chave in chaves">
+																	<md-input-container flex>
+																		<label>{{chave.label}}</label><input
+																			type="number" id="value{{chave}}"
+																			ng-model="chave.value" />
+																	</md-input-container>
+																</div>
+															</div>
+														</div>
+													</div>
+												</md-content>
+											</md-tab>
+										</md-tabs>
+									</div>
+
+									<div ng-if="detalhes" layout layout-sm="column">
+										<table md-table md-progress="promise">
+											<thead md-head>
+												<tr md-row>
+													<th md-column><span>Criado em:</span></th>
+													<th md-column><span>Atualizado em:</span></th>
+													<th md-column><span>Criado por:</span></th>
+													<th md-column><span>Atualizado por:</span></th>
+												</tr>
+											</thead>
+											<tbody md-body>
+												<tr md-row>
+													<td md-cell>{{verba.criadoEm | date:'dd/MM/yy - HH:mm'}}</td>
+													<td md-cell>{{verba.alteradoEm | date:'dd/MM/yy - HH:mm'}}</td>
+													<td md-cell>{{verba.criadoPor}}</td>
+													<td md-cell>{{verba.alteradoPor}}</td>
+												</tr>
+											</tbody>
+										</table>
+									</div>
+
+									<div class="row">
+										<div class="col-md-12 text-center">
+											<button ng-if="!detalhes" ng-disabled="verbaForm.$invalid" type="submit"
+												ui-wave class="btn btn-primary btn-w-md">Salvar</button>
+											<p class="btn btn-default btn-w-md" ui-wave data-ng-click="goBack()">Voltar
+											</p>
+										</div>
+									</div>
+								</div>
+							</form>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

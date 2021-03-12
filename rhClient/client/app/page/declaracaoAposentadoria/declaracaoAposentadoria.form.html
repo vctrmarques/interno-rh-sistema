@@ -1,0 +1,763 @@
+<div class="page" ng-controller="declaracaoAposentadoriaFormCtrl">
+	<div class="row ui-section">
+		<div class="col-lg-8 clearfix">
+			<h2 class="section-header">
+				{{!detalhes ? 'Formulário de Declaração para Aposentados' : 'Detalhes de Declaração para Aposentados'}}
+			</h2>
+		</div>
+		<div class="col-md-12">
+			<div class="panel panel-default">
+				<div class="panel-body">
+					<div class="row">
+						<div class="col-lg-12">
+							<div layout="column" ng-cloak class="md-inline-form inputdemoBasicUsage">
+								<form ng-disabled="detalhes" name="declaracaoAposentadoriaForm">
+									<div layout-padding>
+										<md-tabs md-dynamic-height md-border-bottom>
+											<!-- Início da aba DECLARAÇÃO -->
+											<md-tab label="Declaração">
+												<md-content class="md-padding">
+													<div style="text-align: center;"
+														ng-if="declaracaoAposentadoria.rascunho && savarComoRascunho">
+														<span style="font-weight: bold;color: rgb(0,150,136);">
+															RASCUNHO</span>
+													</div>
+													<div style="text-align: center;"
+														ng-if="declaracaoAposentadoria.numeroRetificacao">
+														<span style="font-weight: bold;color: rgb(0,150,136);">
+															RETIFICAÇÃO Nº
+															{{declaracaoAposentadoria.numeroRetificacao}}</span>
+													</div>
+													<div class="divider divider"></div>
+													<div class="panel panel-default">
+														<div class="panel-body">
+															<fieldset>
+																<legend>Dados funcionais</legend>
+
+																<div class="row">
+																	<div layout layout-sm="column" class="col-md-2"
+																		ng-show="numeroDeclaracao">
+																		<md-input-container flex> <label>Número da
+																				Declaração</label> <input
+																				ng-disabled="true"
+																				ng-model="numeroDeclaracao" />
+																	</div>
+
+																	<div layout layout-sm="column"
+																		ng-class="numeroDeclaracao ? 'col-md-5' : 'col-md-7'">
+																		<md-autocomplete ng-disabled="detalhes" flex
+																			md-no-cache="noCache"
+																			md-floating-label="Funcionário"
+																			md-selected-item="funcionario"
+																			md-search-text="searchFuncionario"
+																			md-items="item in querySearch(searchFuncionario, 'funcionario')"
+																			md-item-text="funcionario.nome"
+																			md-delay="1000" md-min-length="3"
+																			md-selected-item-change="funcionarioSelecionado()">
+																			<md-item-template> <span
+																					md-highlight-text="searchFuncionario"
+																					md-highlight-flags="^i">{{item.nome}}</span>
+																			</md-item-template>
+																			<md-not-found> Item "{{searchFuncionario}}"
+																				não encontrado. </md-not-found>
+																		</md-autocomplete>
+																		<div ng-messages="aposentado.$error">
+																			<div ng-message="required">Campo de
+																				preenchimento obrigatório.</div>
+																		</div>
+																	</div>
+
+																	<div layout layout-sm="column" class="col-md-3">
+																		<md-autocomplete ng-disabled="detalhes" flex
+																			md-no-cache="noCache"
+																			md-floating-label="Matrícula"
+																			md-selected-item="funcionario"
+																			md-search-text="searchMatricula"
+																			md-items="item in querySearch(searchMatricula, 'matricula')"
+																			md-item-text="funcionario.matricula"
+																			md-delay="1000" md-min-length="1"
+																			md-selected-item-change="funcionarioSelecionado()">
+																			<md-item-template> <span
+																					md-highlight-text="searchMatricula"
+																					md-highlight-flags="^i">{{item.matricula}}
+																					- {{item.nome}}</span>
+																			</md-item-template>
+																			<md-not-found> Item "{{searchMatricula}}"
+																				não encontrado. </md-not-found>
+																		</md-autocomplete>
+																		<div ng-messages="aposentado.$error">
+																			<div ng-message="required">Campo de
+																				preenchimento obrigatório.</div>
+																		</div>
+																	</div>
+
+																	<div layout layout-sm="column" class="col-md-2">
+																		<md-input-container flex> <label>Gênero</label>
+																			<input ng-disabled="true"
+																				ng-model="genero" />
+																	</div>
+																</div>
+																<div class="row">
+																	<div layout layout-sm="column" class="col-md-3">
+																		<md-input-container flex>
+																			<label>Identidade</label> <input
+																				ng-disabled="true"
+																				ng-model="funcionario.identidade" />
+																	</div>
+																	<div layout layout-sm="column" class="col-md-3">
+																		<md-autocomplete ng-disabled="detalhes" flex
+																			md-no-cache="noCache"
+																			md-floating-label="CPF"
+																			md-selected-item="funcionario"
+																			md-search-text="searchCPF"
+																			md-items="item in querySearch(searchCPF, 'cpf')"
+																			md-item-text="funcionario.cpf"
+																			md-delay="1000" md-min-length="3"
+																			md-selected-item-change="funcionarioSelecionado()">
+																			<md-item-template> <span
+																					md-highlight-text="searchCPF"
+																					md-highlight-flags="^i">{{item.cpf}}
+																					- {{item.nome}}</span>
+																			</md-item-template>
+																			<md-not-found> Item "{{searchCPF}}" não
+																				encontrado. </md-not-found>
+																		</md-autocomplete>
+																		<div ng-messages="aposentado.$error">
+																			<div ng-message="required">Campo de
+																				preenchimento obrigatório.</div>
+																		</div>
+																	</div>
+
+																	<div layout layout-sm="column" class="col-md-3">
+																		<md-autocomplete ng-disabled="detalhes" flex
+																			md-no-cache="noCache"
+																			md-floating-label="Pis / Pasep"
+																			md-selected-item="funcionario"
+																			md-search-text="searchPis"
+																			md-items="item in querySearch(searchPis, 'pis')"
+																			md-item-text="funcionario.pisPasep"
+																			md-delay="1000" md-min-length="3"
+																			md-selected-item-change="funcionarioSelecionado()">
+																			<md-item-template> <span
+																					md-highlight-text="searchPis"
+																					md-highlight-flags="^i">{{item.pisPasep}}
+																					- {{item.nome}}</span>
+																			</md-item-template>
+																			<md-not-found> Item "{{searchPis}}" não
+																				encontrado. </md-not-found>
+																		</md-autocomplete>
+																		<div ng-messages="aposentado.$error">
+																			<div ng-message="required">Campo de
+																				preenchimento obrigatório.</div>
+																		</div>
+																	</div>
+																	<div layout layout-sm="column" class="col-md-3">
+																		<md-input-container flex> <label>Data de
+																				Nascimento</label> <input
+																				ng-disabled="true"
+																				ng-model="funcionario.dataNascimento"
+																				ng-value="funcionario.dataNascimento | date: DD/MM/YYYY" />
+																	</div>
+																</div>
+
+																<div class="row">
+																	<div layout layout-sm="column" class="col-md-12">
+																		<md-input-container flex> <label>Situação
+																				Funcional</label> <input
+																				ng-disabled="true"
+																				ng-value="situacaoFuncional" />
+																	</div>
+																</div>
+
+																<div class="row">
+																	<div layout layout-sm="column" class="col-md-12">
+																		<md-input-container flex>
+																			<label>Filiação</label> <input
+																				ng-disabled="true"
+																				ng-value="filiacao" />
+																	</div>
+																</div>
+
+																<div class="row">
+																	<div layout layout-sm="column" class="col-md-9">
+																		<md-input-container flex> <label>Empresa /
+																				Filial</label> <input ng-disabled="true"
+																				ng-model="funcionario.empresa.nomeFilial" />
+																	</div>
+
+																	<div layout layout-sm="column" class="col-md-3">
+																		<md-input-container flex> <label>CNPJ</label>
+																			<input ng-disabled="true"
+																				ng-model="funcionario.empresa.cnpj"
+																				ui-br-cnpj-mask />
+																	</div>
+																</div>
+
+
+															</fieldset>
+
+															<fieldset>
+																<legend>Período averbado para fins de aposentadoria
+																	nesse instituto</legend>
+
+																<div class="row" ng-show="!detalhes">
+																	<div layout layout-sm="column" class="col-md-6">
+																		<md-input-container flex>
+																			<label>Empregador</label> <input
+																				ng-disabled="detalhes"
+																				autocomplete="off"
+																				ng-model="averbacao.empregador" />
+																	</div>
+
+																	<div layout layout-sm="column" class="col-md-3">
+																		<md-input-container flex>
+																			<label>Período de início</label>
+																			<md-icon
+																				class="material-icons icon-momentpicker"
+																				ng-class="md-datepicker-calendar-icon"
+																				aria-label="md-calendar">date_range
+																			</md-icon>
+																			<input
+																				moment-picker="averbacao.periodoInicio"
+																				placeholder="Selecione a data"
+																				max-date="averbacao.periodoFim"
+																				ng-model="averbacao.periodoInicio"
+																				format="DD/MM/YYYY" locale="pt-br"
+																				start-view="month"
+																				ng-disabled="detalhes"
+																				ng-model-options="{ updateOn: 'blur' }">
+																		</md-input-container>
+																	</div>
+																	<div layout layout-sm="column" class="col-md-3">
+																		<md-input-container flex>
+																			<label>Período de fim</label>
+																			<md-icon
+																				class="material-icons icon-momentpicker"
+																				ng-class="md-datepicker-calendar-icon"
+																				aria-label="md-calendar">date_range
+																			</md-icon>
+																			<input moment-picker="averbacao.periodoFim"
+																				placeholder="Selecione a data"
+																				min-date="averbacao.periodoInicio"
+																				ng-model="averbacao.periodoFim"
+																				format="DD/MM/YYYY" locale="pt-br"
+																				start-view="month"
+																				ng-disabled="detalhes"
+																				ng-model-options="{ updateOn: 'blur' }">
+																		</md-input-container>
+																	</div>
+																</div>
+
+																<div class="row" ng-show="!detalhes">
+																	<div layout layout-sm="column" class="col-md-10">
+																		<md-input-container flex> <label>Fonte de
+																				informação</label> <input
+																				ng-disabled="detalhes"
+																				autocomplete="off"
+																				ng-model="averbacao.fonteInf" />
+																	</div>
+																	<div layout layout-sm="column" class="col-md-2">
+																		<a ng-disabled="validarBotaoAverbacao()"
+																			ng-click="adicionarAverbacao(true)" ui-wave
+																			class="btn btn-primary btn-w-md">Adicionar</a>
+																	</div>
+																</div>
+
+																<div ng-if="(declaracaoAposentadoria.averbacoes | filter: filtrarAverbado).length > 0"
+																	style="border:1px solid #CCC; margin-bottom: 10px;">
+																	<div class="col-md-12">
+																		<md-table-container>
+																			<table md-table ng-model="selected"
+																				md-progress="promise">
+																				<thead md-head md-order="query.order"
+																					md-on-reorder="loadList">
+																					<tr md-row>
+																						<th md-column>
+																							<span>Empregador</span></th>
+																						<th md-column>
+																							<span>Período</span></th>
+																						<th md-column><span>Tempo
+																								líquido</span></th>
+																						<th md-column><span>Fonte de
+																								informacao</span></th>
+																						<th md-column
+																							ng-show="!detalhes">
+																							<span>Ação</span></th>
+																					</tr>
+																				</thead>
+																				<tbody md-body>
+																					<tr md-row md-select="item"
+																						md-select-id="item"
+																						md-auto-select
+																						ng-repeat="item in declaracaoAposentadoria.averbacoes  | filter: filtrarAverbado">
+																						<td md-cell>{{item.empregador}}
+																						</td>
+																						<td md-cell>
+																							{{convertDate(item.periodoInicio, false)}}
+																							a
+																							{{convertDate(item.periodoFim, false)}}
+																						</td>
+																						<td md-cell>
+																							{{calularPeriodo(item.periodoInicio, item.periodoFim)}}
+																						</td>
+																						<td md-cell
+																							style="text-align: justify;">
+																							{{item.fonteInf}}
+																						</td>
+																						<td md-cell ng-show="!detalhes">
+																							<a
+																								ng-click="removerAverbacao(item)">
+																								<md-tooltip
+																									md-direction="top">
+																									Remover</md-tooltip>
+																								<i
+																									class="fa fa-trash fa-lg"></i>
+																							</a></td>
+																					</tr>
+																				</tbody>
+																			</table>
+																		</md-table-container>
+																	</div>
+																	<div style="clear:both;"></div>
+																</div>
+
+															</fieldset>
+
+															<fieldset>
+																<legend>Período não averbado</legend>
+
+																<div class="row" ng-show="!detalhes">
+																	<div layout layout-sm="column" class="col-md-6">
+																		<md-input-container flex>
+																			<label>Empregador</label> <input
+																				ng-disabled="detalhes"
+																				autocomplete="off"
+																				ng-model="naoAverbacao.empregador" />
+																	</div>
+
+																	<div layout layout-sm="column" class="col-md-3">
+																		<md-input-container flex>
+																			<label>Período de início</label>
+																			<md-icon
+																				class="material-icons icon-momentpicker"
+																				ng-class="md-datepicker-calendar-icon"
+																				aria-label="md-calendar">date_range
+																			</md-icon>
+																			<input
+																				moment-picker="naoAverbacao.periodoInicio"
+																				placeholder="Selecione a data"
+																				max-date="naoAverbacao.periodoFim"
+																				ng-model="naoAverbacao.periodoInicio"
+																				format="DD/MM/YYYY" locale="pt-br"
+																				start-view="month"
+																				ng-disabled="detalhes"
+																				ng-model-options="{ updateOn: 'blur' }">
+																		</md-input-container>
+																	</div>
+
+																	<div layout layout-sm="column" class="col-md-3">
+																		<md-input-container flex>
+																			<label>Período de fim</label>
+																			<md-icon
+																				class="material-icons icon-momentpicker"
+																				ng-class="md-datepicker-calendar-icon"
+																				aria-label="md-calendar">date_range
+																			</md-icon>
+																			<input
+																				moment-picker="naoAverbacao.periodoFim"
+																				placeholder="Selecione a data"
+																				min-date="naoAverbacao.periodoInicio"
+																				ng-model="naoAverbacao.periodoFim"
+																				format="DD/MM/YYYY" locale="pt-br"
+																				start-view="month"
+																				ng-disabled="detalhes"
+																				ng-model-options="{ updateOn: 'blur' }">
+																		</md-input-container>
+																	</div>
+																</div>
+
+																<div class="row" ng-show="!detalhes">
+																	<div layout layout-sm="column" class="col-md-10">
+																		<md-input-container flex>
+																			<label>Observação</label> <input
+																				ng-disabled="detalhes"
+																				autocomplete="off"
+																				ng-model="naoAverbacao.observacao" />
+																	</div>
+																	<div layout layout-sm="column" class="col-md-2">
+																		<a ng-disabled="validarBotaoNaoAverbacao()"
+																			ng-click="adicionarAverbacao(false)" ui-wave
+																			class="btn btn-primary btn-w-md">Adicionar</a>
+																	</div>
+																</div>
+
+																<div ng-if="(declaracaoAposentadoria.averbacoes | filter: filtrarNaoAverbado).length > 0"
+																	style="border:1px solid #CCC; margin-bottom: 10px;">
+																	<div class="col-md-12">
+																		<md-table-container>
+																			<table md-table ng-model="selected"
+																				md-progress="promise">
+																				<thead md-head md-order="query.order"
+																					md-on-reorder="loadList">
+																					<tr md-row>
+																						<th md-column>
+																							<span>Empregador</span></th>
+																						<th md-column>
+																							<span>Período</span></th>
+																						<th md-column><span>Tempo
+																								líquido</span></th>
+																						<th md-column>
+																							<span>Observação</span></th>
+																						<th md-column
+																							ng-show="!detalhes">
+																							<span>Ação</span></th>
+																					</tr>
+																				</thead>
+																				<tbody md-body>
+																					<tr md-row md-select="item"
+																						md-select-id="item"
+																						md-auto-select
+																						ng-repeat="item in declaracaoAposentadoria.averbacoes | filter: filtrarNaoAverbado">
+																						<td md-cell>{{item.empregador}}
+																						</td>
+																						<td md-cell>
+																							{{convertDate(item.periodoInicio, false)}}
+																							a
+																							{{convertDate(item.periodoFim, false)}}
+																						</td>
+																						<td md-cell>
+																							{{calularPeriodo(item.periodoInicio, item.periodoFim)}}
+																						</td>
+																						<td md-cell
+																							style="text-align: justify;">
+																							{{item.observacao}}
+																						</td>
+																						<td md-cell ng-show="!detalhes">
+																							<a
+																								ng-click="removerAverbacao(item)">
+																								<md-tooltip
+																									md-direction="top">
+																									Remover</md-tooltip>
+																								<i
+																									class="fa fa-trash fa-lg"></i>
+																							</a></td>
+																					</tr>
+																				</tbody>
+																			</table>
+																		</md-table-container>
+																	</div>
+																	<div style="clear:both;"></div>
+																</div>
+
+															</fieldset>
+
+															<fieldset>
+																<legend>Assinaturas</legend>
+
+																<div class="row" ng-show="!detalhes">
+																	<div layout layout-sm="column" class="col-md-7">
+																		<md-autocomplete ng-disabled="detalhes" flex
+																			md-no-cache="noCache"
+																			md-floating-label="Funcionário"
+																			md-selected-item="funcionarioAssinatura"
+																			md-search-text="searchFuncionarioAssinatura"
+																			md-items="item in querySearchFuncionario(searchFuncionarioAssinatura)"
+																			md-item-text="item.nome" md-delay="1000"
+																			md-min-length="3"
+																			md-selected-item-change="funcionarioAssinaturaSelecionado()">
+																			<md-item-template> <span
+																					md-highlight-text="searchFuncionarioAssinatura"
+																					md-highlight-flags="^i">{{item.nome}}</span>
+																			</md-item-template>
+																			<md-not-found> Item
+																				"{{searchFuncionarioAssinatura}}"
+																				não
+																				encontrado. </md-not-found>
+																		</md-autocomplete>
+																	</div>
+
+																	<div layout layout-sm="column" class="col-md-3">
+																		<md-input-container class="md-block" flex>
+																			<label>Função</label>
+																			<md-select ng-disabled="detalhes"
+																				ng-model="assinatura.funcao">
+																				<md-option ng-repeat="f in list.funcoes"
+																					value="{{f.label}}"> {{f.label}}
+																				</md-option>
+																			</md-select>
+																		</md-input-container>
+																	</div>
+
+																	<div layout layout-sm="column" class="col-md-2">
+																		<a ng-disabled="validarBotaoAssinatura()"
+																			ng-click="adicionarAssinatura()" ui-wave
+																			class="btn btn-primary btn-w-md">Adicionar</a>
+																	</div>
+																</div>
+
+																<div ng-if="declaracaoAposentadoria.assinaturas.length > 0"
+																	style="border:1px solid #CCC; margin-bottom: 10px;">
+																	<div class="col-md-12">
+																		<md-table-container>
+																			<table md-table ng-model="selected"
+																				md-progress="promise">
+																				<thead md-head md-order="query.order"
+																					md-on-reorder="loadList">
+																					<tr md-row>
+																						<th md-column>
+																							<span>Funcionario</span>
+																						</th>
+																						<th md-column>
+																							<span>Função</span></th>
+																						<th md-column
+																							ng-show="!detalhes">
+																							<span>Ação</span></th>
+																					</tr>
+																				</thead>
+																				<tbody md-body>
+																					<tr md-row md-select="item"
+																						md-select-id="item"
+																						md-auto-select
+																						ng-repeat="item in declaracaoAposentadoria.assinaturas">
+																						<td md-cell>
+																							{{item.funcionario.nome}}
+																						</td>
+																						<td md-cell>{{item.funcao}}</td>
+																						<td md-cell ng-show="!detalhes">
+																							<a
+																								ng-click="removerAssinatura(item)">
+																								<md-tooltip
+																									md-direction="top">
+																									Remover</md-tooltip>
+																								<i
+																									class="fa fa-trash fa-lg"></i>
+																							</a></td>
+																					</tr>
+																				</tbody>
+																			</table>
+																		</md-table-container>
+																	</div>
+																	<div style="clear:both;"></div>
+																</div>
+															</fieldset>
+
+
+
+														</div>
+													</div>
+
+												</md-content>
+											</md-tab> <!-- Fim da aba DECLARAÇÃO -->
+
+											<!-- Início da aba ANEXOS -->
+
+											<md-tab label="Anexos">
+												<md-content class="md-padding">
+													<div style="text-align: center;"
+														ng-if="declaracaoAposentadoria.rascunho && savarComoRascunho">
+														<span style="font-weight: bold;color: rgb(0,150,136);">
+															RASCUNHO</span>
+													</div>
+													<div style="text-align: center;"
+														ng-if="declaracaoAposentadoria.numeroRetificacao">
+														<span style="font-weight: bold;color: rgb(0,150,136);">
+															RETIFICAÇÃO Nº
+															{{declaracaoAposentadoria.numeroRetificacao}}</span>
+													</div>
+													<div class="divider divider"></div>
+													<div class="panel panel-default">
+														<div class="panel-body">
+
+															<div class="row">
+																<div class="col-md-12">
+																	<label>Anexar documento</label>
+																</div>
+																<div layout layout-sm="column" class="col-md-12">
+																	<md-input-container flex><input aria-label="anexo"
+																			type="file" nv-file-select
+																			uploader="uploader" accept=".pdf"
+																			multiple />
+																	</md-input-container>
+																</div>
+
+																<table class="table" ng-if="uploader.queue.length > 0">
+																	<thead>
+																		<tr>
+																			<th width="50%">Descrição</th>
+																			<th ng-show="uploader.isHTML5">Tamanho</th>
+																			<th ng-show="uploader.isHTML5">Progresso
+																			</th>
+																			<th>Situação</th>
+																			<th>Ações</th>
+																		</tr>
+																	</thead>
+																	<tbody>
+																		<tr ng-repeat="item in uploader.queue">
+																			<td><strong>{{ item.file.name }}</strong>
+																			</td>
+																			<td ng-show="uploader.isHTML5" nowrap>
+																				{{ item.file.size/1024/1024|number:2 }}
+																				MB</td>
+																			<td ng-show="uploader.isHTML5">
+																				<div class="progress"
+																					style="margin-bottom: 0;">
+																					<div class="progress-bar"
+																						role="progressbar"
+																						ng-style="{ 'width': item.progress + '%' }">
+																					</div>
+																				</div>
+																			</td>
+																			<td class="text-center">
+																				<span ng-show="item.isSuccess">
+																					<md-tooltip md-direction="top">
+																						Sucesso</md-tooltip><i
+																						class="fa fa-check"></i>
+																				</span>
+																				<span ng-show="item.isCancel">
+																					<md-tooltip md-direction="top">
+																						Cancelado</md-tooltip><i
+																						class="fa fa-ban"></i>
+																				</span>
+																				<span ng-show="item.isError">
+																					<md-tooltip md-direction="top">Erro
+																					</md-tooltip><i
+																						class="fa fa-exclamation-triangle"></i></i>
+																				</span>
+																			</td>
+																			<td nowrap>
+																				<button type="button"
+																					class="btn btn-success btn-xs"
+																					ng-click="item.upload()"
+																					ng-disabled="item.isReady || item.isUploading || item.isSuccess">
+																					<md-tooltip md-direction="top">
+																						Upload</md-tooltip>
+																					<i class="fa fa-upload fa-lg"></i>
+																				</button>
+																				<button type="button"
+																					class="btn btn-warning btn-xs"
+																					ng-click="item.cancel()"
+																					ng-disabled="!item.isUploading">
+																					<md-tooltip md-direction="top">
+																						Cancelar upload</md-tooltip>
+																					<i class="fa fa-ban fa-lg"></i>
+																				</button>
+																				<button type="button"
+																					class="btn btn-danger btn-xs"
+																					ng-click="item.remove()"
+																					ng-disabled="item.isReady"
+																					title="remover">
+																					<md-tooltip md-direction="top">
+																						Remover</md-tooltip>
+																					<i class="fa fa-trash fa-lg"></i>
+																				</button>
+																			</td>
+																		</tr>
+																	</tbody>
+																</table>
+
+																<table class="table" ng-if="lista.anexos.length > 0">
+																	<thead>
+																		<tr>
+																			<th>Descrição</th>
+																			<th>Tamanho</th>
+																			<th>Ações</th>
+																		</tr>
+																	</thead>
+																	<tbody>
+																		<tr ng-repeat="item in lista.anexos">
+																			<td><strong>{{ item.description }}</strong>
+																			</td>
+																			<td>{{ item.size/1024/1024|number:2 }} MB
+																			</td>
+																			<td nowrap>
+																				<a href="{{item.fileDownloadUri}}"
+																					target="_blank"
+																					class="btn btn-success btn-xs">
+																					<md-tooltip md-direction="top">
+																						Download</md-tooltip>
+																					<i class="fa fa-download fa-lg"></i>
+																				</a>
+																				<button type="button"
+																					class="btn btn-danger btn-xs"
+																					ng-click="removerAnexo(item)">
+																					<md-tooltip md-direction="top">
+																						Remover</md-tooltip>
+																					<i class="fa fa-trash fa-lg"></i>
+																				</button>
+																			</td>
+																		</tr>
+																	</tbody>
+																</table>
+
+															</div>
+
+														</div>
+													</div>
+
+
+												</md-content>
+											</md-tab> <!-- Fim da aba ANEXOS -->
+										</md-tabs>
+
+
+										<div ng-if="detalhes" layout layout-sm="column">
+											<table md-table md-progress="promise">
+												<thead md-head>
+													<tr md-row>
+														<th md-column><span>Criado em:</span></th>
+														<th md-column><span>Atualizado em:</span></th>
+														<th md-column><span>Criado por:</span></th>
+														<th md-column><span>Atualizado por:</span></th>
+													</tr>
+												</thead>
+												<tbody md-body>
+													<tr md-row>
+														<td md-cell>
+															{{declaracaoAposentadoria.criadoEm | date: 'dd MMM yyyy'}}
+														</td>
+														<td md-cell>
+															{{declaracaoAposentadoria.alteradoEm | date: 'dd MMM yyyy'}}
+														</td>
+														<td md-cell>{{declaracaoAposentadoria.criadoPor}}</td>
+														<td md-cell>{{declaracaoAposentadoria.alteradoPor}}</td>
+
+													</tr>
+												</tbody>
+											</table>
+										</div>
+										<br>
+										<div class="row">
+											<div class="col-md-12 text-center"
+												ng-show="declaracaoAposentadoria.rascunho">
+												<div layout layout-sm="column" class="col-md-4"></div>
+												<div layout layout-sm="column" class="col-md-4">
+													<md-input-container flex>
+														<md-switch ng-model="savarComoRascunho"
+															style="margin-left: 50px;"
+															aria-label="Salvar como rascunho">
+															Salvar como rascunho
+														</md-switch>
+													</md-input-container>
+												</div>
+												<div layout layout-sm="column" class="col-md-4"></div>
+											</div>
+											<div class="col-md-12 text-center">
+												<button
+													ng-disabled="(declaracaoAposentadoriaForm.$invalid || detalhes || (!podeCadastrar && !podeAtualizar)) ? true : false"
+													ng-click="save()" ui-wave
+													class="btn btn-primary btn-w-md">Salvar</button>
+												<p class="btn btn-default btn-w-md" ui-wave data-ng-click="goBack()">
+													Voltar</p>
+											</div>
+										</div>
+
+									</div>
+								</form>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

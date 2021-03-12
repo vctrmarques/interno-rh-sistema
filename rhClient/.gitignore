@@ -1,0 +1,21 @@
+node_modules
+dist
+.tmp
+.sass-cache
+client/bower_components
+landing/bower_components
+landing/css/main.css
+landing/jade
+landing/vendors
+landing/index.html
+
+documentation/*.html
+
+.DS_Store
+npm-debug.log
+/preview/preview.zip
+
+
+### VSCode Files ###
+/.vscode
+/package-lock.json

@@ -1,0 +1,274 @@
+<div class="page" ng-controller="frequenciaFormCtrl">
+    <div class="row ui-section">
+        <div class="col-lg-8 clearfix">
+            <h2 class="section-header">{{!detalhes ? 'Formulário Frequência' : 'Detalhes Frequência'}}</h2>
+        </div>
+        <div class="col-md-12">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <form id="form-frequencia" ng-disabled="detalhes" name="frequenciaForm" ng-submit="save()">
+                        <div layout="column" ng-cloak class="md-inline-form inputdemoBasicUsage">
+                            <div layout-padding>
+                                <div class="row">
+                                    <div layout class="col-lg-2" layout-sm="colum">
+                                        <md-input-container flex>
+                                            <label>Matrícula</label>
+                                            <input ng-disabled="detalhes || jaRegistrado" readonly="true" ng-model="funcionario.matricula"
+                                                name="matricula">
+                                        </md-input-container>
+                                    </div>
+                                    <div class="col-lg-10" layout-sm="column">
+                                        <md-autocomplete ng-disabled="detalhes || frequencia.id !=null || jaRegistrado || frequencias.length>0"
+                                            md-input-name="autocompleteField" ng-required="true" md-no-cache="noCache"
+                                            md-floating-label="Funcionário" md-selected-item="funcionario"
+                                            md-search-text="searchFuncionario" md-items="funcionario in querySearchFuncionario(searchFuncionario)"
+                                            md-item-text="funcionario.nome" md-delay="100" md-min-length="3"
+                                            md-selected-item-change="funcionarioSelect()">
+                                            <md-item-template>
+                                                <div>{{funcionario.matricula}} - {{funcionario.nome}}</div>
+                                            </md-item-template>
+                                        </md-autocomplete>
+                                    </div>
+                                </div>
+
+
+                                <div class="row">
+                                    <div layout class="col-lg-6" layout-sm="colum">
+                                        <md-input-container flex>
+                                            <label>Empresa</label>
+                                            <input ng-disabled="detalhes || jaRegistrado || frequencias.length>0"
+                                                readonly="true" ng-model="funcionario.empresa.nomeFilial" name="empresaNome">
+                                        </md-input-container>
+                                    </div>
+                                    <!-- <div layout class="col-lg-3" layout-sm="colum">
+                                            <md-input-container flex>
+                                                <label>CARGA</label>
+                                                <input readonly="true" ng-model="funcionario.cargaHoraria"
+                                                    name="filialNome">
+                                            </md-input-container>
+                                        </div> -->
+                                    <div layout class="col-lg-6" layout-sm="colum">
+                                        <md-input-container flex>
+                                            <label>Horas diárias</label>
+                                            <input readonly="true" ng-disabled="detalhes || jaRegistrado || frequencias.length>0"
+                                                ng-model="horas" name="filialNome">
+                                        </md-input-container>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <h2 class="md-title">Informações de frequência</h2>
+                                    </div>
+                                    <div class="right">
+                                        <div class="col-md-6" layout-sm="column">
+                                            <md-input-container>
+                                                <md-button ng-disabled="funcionario.id==null || jaRegistrado || detalhes"
+                                                    ng-click="faltaFormulario()" class="md-warn md-raised md-hue-2"><span
+                                                        class="btn-title-center">Falta</span> </md-button>
+                                            </md-input-container>
+                                        </div>
+                                    </div>
+                                </div>
+
+
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="panel panel-default">
+                                            <div class="panel-body">
+                                                <article class="article">
+                                                    <md-card class="no-margin-h">
+                                                        <div class="col-md-12">
+                                                            <div ng-if="!detalhes" class="row">
+                                                                <div layout layout-sm="column" class="col-md-3">
+                                                                    <md-input-container flex>
+                                                                        <label>Entrada 1</label>
+                                                                        <md-icon class="material-icons icon-momentpicker"
+                                                                            ng-class="md-datepicker-calendar-icon"
+                                                                            aria-label="md-calendar">date_range</md-icon>
+                                                                        <input required name="entradaUm" moment-picker="frequencia.entradaUm"
+                                                                            placeholder="Selecione a hora" ng-model="frequencia.entradaUm"
+                                                                            format="HH:mm:ss" locale="pt-br" start-view="hour"
+                                                                            ng-model-options="{ updateOn: 'blur' }"
+                                                                            ng-disabled="detalhes || jaRegistrado">
+                                                                        <div ng-messages="frequenciaForm.entradaUm.$error"
+                                                                            multiple>
+                                                                            <div ng-message="required">Campo de
+                                                                                preenchimento obrigatório.</div>
+                                                                        </div>
+                                                                    </md-input-container>
+                                                                </div>
+                                                                <div layout layout-sm="column" class="col-md-3">
+                                                                    <md-input-container flex>
+                                                                        <label>Saída 1</label>
+                                                                        <md-icon class="material-icons icon-momentpicker"
+                                                                            ng-class="md-datepicker-calendar-icon"
+                                                                            aria-label="md-calendar">date_range</md-icon>
+                                                                        <input required name="saidaUm" moment-picker="frequencia.saidaUm"
+                                                                            placeholder="Selecione a hora" ng-model="frequencia.saidaUm"
+                                                                            format="HH:mm:ss" locale="pt-br" start-view="hour"
+                                                                            ng-model-options="{ updateOn: 'blur' }"
+                                                                            ng-disabled="detalhes || jaRegistrado">
+                                                                        <div ng-messages="frequenciaForm.saidaUm.$error"
+                                                                            multiple>
+                                                                            <div ng-message="required">Campo de
+                                                                                preenchimento obrigatório.</div>
+                                                                        </div>
+                                                                    </md-input-container>
+                                                                </div>
+                                                                <div layout layout-sm="column" class="col-md-3">
+                                                                    <md-input-container flex>
+                                                                        <label>Entrada 2</label>
+                                                                        <md-icon class="material-icons icon-momentpicker"
+                                                                            ng-class="md-datepicker-calendar-icon"
+                                                                            aria-label="md-calendar">date_range</md-icon>
+                                                                        <input required name="entradaDois"
+                                                                            moment-picker="frequencia.entradaDois"
+                                                                            placeholder="Selecione a hora" ng-model="frequencia.entradaDois"
+                                                                            format="HH:mm:ss" locale="pt-br" start-view="hour"
+                                                                            ng-model-options="{ updateOn: 'blur' }"
+                                                                            ng-disabled="detalhes|| jaRegistrado">
+                                                                        <div ng-messages="frequenciaForm.entradaDois.$error"
+                                                                            multiple>
+                                                                            <div ng-message="required">Campo de
+                                                                                preenchimento obrigatório.</div>
+                                                                        </div>
+                                                                    </md-input-container>
+                                                                </div>
+                                                                <div layout layout-sm="column" class="col-md-3">
+                                                                    <md-input-container flex>
+                                                                        <label>Saída 2</label>
+                                                                        <md-icon class="material-icons icon-momentpicker"
+                                                                            ng-class="md-datepicker-calendar-icon"
+                                                                            aria-label="md-calendar">date_range</md-icon>
+                                                                        <input required name="saidaDois" moment-picker="frequencia.saidaDois"
+                                                                            placeholder="Selecione a hora" ng-model="frequencia.saidaDois"
+                                                                            format="HH:mm:ss" locale="pt-br" start-view="hour"
+                                                                            ng-model-options="{ updateOn: 'blur' }"
+                                                                            ng-disabled="detalhes || jaRegistrado">
+                                                                        <div ng-messages="frequenciaForm.saidaDois.$error"
+                                                                            multiple>
+                                                                            <div ng-message="required">Campo de
+                                                                                preenchimento obrigatório.</div>
+                                                                        </div>
+                                                                    </md-input-container>
+                                                                </div>
+
+                                                            </div>
+                                                        </div>
+                                                        <md-table-container>
+
+                                                            <table md-table ng-model="selected" md-progress="promise">
+                                                                <thead ng-if="!options.decapitate" md-head md-order="query.order"
+                                                                    md-on-reorder="loadList">
+                                                                    <tr md-row>
+                                                                        <th md-column md-order-by="nome">
+                                                                            <span>Data</span>
+                                                                        </th>
+                                                                        <th md-column md-order-by="nome">
+                                                                            <span>Entrada 1</span>
+                                                                        </th>
+                                                                        <th md-column md-order-by="nome">
+                                                                            <span>Saída 1</span>
+                                                                        </th>
+                                                                        <th md-column md-order-by="nome">
+                                                                            <span>Entrada 2</span>
+                                                                        </th>
+                                                                        <th md-column>
+                                                                            <span>Saída 2</span>
+                                                                        </th>
+                                                                        <th md-column>
+                                                                            <span>Hora Extra</span>
+                                                                        </th>
+                                                                        <th ng-if="!detalhes" md-column>
+                                                                            <span>Ações</span>
+                                                                        </th>
+                                                                    </tr>
+                                                                </thead>
+                                                                <tbody md-body>
+                                                                    <tr ng-click="frequenciaClicada(item)" md-row
+                                                                        md-select="item" md-select-id="item"
+                                                                        md-auto-select ng-repeat="item in frequencias">
+                                                                        <td md-cell>{{item.data | date:'dd/MM/yyyy'}}</td>
+                                                                        <td md-cell colspan="5" ng-if="item.falta">Faltou</td>
+
+                                                                        <td md-cell ng-if="!item.falta">{{item.entradaUm
+                                                                            | date:'HH:mm:ss'}}</td>
+                                                                        <td md-cell ng-if="!item.falta">{{item.saidaUm
+                                                                            | date:'HH:mm:ss'}}</td>
+                                                                        <td md-cell ng-if="!item.falta">{{item.entradaDois
+                                                                            | date:'HH:mm:ss'}}</td>
+                                                                        <td md-cell ng-if="!item.falta">{{item.saidaDois
+                                                                            | date:'HH:mm:ss'}}</td>
+                                                                        <td md-cell ng-if="!item.falta">{{item.horaExtra
+                                                                            | date:'HH:mm:ss'}}</td>
+                                                                        <td md-cell ng-if="item.falta">
+                                                                            <a ng-if="item.falta || detalhes" href=""
+                                                                                ui-sref="faltaDetalhes({ id: item.falta.id, detalhes: true })">
+                                                                                <md-tooltip md-direction="top">Ver
+                                                                                    falta</md-tooltip>
+                                                                                <i class="fa fa-search fa-lg"></i>
+                                                                            </a>
+                                                                            <a ng-if="item.falta || detalhes" ui-sref="faltaEdit({ id: item.falta.id })">
+                                                                                <md-tooltip md-direction="top">Editar</md-tooltip>
+                                                                                <i class="fa fa-pencil fa-lg"></i>
+                                                                            </a>
+                                                                        </td>
+                                                                        <td md-cell ng-if="!item.falta">
+                                                                        </td>
+                                                                    </tr>
+                                                                </tbody>
+                                                            </table>
+                                                        </md-table-container>
+
+                                                    </md-card>
+                                                </article>
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div ng-if="detalhes" layout layout-sm="column">
+                                    <table md-table md-progress="promise">
+                                        <thead md-head>
+                                            <tr md-row>
+                                                <th md-column>
+                                                    <span>Criado em:</span>
+                                                </th>
+                                                <th md-column>
+                                                    <span>Atualizado em:</span>
+                                                </th>
+                                                <th md-column>
+                                                    <span>Criado por:</span>
+                                                </th>
+                                                <th md-column>
+                                                    <span>Atualizado por:</span>
+                                                </th>
+                                            </tr>
+                                        </thead>
+                                        <tbody md-body>
+                                            <tr md-row>
+                                                <td md-cell>{{frequencia.criadoEm | date:'dd/MM/yy - HH:mm'}}</td>
+                                                <td md-cell>{{frequencia.alteradoEm | date:'dd/MM/yy -
+                                                    HH:mm'}}</td>
+                                                <td md-cell>{{frequencia.criadoPor}}</td>
+                                                <td md-cell>{{frequencia.alteradoPor}}</td>
+
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-12 text-center">
+                                        <button ng-if="!detalhes" ng-disabled="frequenciaForm.$invalid" type="submit"
+                                            ui-wave class="btn btn-primary btn-w-md">Salvar</button>
+                                        <p class="btn btn-default btn-w-md" ui-wave data-ng-click="goBack()">Voltar</p>
+                                        <p class="btn btn-default btn-w-md" ui-wave ng-click="limparCampos()">Limpar</p>
+                                    </div>
+                                </div>
+                            </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

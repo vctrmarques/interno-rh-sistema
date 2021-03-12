@@ -1,0 +1,631 @@
+<div class="page" ng-controller="requisicaoPessoalFormCtrl">
+    <div class="row ui-section">
+        <div class="col-lg-8 clearfix">
+            <h2 class="section-header">{{!detalhes ? 'Formulário de Requisição de Pessoal' : 'Detalhes Processo'}}</h2>
+        </div>
+        <div class="col-md-12">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <div layout="column" ng-cloak class="md-inline-form inputdemoBasicUsage">
+                        <div layout-padding>
+                            <div class="row">
+                                <div class="col-md-12" ng-if="!detalhes && requisicaoPessoal.situacao=='Em Processo'">
+                                    <div class="right">
+                                        <button ng-if="requisicaoPessoal.id != null"
+                                            type="button" ui-wave class="btn btn-primary btn-w-md"
+                                            ng-click="showAlterarSituacao('Aprovado', requisicaoPessoal.id)">Aprovar</button>
+                                        <button ng-if="requisicaoPessoal.id != null"
+                                            type="button" ui-wave class="btn btn-danger btn-w-md"
+                                            ng-click="showAlterarSituacao('Rejeitado', requisicaoPessoal.id)">Rejeitar</button>
+                                        </p>
+                                    </div>
+                                </div>
+                                <form ng-disabled="detalhes" id="requisicaoPessoalForm" name="requisicaoPessoalForm"
+                                    ng-submit="save()">
+                                    <div layout class="col-lg-6" layout-sm="colum">
+                                        <md-autocomplete flex ng-disabled="detalhes || processo.id !=null"
+                                            md-input-name="autocompleteField" ng-required="true" md-no-cache="noCache"
+                                            md-floating-label="Nome do Solicitante"
+                                            md-selected-item="funcionarioSolicitante" md-search-text="searchFuncionario"
+                                            md-items="funcionario in querySearchFuncionario(searchFuncionario)"
+                                            md-item-text="funcionarioSolicitante.nome" md-delay="100" md-min-length="3"
+                                            md-selected-item-change="funcionarioSolicitanteSelecionado()">
+                                            <md-item-template>
+                                                <div>{{funcionario.matricula}} - {{funcionario.nome}}</div>
+                                            </md-item-template>
+                                        </md-autocomplete>
+                                    </div>
+                                    <div layout class="col-lg-3" layout-sm="colum">
+                                        <md-input-container flex>
+                                            <label>Data Entrada</label>
+                                            <md-icon class="material-icons icon-momentpicker"
+                                                ng-class="md-datepicker-calendar-icon" aria-label="md-calendar">
+                                                date_range</md-icon>
+                                            <input required name="dataEntrada"
+                                                moment-picker="requisicaoPessoal.dataEntrada" placeholder="Selecione"
+                                                ng-model="requisicaoPessoal.dataEntrada" format="DD/MM/YYYY"
+                                                locale="pt-br" start-view="month"
+                                                ng-model-options="{ updateOn: 'blur' }" ng-disabled="detalhes">
+                                            <div ng-messages="requisicaoPessoalForm.dataEntrada.$error">
+                                                <div ng-message="required">Campo de preenchimento obrigatório.</div>
+                                            </div>
+                                        </md-input-container>
+                                    </div>
+                                    <div layout class="col-lg-3" layout-sm="colum">
+                                        <md-input-container flex>
+                                            <label>Situação</label>
+                                            <md-select required ng-disabled="true" name="situacao"
+                                                ng-model="requisicaoPessoal.situacao">
+                                                <md-option ng-repeat="tc in list.situacoes" value="{{tc.label}}">
+                                                    {{tc.label}}
+                                                </md-option>
+                                            </md-select>
+                                        </md-input-container>
+                                    </div>
+                                    <div layout class="col-lg-6" layout-sm="colum">
+                                        <md-input-container flex>
+                                            <label>Filal</label>
+                                            <input ng-disabled="true"
+                                                ng-model="funcionarioSolicitante.filial.nomeFilial" name="filialNome">
+                                        </md-input-container>
+                                    </div>
+                                    <div layout class="col-lg-6" layout-sm="colum">
+                                        <md-input-container flex>
+                                            <label>Lotação</label>
+                                            <input ng-disabled="true"
+                                                ng-model="funcionarioSolicitante.lotacao.descricao" name="lotacao">
+                                        </md-input-container>
+                                    </div>
+
+                                    <div layout class="col-lg-6" ng-if="requisicaoPessoal.id!=null" layout-sm="colum">
+                                        <md-input-container flex>
+                                            <label>Processo</label>
+                                            <input ng-disabled="detalhes" ng-model="requisicaoPessoal.id"
+                                                name="processo">
+                                            <div ng-messages="requisicaoPessoalForm.dataEntrprocessoada.$error">
+                                                <div ng-message="required">Campo de preenchimento obrigatório.</div>
+                                            </div>
+                                        </md-input-container>
+                                    </div>
+                                    <div layout class="col-lg-6" layout-sm="colum">
+                                        <md-input-container flex>
+                                            <label>Data Limite</label>
+                                            <md-icon class="material-icons icon-momentpicker"
+                                                ng-class="md-datepicker-calendar-icon" aria-label="md-calendar">
+                                                date_range</md-icon>
+                                            <input required name="dataLimite"
+                                                moment-picker="requisicaoPessoal.dataLimite" placeholder="Selecione"
+                                                ng-model="requisicaoPessoal.dataLimite" format="DD/MM/YYYY"
+                                                locale="pt-br" start-view="month"
+                                                ng-model-options="{ updateOn: 'blur' }" ng-disabled="detalhes">
+                                            <div ng-messages="requisicaoPessoalForm.dataLimite.$error">
+                                                <div ng-message="required">Campo de preenchimento obrigatório.</div>
+                                            </div>
+                                        </md-input-container>
+                                    </div>
+
+                                    <div class=" col-md-12">
+                                        <div class="panel panel-default">
+                                            <div class="panel-body">
+                                                <div class="row">
+                                                    <div class="col-md-12">
+                                                        <h4>Solicitação</h4>
+                                                    </div>
+                                                    <div class="col-md-12">
+                                                        <div class="col-md-2">
+                                                            <md-checkbox ng-disabled="detalhes"
+                                                                ng-click="check('AUMENTO_QUADRO')"
+                                                                ng-checked="aumentoDeQuadro">
+                                                                <span>Aumento de Quadro</span>
+                                                            </md-checkbox>
+                                                        </div>
+                                                        <div class="col-md-2">
+                                                            <md-checkbox ng-disabled="detalhes"
+                                                                ng-click="check('SUBSTITUICAO')"
+                                                                ng-checked="substituicao">
+                                                                <span>Substituição</span>
+                                                            </md-checkbox>
+                                                        </div>
+                                                        <div class="col-lg-8" layout-sm="column">
+                                                            <md-autocomplete ng-disabled="detalhes || !substituicao"
+                                                                md-input-name="autocompleteField"
+                                                                ng-required="substituicao" md-no-cache="noCache"
+                                                                md-floating-label="Colaborador Substutuido"
+                                                                md-selected-item="funcionarioSubstituido"
+                                                                md-search-text="subsituidoSearch"
+                                                                md-items="funcionario in querySearchFuncionario(subsituidoSearch)"
+                                                                md-item-text="funcionarioSubstituido.nome"
+                                                                md-delay="100" md-min-length="3"
+                                                                md-selected-item-change="funcionarioSubstituidoSelecionado()">
+                                                                <md-item-template>
+                                                                    <div>{{funcionario.matricula}} -
+                                                                        {{funcionario.nome}}</div>
+                                                                </md-item-template>
+                                                            </md-autocomplete>
+                                                        </div>
+                                                    </div>
+                                                    <div layout class="col-lg-8" layout-sm="colum">
+                                                        <md-input-container flex>
+                                                            <label>Justificativa</label>
+                                                            <textarea required ng-model="requisicaoPessoal.justificativa"
+                                                                columns="2"></textarea>
+                                                        </md-input-container>
+                                                    </div>
+                                                    <div layout class="col-lg-4" layout-sm="colum">
+                                                        <md-input-container flex>
+                                                            <label>Data Prevista de Adimissão</label>
+                                                            <md-icon class="material-icons icon-momentpicker"
+                                                                ng-class="md-datepicker-calendar-icon"
+                                                                aria-label="md-calendar">
+                                                                date_range</md-icon>
+                                                            <input required name="dataPrevistaAdimissao"
+                                                                moment-picker="requisicaoPessoal.dataPrevistaAdimissao"
+                                                                placeholder="Selecione"
+                                                                ng-model="requisicaoPessoal.dataPrevistaAdimissao"
+                                                                format="DD/MM/YYYY" locale="pt-br" start-view="month"
+                                                                ng-model-options="{ updateOn: 'blur' }"
+                                                                ng-disabled="detalhes">
+                                                            <div
+                                                                ng-messages="requisicaoPessoalForm.dataPrevistaAdimissao.$error">
+                                                                <div ng-message="required">Campo de preenchimento
+                                                                    obrigatório.</div>
+                                                            </div>
+                                                        </md-input-container>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </form>
+
+                                <div class=" col-md-12" ng-if="detalhes">
+                                    <div class="panel panel-default" ng-repeat="item in funcaoesView">
+                                        <div class="panel-body">
+                                            <div class="row">
+                                                <div class="col-md-12">
+                                                    <h4>Informação da função {{item.funcao.nome}}</h4>
+                                                </div>
+                                                <div layout class="col-lg-6" layout-sm="colum">
+                                                    <md-input-container flex>
+                                                        <label>Tipo Contratação</label>
+                                                        <input readonly="true" ng-model="item.tipoContratacao">
+                                                    </md-input-container>
+                                                </div>
+                                                <div class="col-md-12">
+                                                    <article class="article">
+                                                        <md-card class="no-margin-h">
+                                                            <md-table-container>
+                                                                <table md-table ng-model="selected"
+                                                                    md-progress="promise">
+                                                                    <thead ng-if="!options.decapitate" md-head>
+                                                                        <tr md-row>
+                                                                            <th md-column>
+                                                                                <span>Vagas</span>
+                                                                            </th>
+                                                                            <th md-column>
+                                                                                <span>Requisitos</span>
+                                                                            </th>
+                                                                            <th md-column>
+                                                                                <span>Cursos</span>
+                                                                            </th>
+                                                                            <th md-column>
+                                                                                <span>Habilidades</span>
+                                                                            </th>
+                                                                            <th md-column>
+                                                                                <span>Turno</span>
+                                                                            </th>
+                                                                            <th md-column>
+                                                                                <span>Atividades</span>
+                                                                            </th>
+                                                                            <th ng-if="!detalhes" md-column>
+                                                                                <span>Ações</span>
+                                                                            </th>
+                                                                        </tr>
+                                                                    </thead>
+                                                                    <tbody md-body>
+                                                                        <tr md-row>
+                                                                            <td md-cell>{{item.qtdVagas}}</td>
+                                                                            <td md-cell>
+                                                                                <div
+                                                                                    ng-repeat="requisito in item.funcao.requisitos">
+                                                                                    {{requisito.dadoComparativo}},
+                                                                                    {{requisito.comparacao}}
+                                                                                    {{requisito.valor}}
+                                                                                    <span
+                                                                                        ng-if="requisito.inicioIntervalo">{{'de '+requisito.inicioIntervalo}}</span>
+                                                                                    <span
+                                                                                        ng-if="requisito.fimIntervalo">
+                                                                                        {{' até '+requisito.fimIntervalo}}</span><br />
+                                                                                </div>
+                                                                            </td>
+                                                                            <td md-cell>
+                                                                                <div
+                                                                                    ng-repeat="curso in item.funcao.cursos">
+                                                                                    {{curso.nomeCurso}}</div>
+                                                                            </td>
+                                                                            <td md-cell>
+                                                                                <div
+                                                                                    ng-repeat="habilidade in item.funcao.habilidades">
+                                                                                    {{habilidade.descricao}}
+                                                                                </div>
+                                                                            </td>
+                                                                            <td md-cell>
+                                                                                <span>Horário: </span>
+                                                                                <span ng-if="item.turno.horarioFlexivel">
+                                                                                    {{item.turno.jornada | date:'HH:mm'}}
+                                                                                </span>
+                                                                                <span ng-if="!item.turno.horarioFlexivel">
+                                                                                    {{item.turno.horarioFlexivelInicio | date:'HH:mm'}}
+                                                                                    às
+                                                                                    {{item.turno.horarioFlexivelFim | date:'HH:mm'}}
+                                                                                </span>
+                                                                                
+                                                                                <span> - Intervalo: </span>
+                                                                                <span ng-if="item.turno.intervaloFlexivel">
+                                                                                    {{item.turno.intervalo | date:'HH:mm'}}
+                                                                                </span>
+                                                                                <span ng-if="!item.turno.intervaloFlexivel">
+                                                                                    {{item.turno.intervaloFlexivelInicio | date:'HH:mm'}}
+                                                                                    às
+                                                                                    {{item.turno.intervaloFlexivelFim | date:'HH:mm'}}
+                                                                                </span>
+                                                                            </td>
+                                                                            <td md-cell>
+                                                                                <div ng-repeat="atividade in item.funcao.atividades">
+                                                                                    {{atividade.descricao}}
+                                                                                </div>
+                                                                            </td>
+                                                                            <td ng-if="!detalhes" md-cell>
+                                                                                <a ng-if="requisicaoPessoal.id==null"
+                                                                                    ng-click="removerFuncao(item.funcaoId)">
+                                                                                    <md-tooltip md-direction="top">
+                                                                                        Excluir</md-tooltip>
+                                                                                    <i class="fa fa-trash-o fa-lg"></i>
+                                                                                </a>
+                                                                                <a ng-if="requisicaoPessoal.id!=null"
+                                                                                    ng-if="botoesGestao"
+                                                                                    ng-click="showConfirm($event,item.id)">
+                                                                                    <md-tooltip md-direction="top">
+                                                                                        Excluir</md-tooltip>
+                                                                                    <i class="fa fa-trash-o fa-lg"></i>
+                                                                                </a>
+                                                                            </td>
+                                                                        </tr>
+                                                                    </tbody>
+                                                                </table>
+                                                            </md-table-container>
+                                                        </md-card>
+                                                    </article>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class=" col-md-12" ng-if="!detalhes">
+                                    <div class="panel panel-default">
+                                        <div class="panel-body">
+                                            <div class="row">
+
+                                                <div class="col-md-12">
+                                                    <h4>Informação da Função</h4>
+                                                </div>
+                                                <div ng-if="!detalhes">
+                                                    <form name='requisicaoPessoalFuncaoForm'
+                                                        id="requisicaoPessoalFuncaoForm">
+                                                        <div layout class="col-lg-6" layout-sm="colum">
+
+                                                            <md-input-container flex ng-if="loadedFuncoes">
+                                                                <label>Função</label>
+                                                                <md-select id="rpFuncao" ng-required="habilitar" ng-disabled="detalhes"
+                                                                    name="funcao" ng-model="funcaoRequest.funcaoId">
+                                                                    <md-option ng-click="funcaoSelecionada(f)"
+                                                                        ng-repeat="f in list.funcoes" ng-value="f.id">
+                                                                        {{f.nome}}
+                                                                    </md-option>
+                                                                </md-select>
+                                                            </md-input-container>
+                                                        </div>
+                                                        <div layout class="col-lg-6" layout-sm="colum">
+                                                            <md-input-container flex>
+                                                                <label>Tipo de Contratação</label>
+                                                                <md-select id="rpTipoContratacao" ng-required="habilitar"
+                                                                    ng-disabled="detalhes" name="tipoContratacao"
+                                                                    ng-model="funcaoRequest.tipoContratacao">
+                                                                    <md-option ng-repeat="tc in list.tipoContratacao"
+                                                                        value="{{tc.label}}">
+                                                                        {{tc.label}}
+                                                                    </md-option>
+                                                                </md-select>
+                                                            </md-input-container>
+                                                        </div>
+                                                        <div layout class="col-lg-4" layout-sm="colum">
+                                                            <md-input-container flex>
+                                                                <label>Custo por vaga</label>
+                                                                <input ng-disabled="detalhes" ng-required="habilitar"
+                                                                    ng-model="funcaoRequest.custoPorVaga"
+                                                                    name="custoVaga" ui-number-mask="2">
+                                                            </md-input-container>
+                                                        </div>
+                                                        <div layout class="col-lg-4" layout-sm="colum">
+                                                            <md-input-container flex>
+                                                                <label>Quantidade de vagas</label>
+                                                                <input ng-disabled="detalhes" ng-required="habilitar"
+                                                                    ng-model="funcaoRequest.qtdVagas" name="qtdVagas">
+                                                            </md-input-container>
+                                                        </div>
+                                                        <div layout class="col-lg-4" layout-sm="colum">
+                                                            <md-input-container flex>
+                                                                <label>Turno</label>
+                                                                <md-select id="rpTurno" ng-required="habilitar" ng-disabled="detalhes"
+                                                                    name="situacao" ng-model="funcaoRequest.turnoId">
+                                                                    <md-option ng-click="turnoSelecionado(turno)"
+                                                                        ng-repeat="t in list.turnos"
+                                                                        ng-value="t.id">
+                                                                        <span>Horário: </span>
+                                                                        <span ng-if="t.horarioFlexivel">
+                                                                            {{t.jornada | date:'HH:mm'}}
+                                                                        </span>
+                                                                        <span ng-if="!t.horarioFlexivel">
+                                                                            {{t.horarioFlexivelInicio | date:'HH:mm'}}
+                                                                            às
+                                                                            {{t.horarioFlexivelFim | date:'HH:mm'}}
+                                                                        </span>
+                                                                        <span> - Intervalo: </span>
+                                                                        <span ng-if="t.intervaloFlexivel">
+                                                                            {{t.intervalo | date:'HH:mm'}}
+                                                                        </span>
+                                                                        <span ng-if="!t.intervaloFlexivel">
+                                                                            {{t.intervaloFlexivelInicio | date:'HH:mm'}}
+                                                                            às
+                                                                            {{t.intervaloFlexivelFim | date:'HH:mm'}}
+                                                                        </span>
+                                                                    </md-option>
+                                                                </md-select>
+                                                            </md-input-container>
+                                                        </div>
+                                                        <div class="col-md-12" ng-if="!detalhes">
+                                                            <article class="article">
+                                                                <md-card class="no-margin-h">
+                                                                    <md-table-container>
+                                                                        <table md-table ng-model="selected"
+                                                                            md-progress="promise">
+                                                                            <thead md-head>
+                                                                                <tr md-row>
+                                                                                    <th md-column>
+                                                                                        <span>Requisitos</span>
+                                                                                    </th>
+                                                                                    <th md-column>
+                                                                                        <span>Cursos</span>
+                                                                                    </th>
+                                                                                    <th md-column>
+                                                                                        <span>Habilidades</span>
+                                                                                    </th>
+                                                                                    <th md-column>
+                                                                                        <span>Atividades</span>
+                                                                                    </th>
+
+                                                                                </tr>
+                                                                            </thead>
+                                                                            <tbody md-body ng-if="funcao!=null">
+                                                                                <tr md-row md-select="item"
+                                                                                    md-select-id="item" md-auto-select>
+                                                                                    <td md-cell>
+                                                                                        <div
+                                                                                            ng-repeat="requisito in funcao.requisitos">
+                                                                                            {{requisito.dadoComparativo}},
+                                                                                            {{requisito.comparacao}}
+                                                                                            {{requisito.valor}}
+                                                                                            <span
+                                                                                                ng-if="requisito.inicioIntervalo">{{'de '+requisito.inicioIntervalo}}</span>
+                                                                                            <span
+                                                                                                ng-if="requisito.fimIntervalo">
+                                                                                                {{' até '+requisito.fimIntervalo}}</span><br />
+                                                                                        </div>
+                                                                                    </td>
+                                                                                    <td md-cell>
+                                                                                        <div
+                                                                                            ng-repeat="curso in funcao.cursos">
+                                                                                            {{curso.nomeCurso}}</div>
+                                                                                    </td>
+                                                                                    <td md-cell>
+                                                                                        <div
+                                                                                            ng-repeat="habilidade in funcao.habilidades">
+                                                                                            {{habilidade.descricao}}
+                                                                                        </div>
+                                                                                    </td>
+                                                                                    <td md-cell>
+                                                                                        <div
+                                                                                            ng-repeat="atividade in funcao.atividades">
+                                                                                            {{atividade.descricao}}
+                                                                                        </div>
+                                                                                    </td>
+                                                                                </tr>
+                                                                            </tbody>
+                                                                        </table>
+                                                                    </md-table-container>
+                                                                </md-card>
+                                                            </article>
+                                                        </div>
+                                                        <div class="col-md-12 text-center">
+                                                            <button ng-if="!detalhes"
+                                                                ng-disabled="requisicaoPessoalFuncaoForm.$invalid"
+                                                                type="button" ui-wave ng-click="adicionarFuncao()"
+                                                                class="btn btn-primary btn-w-md">Adicionar
+                                                                Função</button>
+                                                        </div>
+                                                    </form>
+                                                </div>
+
+
+                                                <div class="col-md-12">
+                                                    <article class="article">
+                                                        <md-card class="no-margin-h">
+                                                            <md-table-container>
+                                                                <table md-table ng-model="selected"
+                                                                    md-progress="promise">
+                                                                    <thead ng-if="!options.decapitate" md-head>
+                                                                        <tr md-row>
+                                                                            <th md-column>
+                                                                                <span>Função</span>
+                                                                            </th>
+                                                                            <th md-column>
+                                                                                <span>Vagas</span>
+                                                                            </th>
+                                                                            <th md-column>
+                                                                                <span>Requisitos</span>
+                                                                            </th>
+                                                                            <th md-column>
+                                                                                <span>Cursos</span>
+                                                                            </th>
+                                                                            <th md-column>
+                                                                                <span>Habilidades</span>
+                                                                            </th>
+                                                                            <th md-column>
+                                                                                <span>Turno</span>
+                                                                            </th>
+                                                                            <th md-column>
+                                                                                <span>Atividades</span>
+                                                                            </th>
+                                                                            <th ng-if="!detalhes" md-column>
+                                                                                <span>Ações</span>
+                                                                            </th>
+                                                                        </tr>
+                                                                    </thead>
+                                                                    <tbody md-body>
+                                                                        <tr md-row md-select="item" md-select-id="item"
+                                                                            md-auto-select
+                                                                            ng-repeat="item in funcaoesView">
+                                                                            <td md-cell>{{item.funcao.nome}}</td>
+                                                                            <td md-cell>{{item.qtdVagas}}</td>
+                                                                            <td md-cell>
+                                                                                <div
+                                                                                    ng-repeat="requisito in item.funcao.requisitos">
+                                                                                    {{requisito.dadoComparativo}},
+                                                                                    {{requisito.comparacao}}
+                                                                                    {{requisito.valor}}
+                                                                                    <span
+                                                                                        ng-if="requisito.inicioIntervalo">{{'de '+requisito.inicioIntervalo}}</span>
+                                                                                    <span
+                                                                                        ng-if="requisito.fimIntervalo">
+                                                                                        {{' até '+requisito.fimIntervalo}}</span><br />
+                                                                                </div>
+                                                                            </td>
+                                                                            <td md-cell>
+                                                                                <div
+                                                                                    ng-repeat="curso in item.funcao.cursos">
+                                                                                    {{curso.nomeCurso}}</div>
+                                                                            </td>
+                                                                            <td md-cell>
+                                                                                <div
+                                                                                    ng-repeat="habilidade in item.funcao.habilidades">
+                                                                                    {{habilidade.descricao}}
+                                                                                </div>
+                                                                            </td>
+                                                                            <td md-cell>
+                                                                                <span>Horário: </span>
+                                                                                <span ng-if="item.turno.horarioFlexivel">
+                                                                                    {{item.turno.jornada | date:'HH:mm'}}
+                                                                                </span>
+                                                                                <span ng-if="!item.turno.horarioFlexivel">
+                                                                                    {{item.turno.horarioFlexivelInicio | date:'HH:mm'}}
+                                                                                    às
+                                                                                    {{item.turno.horarioFlexivelFim | date:'HH:mm'}}
+                                                                                </span>
+                                                                                <span> - Intervalo: </span>
+                                                                                <span ng-if="item.turno.intervaloFlexivel">
+                                                                                    {{item.turno.intervalo | date:'HH:mm'}}
+                                                                                </span>
+                                                                                <span ng-if="!item.turno.intervaloFlexivel">
+                                                                                    {{item.turno.intervaloFlexivelInicio | date:'HH:mm'}}
+                                                                                    às
+                                                                                    {{item.turno.intervaloFlexivelFim | date:'HH:mm'}}
+                                                                                </span>
+                                                                            </td>
+                                                                            <td md-cell>
+                                                                                <div
+                                                                                    ng-repeat="atividade in item.funcao.atividades">
+                                                                                    {{atividade.descricao}}
+                                                                                </div>
+                                                                            </td>
+                                                                            <td ng-if="!detalhes" md-cell>
+                                                                                <a ng-if="requisicaoPessoal.id==null"
+                                                                                    ng-click="removerFuncao(item.funcaoId)">
+                                                                                    <md-tooltip md-direction="top">
+                                                                                        Excluir</md-tooltip>
+                                                                                    <i class="fa fa-trash-o fa-lg"></i>
+                                                                                </a>
+                                                                                <a ng-if="requisicaoPessoal.id!=null"
+                                                                                    ng-if="botoesGestao"
+                                                                                    ng-click="showConfirm($event,item.id)">
+                                                                                    <md-tooltip md-direction="top">
+                                                                                        Excluir</md-tooltip>
+                                                                                    <i class="fa fa-trash-o fa-lg"></i>
+                                                                                </a>
+                                                                            </td>
+                                                                        </tr>
+                                                                    </tbody>
+                                                                </table>
+                                                            </md-table-container>
+                                                        </md-card>
+                                                    </article>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div ng-if="detalhes" layout layout-sm="column">
+                                <table md-table md-progress="promise">
+                                    <thead md-head>
+                                        <tr md-row>
+                                            <th md-column>
+                                                <span>Criado em:</span>
+                                            </th>
+                                            <th md-column>
+                                                <span>Atualizado em:</span>
+                                            </th>
+                                            <th md-column>
+                                                <span>Criado por:</span>
+                                            </th>
+                                            <th md-column>
+                                                <span>Atualizado por:</span>
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody md-body>
+                                        <tr md-row>
+                                            <td md-cell>{{requisicaoPessoal.criadoEm | date:'dd/MM/yy - HH:mm'}}</td>
+                                            <td md-cell>{{requisicaoPessoal.alteradoEm | date:'dd/MM/yy -
+                                                                    HH:mm'}}</td>
+                                            <td md-cell>{{requisicaoPessoal.criadoPor}}</td>
+                                            <td md-cell>{{requisicaoPessoal.alteradoPor}}</td>
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-12 text-center">
+                                    <button ng-if="!detalhes && requisicaoPessoal.id == null"
+                                        ng-disabled="requisicaoPessoalForm.$invalid || funcaoesView.length==0"
+                                        type="button" ui-wave class="btn btn-primary btn-w-md"
+                                        ng-click="save('Em Processo')">Encaminhar para
+                                        aprovação</button>
+                                    <button
+                                        ng-if="!detalhes && requisicaoPessoal.situacao == 'Rascunho' || requisicaoPessoal.situacao == 'Aberto'"
+                                        ng-disabled="requisicaoPessoalForm.$invalid || funcaoesView.length==0"
+                                        type="button" ui-wave class="btn btn-info btn-w-md"
+                                        ng-click="save('Rascunho')">Salvar Rascunho</button>
+                                    <p class="btn btn-default btn-w-md" ui-wave data-ng-click="goBack()">Voltar
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>

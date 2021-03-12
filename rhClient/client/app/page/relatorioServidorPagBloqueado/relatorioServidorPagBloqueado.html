@@ -1,0 +1,121 @@
+<section class="page container-fluid with-maxwidth chapter" ng-controller="relatorioServidorPagBloqueadoCtrl">
+
+    <div class="row ui-section">
+        <div class="col-lg-9 clearfix">
+            <h2 class="section-header">Relatórios de Servidores com Pagamento Bloqueado</h2>
+        </div>
+        <div class="col-lg-3 clearfix" style="padding-top: 10px;">
+        </div>
+        <div class="col-md-12">
+            <article class="article">
+
+                <md-card class="no-margin-h">
+                    <div layout="column">
+                        <div layout-padding>
+                            <form ng-disabled="detalhes" name="relServPagBloqForm">
+                                <div layout layout-sm="column">
+
+                                    <md-input-container flex>
+                                        <label>Fundo</label>
+                                        <select-multiplo-component ng-disabled='detalhes' ng-required='true'
+                                            ng-model='fundosSelecionados' name='fundosSelecionados'
+                                            end-point='/relatorioServidorPagBloqueado/empresa/filial/search'>
+                                        </select-multiplo-component>
+                                        <div ng-messages='relServPagBloqForm.fundosSelecionados.$error' multiple
+                                            role='alert'>
+                                            <div ng-message='required'>Campo de preenchimento
+                                                obrigatório.</div>
+                                        </div>
+                                    </md-input-container>
+
+                                    <md-input-container flex>
+                                        <label>Situação Funcional</label>
+                                        <select-multiplo-component ng-disabled='detalhes' ng-required='false'
+                                            ng-model='situacaoFuncionalSelecionadas'
+                                            name='situacaoFuncionalSelecionadas'
+                                            end-point='/relatorioServidorPagBloqueado/situacao/funcional/search'>
+                                        </select-multiplo-component>
+                                        <div ng-messages='relServPagBloqForm.situacaoFuncionalSelecionadas.$error'
+                                            multiple role='alert'>
+                                            <div ng-message='required'>Campo de preenchimento
+                                                obrigatório.</div>
+                                        </div>
+                                    </md-input-container>
+
+                                </div>
+                                <div layout layout-sm="column">
+
+                                    <autocomplete-component disabled='detalhes' required='false'
+                                        model='servidorSelecionado' input-name='servidorSelecionado' label='Servidor'
+                                        end-point='/relatorioServidorPagBloqueado/servidor/search' change=''>
+                                    </autocomplete-component>
+                                    <div ng-messages='relServPagBloqForm.servidorSelecionado.$error' multiple
+                                        role='alert'>
+                                        <div ng-message='required'>Campo de preenchimento
+                                            obrigatório.</div>
+                                    </div>
+                                    <clear-button model='servidorSelecionado' disabled='detalhes'></clear-button>
+
+                                    <md-input-container class="md-block" style="width: 190px;">
+                                        <label>Data de Nascimento</label>
+                                        <md-icon class="material-icons icon-momentpicker"
+                                            ng-class="md-datepicker-calendar-icon" aria-label="md-calendar">
+                                            date_range</md-icon>
+                                        <input name="dataNascimento" moment-picker="dataNascimento"
+                                            placeholder="Selecione a data" ng-model="dataNascimento" format="DD/MM/YYYY"
+                                            locale="pt-br" start-view="month" ng-model-options="{ updateOn: 'blur' }"
+                                            ng-required="false">
+                                    </md-input-container>
+                                    <clear-button model='dataNascimento' disabled='detalhes'></clear-button>
+
+                                    <md-input-container class="md-block" style="width: 150px;">
+                                        <label>Pensão Alimentícia</label>
+                                        <md-select name="pensaoAlimenticia" ng-model="pensaoAlimenticia">
+                                            <md-option ng-value="null">
+                                                Todos
+                                            </md-option>
+                                            <md-option ng-value="false">
+                                                Não
+                                            </md-option>
+                                            <md-option ng-value="true">
+                                                Sim
+                                            </md-option>
+                                        </md-select>
+                                    </md-input-container>
+
+                                    <md-input-container class="md-block" style="width: 150px;">
+                                        <label>Pensionista</label>
+                                        <md-select name="pensionista" ng-model="pensionista">
+                                            <md-option ng-value="null">
+                                                Todos
+                                            </md-option>
+                                            <md-option ng-value="false">
+                                                Não
+                                            </md-option>
+                                            <md-option ng-value="true">
+                                                Sim
+                                            </md-option>
+                                        </md-select>
+                                    </md-input-container>
+
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-12 text-center">
+                                        <button class="btn  btn-w-md"
+                                            ng-click="pensionista = null; pensaoAlimenticia = null; dataNascimento = null; servidorSelecionado = null; fundosSelecionados = null; situacaoFuncionalSelecionadas = null">
+                                            Limpar
+                                            <md-tooltip md-direction="top">Limpar Filtros</md-tooltip>
+                                        </button>
+                                        <button class="btn btn-primary btn-w-md" ng-click="showRelatorio('pdf')">
+                                            Gerar PDF
+                                        </button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </md-card>
+            </article>
+        </div>
+    </div>
+</section>

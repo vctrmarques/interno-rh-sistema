@@ -1,0 +1,1 @@
+UPDATE menu SET nome = 'Dossiê do Servidor' WHERE nome = 'Observação de Doc';

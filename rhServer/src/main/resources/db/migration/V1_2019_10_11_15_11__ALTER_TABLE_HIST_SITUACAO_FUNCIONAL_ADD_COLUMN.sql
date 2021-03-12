@@ -1,0 +1,5 @@
+ALTER TABLE historico_situacao_funcional ADD situacao_funcional_anterior_id BIGINT NOT NULL;
+
+ALTER TABLE historico_situacao_funcional
+ADD CONSTRAINT historico_situacao_funcional_situacao_funcional_anterior_id_id_fkey
+FOREIGN KEY (situacao_funcional_anterior_id) REFERENCES situacao_funcional(id); 

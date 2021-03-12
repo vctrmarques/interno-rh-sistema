@@ -1,0 +1,66 @@
+<md-dialog>
+    <form ng-cloak>
+        <md-toolbar>
+            <div style="background-color: #01722c" class="md-toolbar-tools">
+                <h2>Filtragem de Dados</h2>
+                <span flex></span>
+                <a href="" ng-click="cancel()">
+                    <i class="fa fa-close"></i>
+                </a>
+            </div>
+        </md-toolbar>
+        <md-dialog-content>
+            <div class="page">
+                <div class="row ui-section">
+                    <div class="col-md-12">
+                        <div class="panel panel-default">
+                            <div class="panel-body">
+                                <div class="row">
+                                    <div class="col-lg-12">
+                                        <strong style="color: #01722c">Pesquisar por:</strong>
+                                        <div layout="column" ng-cloak class="md-inline-form inputdemoBasicUsage">
+                                            <div layout-padding>
+                                                <div layout layout-sm="column">
+                                                        <md-chips readonly="detalhes" ng-model="filtro.areasFormacao" md-autocomplete-snap
+                                                        md-transform-chip="transformChip($chip)" md-require-match="true">
+                                                        <md-autocomplete md-selected-item="selectedItem" md-search-text="searchText" md-items="item in querySearchAreaFormacao(searchText)"
+                                                            md-item-text="item.areaFormacao" placeholder="Área de Formação">
+                                                            <span md-highlight-text="searchText">{{item.areaFormacao}}</span>
+                                                        </md-autocomplete>
+                                                        <md-chip-template>
+                                                            <span>
+                                                                <strong>{{$chip.areaFormacao}}</strong>
+                                                            </span>
+                                                        </md-chip-template>
+                                                    </md-chips>
+                                                </div>
+                                                <div layout layout-sm="column">
+                                                    <md-chips readonly="detalhes" ng-model="filtro.grausAcademicos" md-autocomplete-snap
+                                                        md-transform-chip="transformChip($chip)" md-require-match="true">
+                                                        <md-autocomplete md-selected-item="selectedItem" md-search-text="searchText" md-items="item in querySearchGrauAcademico(searchText)"
+                                                            md-item-text="item.nome" placeholder="Grau Acadêmico">
+                                                            <span md-highlight-text="searchText">{{item.nome}}</span>
+                                                        </md-autocomplete>
+                                                        <md-chip-template>
+                                                            <span>
+                                                                <strong>{{$chip.nome}}</strong>
+                                                            </span>
+                                                        </md-chip-template>
+                                                    </md-chips>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="md-dialog-content text-center">
+                <button class="btn btn-primary btn-w-md" ng-click="clickDialog()">Aplicar Filtros</button>
+            </div>
+        </md-dialog-content>
+
+    </form>
+</md-dialog>

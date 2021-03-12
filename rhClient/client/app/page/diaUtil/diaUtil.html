@@ -1,0 +1,392 @@
+<div class="page" ng-controller="diaUtilCtrl">
+    <div class="row ui-section">
+        <div class="col-lg-12 clearfix">
+            <h2 class="section-header" style="float: left;">Dias Úteis</h2>
+            <div style="float: right">
+                <md-button class="md-fab md-primary" ng-href="" ng-click="showRelatorio()">
+                    <md-tooltip md-direction="bottom">Relatório</md-tooltip>
+                    <span class="fa fa-file-pdf-o"></span>
+                </md-button>
+                <md-button class="md-fab md-accent" ng-href="#!/diaUtil/formulario">
+                    <md-tooltip md-direction="bottom">NovDiaUtil</md-tooltip>
+                    <span class="fa fa-plus"></span>
+                </md-button>
+                <span class="space"></span>
+            </div>
+        </div>
+        <div class="col-md-12">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <article class="article">
+                        <md-card class="no-margin-h">
+                            <div layout="column">
+                                <div layout-padding>
+                                    <div layout layout-sm="column">
+                                        <md-input-container flex>
+                                            <label>Ano</label>
+                                            <input ng-model="anoBusca" placeholder="Buscar por Ano..."
+                                                ng-keypress="($event.keyCode === 13) && loadList()">
+                                        </md-input-container>
+                                        <md-button class="md-icon-button" ng-click="limpaFiltro()">
+                                            <md-tooltip md-direction="top">Limpar Filtros</md-tooltip>
+                                            <md-icon>autorenew</md-icon>
+                                        </md-button>
+                                        <md-button class="md-icon-button" ng-click="loadList()">
+                                            <md-tooltip md-direction="top">Atualizar</md-tooltip>
+                                            <md-icon>refresh</md-icon>
+                                        </md-button>
+                                    </div>
+                                    <div ng-if="temDadosDoAno">
+                                        <p class="nome-usuario-label">Não existem dados para o ano {{mostrarAnoNaIndex}}
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                            <md-table-container>
+                                <table md-table ng-model="list.data" md-progress="promise" ng-show="!temDadosDoAno">
+                                    <thead ng-if="!options.decapitate" md-head md-order="query.order"
+                                        md-on-reorder="loadList">
+                                        <tr md-row>
+                                            <th md-column>
+                                                <span>Ano/Mês</span>
+                                            </th>
+                                            <th md-column>
+                                                <span>Dias Úteis</span>
+                                                <md-tooltip md-direction="top">quantidade de dias úteis referentes ao
+                                                    mes</md-tooltip>
+                                            </th>
+                                            <th md-column>
+                                                <span>Seg.</span>
+                                            </th>
+                                            <th md-column>
+                                                <span>Ter.</span>
+                                            </th>
+
+                                            <th md-column>
+                                                <span>Qua.</span>
+                                            </th>
+
+                                            <th md-column>
+                                                <span>Qui.</span>
+                                            </th>
+                                            <th md-column>
+                                                <span>Sex.</span>
+                                            </th>
+                                            <th md-column>
+                                                <span>Sab.</span>
+                                            </th>
+                                            <th md-column>
+                                                <span>Dom.</span>
+                                            </th>
+                                            <th md-column>
+                                                <span>Ações</span>
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody md-body>
+                                        <tr md-row>
+                                            <td md-cell>{{list.data.ano}}</td>
+                                            <td md-cell>{{anoTotal}}</td>
+                                            <td md-cell>{{segundaTotal}}</td>
+                                            <td md-cell>{{tercaTotal}}</td>
+                                            <td md-cell>{{quartaTotal}}</td>
+                                            <td md-cell>{{quintaTotal}}</td>
+                                            <td md-cell>{{sextaTotal}}</td>
+                                            <td md-cell>{{sabadoTotal}}</td>
+                                            <td md-cell>{{domingoTotal}}</td>
+                                            <td md-cell>
+                                                <a href="" ng-if="botoesGestao"
+                                                    ng-click="showConfirm($event,list.data.ano)">
+                                                    <md-tooltip md-direction="top">Excluir</md-tooltip>
+                                                    <i class="fa fa-trash-o fa-lg"></i>
+                                                </a>
+                                            </td>
+                                        </tr>
+                                        <tr md-row>
+                                            <td md-cell>Janeiro</td>
+                                            <td md-cell>{{total[0]}}</td>
+                                            <td md-cell>{{list.data.dadosMeses[0].segunda}}</td>
+                                            <td md-cell>{{list.data.dadosMeses[0].terca}}</td>
+                                            <td md-cell>{{list.data.dadosMeses[0].quarta}}</td>
+                                            <td md-cell>{{list.data.dadosMeses[0].quinta}}</td>
+                                            <td md-cell>{{list.data.dadosMeses[0].sexta}}</td>
+                                            <td md-cell>{{list.data.dadosMeses[0].sabado}}</td>
+                                            <td md-cell>{{list.data.dadosMeses[0].domingo}}</td>
+                                            <td md-cell>
+                                                <a href=""
+                                                    ui-sref="diaUtilFormularioDetalhes({ ano: list.data.ano, mes: list.data.dadosMeses[0].mes, detalhes: true })">
+                                                    <md-tooltip md-direction="top">Detalhes Cadastrais</md-tooltip>
+                                                    <i class="fa fa-search fa-lg"></i>
+                                                </a>
+                                                <a ng-if="botoesGestao"
+                                                    ui-sref="diaUtilFormularioEdit({ ano: list.data.ano, mes: list.data.dadosMeses[0].mes, editar: true })">
+                                                    <md-tooltip md-direction="top">Editar</md-tooltip>
+                                                    <i class="fa fa-pencil fa-lg"></i>
+                                                </a>
+                                            </td>
+                                        </tr>
+                                        <tr md-row>
+                                            <td md-cell>Fevereiro</td>
+                                            <td md-cell>{{total[1]}}</td>
+                                            <td md-cell>{{list.data.dadosMeses[1].segunda}}</td>
+                                            <td md-cell>{{list.data.dadosMeses[1].terca}}</td>
+                                            <td md-cell>{{list.data.dadosMeses[1].quarta}}</td>
+                                            <td md-cell>{{list.data.dadosMeses[1].quinta}}</td>
+                                            <td md-cell>{{list.data.dadosMeses[1].sexta}}</td>
+                                            <td md-cell>{{list.data.dadosMeses[1].sabado}}</td>
+                                            <td md-cell>{{list.data.dadosMeses[1].domingo}}</td>
+                                            <td md-cell>
+                                                <a href=""
+                                                    ui-sref="diaUtilFormularioDetalhes({ ano: list.data.ano, mes: list.data.dadosMeses[1].mes, detalhes: true })">
+                                                    <md-tooltip md-direction="top">Detalhes Cadastrais</md-tooltip>
+                                                    <i class="fa fa-search fa-lg"></i>
+                                                </a>
+                                                <a ng-if="botoesGestao"
+                                                    ui-sref="diaUtilFormularioEdit({ ano: list.data.ano, mes: list.data.dadosMeses[1].mes, editar: true })">
+                                                    <md-tooltip md-direction="top">Editar</md-tooltip>
+                                                    <i class="fa fa-pencil fa-lg"></i>
+                                                </a>
+                                            </td>
+                                        </tr>
+                                        <tr md-row>
+                                            <td md-cell>Março</td>
+                                            <td md-cell>{{total[2]}}</td>
+                                            <td md-cell>{{list.data.dadosMeses[2].segunda}}</td>
+                                            <td md-cell>{{list.data.dadosMeses[2].terca}}</td>
+                                            <td md-cell>{{list.data.dadosMeses[2].quarta}}</td>
+                                            <td md-cell>{{list.data.dadosMeses[2].quinta}}</td>
+                                            <td md-cell>{{list.data.dadosMeses[2].sexta}}</td>
+                                            <td md-cell>{{list.data.dadosMeses[2].sabado}}</td>
+                                            <td md-cell>{{list.data.dadosMeses[2].domingo}}</td>
+                                            <td md-cell>
+                                                <a href=""
+                                                    ui-sref="diaUtilFormularioDetalhes({ ano: list.data.ano, mes: list.data.dadosMeses[2].mes, detalhes: true })">
+                                                    <md-tooltip md-direction="top">Detalhes Cadastrais</md-tooltip>
+                                                    <i class="fa fa-search fa-lg"></i>
+                                                </a>
+                                                <a ng-if="botoesGestao"
+                                                    ui-sref="diaUtilFormularioEdit({ ano: list.data.ano, mes: list.data.dadosMeses[2].mes, editar: true })">
+                                                    <md-tooltip md-direction="top">Editar</md-tooltip>
+                                                    <i class="fa fa-pencil fa-lg"></i>
+                                                </a>
+                                            </td>
+                                        </tr>
+                                        <tr md-row>
+                                            <td md-cell>Abril</td>
+                                            <td md-cell>{{total[3]}}</td>
+                                            <td md-cell>{{list.data.dadosMeses[3].segunda}}</td>
+                                            <td md-cell>{{list.data.dadosMeses[3].terca}}</td>
+                                            <td md-cell>{{list.data.dadosMeses[3].quarta}}</td>
+                                            <td md-cell>{{list.data.dadosMeses[3].quinta}}</td>
+                                            <td md-cell>{{list.data.dadosMeses[3].sexta}}</td>
+                                            <td md-cell>{{list.data.dadosMeses[3].sabado}}</td>
+                                            <td md-cell>{{list.data.dadosMeses[3].domingo}}</td>
+                                            <td md-cell>
+                                                <a href=""
+                                                    ui-sref="diaUtilFormularioDetalhes({ ano: list.data.ano, mes: list.data.dadosMeses[3].mes, detalhes: true })">
+                                                    <md-tooltip md-direction="top">Detalhes Cadastrais</md-tooltip>
+                                                    <i class="fa fa-search fa-lg"></i>
+                                                </a>
+                                                <a ng-if="botoesGestao"
+                                                    ui-sref="diaUtilFormularioEdit({ ano: list.data.ano, mes: list.data.dadosMeses[3].mes, editar: true })">
+                                                    <md-tooltip md-direction="top">Editar</md-tooltip>
+                                                    <i class="fa fa-pencil fa-lg"></i>
+                                                </a>
+                                            </td>
+                                        </tr>
+                                        <tr md-row>
+                                            <td md-cell>Maio</td>
+                                            <td md-cell>{{total[4]}}</td>
+                                            <td md-cell>{{list.data.dadosMeses[4].segunda}}</td>
+                                            <td md-cell>{{list.data.dadosMeses[4].terca}}</td>
+                                            <td md-cell>{{list.data.dadosMeses[4].quarta}}</td>
+                                            <td md-cell>{{list.data.dadosMeses[4].quinta}}</td>
+                                            <td md-cell>{{list.data.dadosMeses[4].sexta}}</td>
+                                            <td md-cell>{{list.data.dadosMeses[4].sabado}}</td>
+                                            <td md-cell>{{list.data.dadosMeses[4].domingo}}</td>
+                                            <td md-cell>
+                                                <a href=""
+                                                    ui-sref="diaUtilFormularioDetalhes({ ano: list.data.ano, mes: list.data.dadosMeses[4].mes, detalhes: true })">
+                                                    <md-tooltip md-direction="top">Detalhes Cadastrais</md-tooltip>
+                                                    <i class="fa fa-search fa-lg"></i>
+                                                </a>
+                                                <a ng-if="botoesGestao"
+                                                    ui-sref="diaUtilFormularioEdit({ ano: list.data.ano, mes: list.data.dadosMeses[4].mes, editar: true })">
+                                                    <md-tooltip md-direction="top">Editar</md-tooltip>
+                                                    <i class="fa fa-pencil fa-lg"></i>
+                                                </a>
+                                            </td>
+                                        </tr>
+                                        <tr md-row>
+                                            <td md-cell>Junho</td>
+                                            <td md-cell>{{total[5]}}</td>
+                                            <td md-cell>{{list.data.dadosMeses[5].segunda}}</td>
+                                            <td md-cell>{{list.data.dadosMeses[5].terca}}</td>
+                                            <td md-cell>{{list.data.dadosMeses[5].quarta}}</td>
+                                            <td md-cell>{{list.data.dadosMeses[5].quinta}}</td>
+                                            <td md-cell>{{list.data.dadosMeses[5].sexta}}</td>
+                                            <td md-cell>{{list.data.dadosMeses[5].sabado}}</td>
+                                            <td md-cell>{{list.data.dadosMeses[5].domingo}}</td>
+                                            <td md-cell>
+                                                <a href=""
+                                                    ui-sref="diaUtilFormularioDetalhes({ ano: list.data.ano, mes: list.data.dadosMeses[5].mes, detalhes: true })">
+                                                    <md-tooltip md-direction="top">Detalhes Cadastrais</md-tooltip>
+                                                    <i class="fa fa-search fa-lg"></i>
+                                                </a>
+                                                <a ng-if="botoesGestao"
+                                                    ui-sref="diaUtilFormularioEdit({ ano: list.data.ano, mes: list.data.dadosMeses[5].mes, editar: true })">
+                                                    <md-tooltip md-direction="top">Editar</md-tooltip>
+                                                    <i class="fa fa-pencil fa-lg"></i>
+                                                </a>
+                                            </td>
+                                        </tr>
+                                        <tr md-row>
+                                            <td md-cell>Julho</td>
+                                            <td md-cell>{{total[6]}}</td>
+                                            <td md-cell>{{list.data.dadosMeses[6].segunda}}</td>
+                                            <td md-cell>{{list.data.dadosMeses[6].terca}}</td>
+                                            <td md-cell>{{list.data.dadosMeses[6].quarta}}</td>
+                                            <td md-cell>{{list.data.dadosMeses[6].quinta}}</td>
+                                            <td md-cell>{{list.data.dadosMeses[6].sexta}}</td>
+                                            <td md-cell>{{list.data.dadosMeses[6].sabado}}</td>
+                                            <td md-cell>{{list.data.dadosMeses[6].domingo}}</td>
+                                            <td md-cell>
+                                                <a href=""
+                                                    ui-sref="diaUtilFormularioDetalhes({ ano: list.data.ano, mes: list.data.dadosMeses[6].mes, detalhes: true })">
+                                                    <md-tooltip md-direction="top">Detalhes Cadastrais</md-tooltip>
+                                                    <i class="fa fa-search fa-lg"></i>
+                                                </a>
+                                                <a ng-if="botoesGestao"
+                                                    ui-sref="diaUtilFormularioEdit({ ano: list.data.ano, mes: list.data.dadosMeses[6].mes, editar: true })">
+                                                    <md-tooltip md-direction="top">Editar</md-tooltip>
+                                                    <i class="fa fa-pencil fa-lg"></i>
+                                                </a>
+                                            </td>
+                                        </tr>
+                                        <tr md-row>
+                                            <td md-cell>Agosto</td>
+                                            <td md-cell>{{total[7]}}</td>
+                                            <td md-cell>{{list.data.dadosMeses[7].segunda}}</td>
+                                            <td md-cell>{{list.data.dadosMeses[7].terca}}</td>
+                                            <td md-cell>{{list.data.dadosMeses[7].quarta}}</td>
+                                            <td md-cell>{{list.data.dadosMeses[7].quinta}}</td>
+                                            <td md-cell>{{list.data.dadosMeses[7].sexta}}</td>
+                                            <td md-cell>{{list.data.dadosMeses[7].sabado}}</td>
+                                            <td md-cell>{{list.data.dadosMeses[7].domingo}}</td>
+                                            <td md-cell>
+                                                <a href=""
+                                                    ui-sref="diaUtilFormularioDetalhes({ ano: list.data.ano, mes: list.data.dadosMeses[7].mes, detalhes: true })">
+                                                    <md-tooltip md-direction="top">Detalhes Cadastrais</md-tooltip>
+                                                    <i class="fa fa-search fa-lg"></i>
+                                                </a>
+                                                <a ng-if="botoesGestao"
+                                                    ui-sref="diaUtilFormularioEdit({ ano: list.data.ano, mes: list.data.dadosMeses[7].mes, editar: true })">
+                                                    <md-tooltip md-direction="top">Editar</md-tooltip>
+                                                    <i class="fa fa-pencil fa-lg"></i>
+                                                </a>
+                                            </td>
+                                        </tr>
+                                        <tr md-row>
+                                            <td md-cell>Setembro</td>
+                                            <td md-cell>{{total[8]}}</td>
+                                            <td md-cell>{{list.data.dadosMeses[8].segunda}}</td>
+                                            <td md-cell>{{list.data.dadosMeses[8].terca}}</td>
+                                            <td md-cell>{{list.data.dadosMeses[8].quarta}}</td>
+                                            <td md-cell>{{list.data.dadosMeses[8].quinta}}</td>
+                                            <td md-cell>{{list.data.dadosMeses[8].sexta}}</td>
+                                            <td md-cell>{{list.data.dadosMeses[8].sabado}}</td>
+                                            <td md-cell>{{list.data.dadosMeses[8].domingo}}</td>
+                                            <td md-cell>
+                                                <a href=""
+                                                    ui-sref="diaUtilFormularioDetalhes({ ano: list.data.ano, mes: list.data.dadosMeses[8].mes, detalhes: true })">
+                                                    <md-tooltip md-direction="top">Detalhes Cadastrais</md-tooltip>
+                                                    <i class="fa fa-search fa-lg"></i>
+                                                </a>
+                                                <a ng-if="botoesGestao"
+                                                    ui-sref="diaUtilFormularioEdit({ ano: list.data.ano, mes: list.data.dadosMeses[8].mes, editar: true })">
+                                                    <md-tooltip md-direction="top">Editar</md-tooltip>
+                                                    <i class="fa fa-pencil fa-lg"></i>
+                                                </a>
+                                            </td>
+                                        </tr>
+                                        <tr md-row>
+                                            <td md-cell>Outubro</td>
+                                            <td md-cell>{{total[9]}}</td>
+                                            <td md-cell>{{list.data.dadosMeses[9].segunda}}</td>
+                                            <td md-cell>{{list.data.dadosMeses[9].terca}}</td>
+                                            <td md-cell>{{list.data.dadosMeses[9].quarta}}</td>
+                                            <td md-cell>{{list.data.dadosMeses[9].quinta}}</td>
+                                            <td md-cell>{{list.data.dadosMeses[9].sexta}}</td>
+                                            <td md-cell>{{list.data.dadosMeses[9].sabado}}</td>
+                                            <td md-cell>{{list.data.dadosMeses[9].domingo}}</td>
+                                            <td md-cell>
+                                                <a href=""
+                                                    ui-sref="diaUtilFormularioDetalhes({ ano: list.data.ano, mes: list.data.dadosMeses[9].mes, detalhes: true })">
+                                                    <md-tooltip md-direction="top">Detalhes Cadastrais</md-tooltip>
+                                                    <i class="fa fa-search fa-lg"></i>
+                                                </a>
+                                                <a ng-if="botoesGestao"
+                                                    ui-sref="diaUtilFormularioEdit({ ano: list.data.ano, mes: list.data.dadosMeses[9].mes, editar: true })">
+                                                    <md-tooltip md-direction="top">Editar</md-tooltip>
+                                                    <i class="fa fa-pencil fa-lg"></i>
+                                                </a>
+                                            </td>
+                                        </tr>
+                                        <tr md-row>
+                                            <td md-cell>Novembro</td>
+                                            <td md-cell>{{total[10]}}</td>
+                                            <td md-cell>{{list.data.dadosMeses[10].segunda}}</td>
+                                            <td md-cell>{{list.data.dadosMeses[10].terca}}</td>
+                                            <td md-cell>{{list.data.dadosMeses[10].quarta}}</td>
+                                            <td md-cell>{{list.data.dadosMeses[10].quinta}}</td>
+                                            <td md-cell>{{list.data.dadosMeses[10].sexta}}</td>
+                                            <td md-cell>{{list.data.dadosMeses[10].sabado}}</td>
+                                            <td md-cell>{{list.data.dadosMeses[10].domingo}}</td>
+                                            <td md-cell>
+                                                <a href=""
+                                                    ui-sref="diaUtilFormularioDetalhes({ ano: list.data.ano, mes: list.data.dadosMeses[10].mes, detalhes: true })">
+                                                    <md-tooltip md-direction="top">Detalhes Cadastrais</md-tooltip>
+                                                    <i class="fa fa-search fa-lg"></i>
+                                                </a>
+                                                <a ng-if="botoesGestao"
+                                                    ui-sref="diaUtilFormularioEdit({ ano: list.data.ano, mes: list.data.dadosMeses[10].mes, editar: true })">
+                                                    <md-tooltip md-direction="top">Editar</md-tooltip>
+                                                    <i class="fa fa-pencil fa-lg"></i>
+                                                </a>
+                                            </td>
+                                        </tr>
+                                        <tr md-row>
+                                            <td md-cell>Dezembro</td>
+                                            <td md-cell>{{total[11]}}</td>
+                                            <td md-cell>{{list.data.dadosMeses[11].segunda}}</td>
+                                            <td md-cell>{{list.data.dadosMeses[11].terca}}</td>
+                                            <td md-cell>{{list.data.dadosMeses[11].quarta}}</td>
+                                            <td md-cell>{{list.data.dadosMeses[11].quinta}}</td>
+                                            <td md-cell>{{list.data.dadosMeses[11].sexta}}</td>
+                                            <td md-cell>{{list.data.dadosMeses[11].sabado}}</td>
+                                            <td md-cell>{{list.data.dadosMeses[11].domingo}}</td>
+                                            <td md-cell>
+                                                <a href=""
+                                                    ui-sref="diaUtilFormularioDetalhes({ ano: list.data.ano, mes: list.data.dadosMeses[11].mes, detalhes: true })">
+                                                    <md-tooltip md-direction="top">Detalhes Cadastrais</md-tooltip>
+                                                    <i class="fa fa-search fa-lg"></i>
+                                                </a>
+                                                <a ng-if="botoesGestao"
+                                                    ui-sref="diaUtilFormularioEdit({ ano: list.data.ano, mes: list.data.dadosMeses[11].mes, editar: true })">
+                                                    <md-tooltip md-direction="top">Editar</md-tooltip>
+                                                    <i class="fa fa-pencil fa-lg"></i>
+                                                </a>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                </div>
+                </md-table-container>
+                </md-card>
+                </article>
+
+            </div>
+        </div>
+    </div>
+</div>
+</div>

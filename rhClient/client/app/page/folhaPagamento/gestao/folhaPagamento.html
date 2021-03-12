@@ -1,0 +1,404 @@
+<div class="page" ng-controller="folhaPagamentoCtrl">
+    <div class="row ui-section">
+        <div class="col-lg-9 clearfix">
+            <h2 class="section-header">Folha de Pagamento</h2>
+        </div>
+        <div class="col-lg-3 clearfix" style="padding-top: 10px;">
+            <div class="pull-right">
+            </div>
+        </div>
+        <div class="col-md-12">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <article class="article">
+                        <div class="row">
+                            <div layout="column" ng-cloak class="md-inline-form inputdemoBasicUsage">
+                                <div layout-padding>
+
+                                    <md-tabs md-dynamic-height md-border-bottom>
+                                        <md-tab label="Processamento de Competência">
+                                            <md-content class="md-padding">
+                                                <form id="folha-pag" ng-disabled="detalhes" name="folhaPagamentoForm"
+                                                    ng-submit="save()">
+                                                    <div class="row">
+                                                        <div class="col-md-3">
+                                                            <h4>Abertura de Competência</h4>
+                                                        </div>
+                                                        <div ng-if="!folhaPagamento.id"
+                                                            class="col-md-offset-3 col-md-6 text-right">
+                                                            <h4>Fechamento de Competência <span class="text-danger"
+                                                                    ng-if="folhaCompetencia.programacaoFechamento"> -
+                                                                    Programação:
+                                                                    {{folhaCompetencia.programacaoFechamento | date: 'dd/MM/yyyy'}}
+                                                                </span> </h4>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div layout layout-sm="column" class="col-md-3">
+                                                            <md-input-container flex>
+                                                                <label>Competência</label>
+                                                                <input
+                                                                    value="{{folhaCompetencia.mesCompetencia | mes}}/{{folhaCompetencia.anoCompetencia}}"
+                                                                    ng-disabled="true">
+                                                            </md-input-container>
+                                                        </div>
+                                                        <div ng-if="!folhaPagamento.id"
+                                                            class="col-md-offset-4 col-md-5 text-right">
+                                                            <a ng-if="folhaCompetencia.programacaoFechamento!=null"
+                                                                ng-click="showDeleteProgramacaoFechamento($event)"
+                                                                ui-wave class="btn btn-danger btn-w-md">
+                                                                Remover Fechamento
+                                                            </a>
+                                                            <a ng-if="folhaCompetencia.programacaoFechamento==null"
+                                                                ng-click="programarFechamentoCompetencia($event)"
+                                                                ui-wave class="btn btn-info btn-w-md">
+                                                                Programar Fechamento
+                                                            </a>
+                                                            <a ng-click="showFecharCompetenciaHoje()"
+                                                                ng-disabled="folhaCompetencia.fimCompetencia != null"
+                                                                ui-wave class="btn btn-success btn-w-md">
+                                                                Fechar Competência
+                                                            </a>
+                                                        </div>
+                                                    </div>
+                                                    <div layout layout-sm="column">
+                                                        <md-input-container flex>
+                                                            <label>Empresa</label>
+                                                            <input value="{{matriz.nomeFilial}}" ng-disabled="true">
+                                                        </md-input-container>
+                                                        <md-input-container flex>
+                                                            <label>Filial</label>
+                                                            <md-select ng-disabled="detalhes || folhaPagamento.id"
+                                                                ng-required="true" name="filial"
+                                                                ng-model="folhaPagamento.filialId">
+                                                                <md-option ng-repeat="filial in filiais"
+                                                                    value="{{filial.id}}">
+                                                                    {{filial.nomeFilial}}
+                                                                </md-option>
+                                                            </md-select>
+                                                            <div ng-messages="folhaPagamentoForm.filial.$error"
+                                                                multiple>
+                                                                <div ng-message="required">Campo de preenchimento
+                                                                    obrigatório.</div>
+                                                            </div>
+                                                        </md-input-container>
+                                                        <md-input-container flex>
+                                                            <label>Tipo de Processamento</label>
+                                                            <md-select ng-disabled="detalhes || folhaPagamento.id"
+                                                                name="tipoFolha"
+                                                                ng-model="folhaPagamento.tipoProcessamentoId"
+                                                                ng-required="true">
+                                                                <md-option
+                                                                    ng-repeat="tipoProcessamento in tipoProcessamentos"
+                                                                    value="{{tipoProcessamento.id}}">
+                                                                    {{tipoProcessamento.codigo}} -
+                                                                    {{tipoProcessamento.descricao}}
+                                                                </md-option>
+                                                            </md-select>
+                                                            <div ng-messages="folhaPagamentoForm.tipoFolha.$error"
+                                                                multiple>
+                                                                <div ng-message="required">Campo de preenchimento
+                                                                    obrigatório.</div>
+                                                            </div>
+                                                        </md-input-container>
+                                                    </div>
+
+                                                    <div layout layout-sm="column">
+                                                        <md-input-container flex>
+                                                            <label>Período de Processamento Inicial</label>
+                                                            <input name="periodoProcessamentoInicio"
+                                                                moment-picker="folhaPagamento.periodoProcessamentoInicio"
+                                                                placeholder="Selecione a data"
+                                                                ng-model="folhaPagamento.periodoProcessamentoInicio"
+                                                                format="DD/MM/YYYY" locale="pt-br" start-view="month"
+                                                                ng-model-options="{ updateOn: 'blur' }"
+                                                                ng-disabled="detalhes" ng-required="true">
+                                                            <div ng-messages="folhaPagamentoForm.periodoProcessamentoInicio.$error"
+                                                                multiple>
+                                                                <div ng-message="required">Campo de preenchimento
+                                                                    obrigatório.</div>
+                                                            </div>
+                                                        </md-input-container>
+                                                        <md-input-container flex>
+                                                            <label>Período de Processamento Final</label>
+                                                            <input name="periodoProcessamentoFim"
+                                                                moment-picker="folhaPagamento.periodoProcessamentoFim"
+                                                                placeholder="Selecione a data"
+                                                                ng-model="folhaPagamento.periodoProcessamentoFim"
+                                                                format="DD/MM/YYYY" locale="pt-br" start-view="month"
+                                                                ng-model-options="{ updateOn: 'blur' }"
+                                                                ng-disabled="detalhes" ng-required="true">
+                                                            <div ng-messages="folhaPagamentoForm.periodoProcessamentoFim.$error"
+                                                                multiple>
+                                                                <div ng-message="required">Campo de preenchimento
+                                                                    obrigatório.</div>
+                                                            </div>
+                                                        </md-input-container>
+                                                        <md-input-container flex>
+                                                            <label>Status da Folha</label>
+                                                            <md-select ng-disabled="detalhes" name="status"
+                                                                placeholder="Selecione o status"
+                                                                ng-model="folhaPagamento.status" ng-required="true">
+                                                                <md-option ng-repeat="item in statusFolhaEnumList"
+                                                                    ng-value="item.label">
+                                                                    {{item.label}}
+                                                                </md-option>
+                                                            </md-select>
+                                                            <div ng-messages="folhaPagamentoForm.status.$error"
+                                                                multiple>
+                                                                <div ng-message="required">Campo de preenchimento
+                                                                    obrigatório.</div>
+                                                            </div>
+                                                        </md-input-container>
+                                                    </div>
+
+                                                    <div class="row text-center">
+                                                        <button ng-if="!detalhes" type="submit" ui-wave
+                                                            ng-disabled="folhaPagamentoForm.$invalid || (!usuarioAdm && !podeGerenciar)"
+                                                            class="btn btn-primary btn-w-md">
+                                                            <md-tooltip ng-if="folhaPagamentoForm.$invalid"
+                                                                md-direction="top">Preencha
+                                                                todos os campos
+                                                                obrigatórios.</md-tooltip>
+                                                            Salvar
+                                                        </button>
+                                                        <p ng-if="folhaPagamento.id" class="btn btn-default btn-w-md"
+                                                            ui-wave data-ng-click="cancelarEdicao()">Cancelar</p>
+                                                    </div>
+
+                                                </form>
+                                                <div class="row divider">
+                                                    <div class="col-md-12">
+                                                        <article class="article">
+                                                            <md-card class="no-margin-h">
+                                                                <md-table-container>
+
+                                                                    <table md-table ng-model="selected"
+                                                                        md-progress="promise">
+                                                                        <thead ng-if="!options.decapitate" md-head
+                                                                            md-order="query.order"
+                                                                            md-on-reorder="loadList">
+                                                                            <tr md-row>
+                                                                                <th md-column>
+                                                                                    <span>Tipo</span>
+                                                                                </th>
+                                                                                <th md-column>
+                                                                                    <span>Filial</span>
+                                                                                </th>
+                                                                                <th md-column>
+                                                                                    <span>Status</span>
+                                                                                </th>
+                                                                                <th md-column>
+                                                                                    <span>Situação</span>
+                                                                                </th>
+                                                                                <th md-column>
+                                                                                    <span>Calculando
+                                                                                        Folha</span>
+                                                                                </th>
+                                                                                <th md-column>
+                                                                                    <span>Período
+                                                                                        Processamento</span>
+                                                                                </th>
+                                                                                <th ng-if="!detalhes" md-column
+                                                                                    style="width: 75px;">
+                                                                                    <span>Ações</span>
+                                                                                </th>
+                                                                            </tr>
+                                                                        </thead>
+                                                                        <tbody md-body>
+                                                                            <tr md-row md-select="item"
+                                                                                md-select-id="item" md-auto-select
+                                                                                ng-repeat="item in folhas">
+                                                                                <td md-cell>
+                                                                                    {{item.tipoProcessamento.descricao}}
+                                                                                </td>
+                                                                                <td md-cell>
+                                                                                    {{item.filial.nomeFilial}}
+                                                                                </td>
+                                                                                <td md-cell>
+                                                                                    {{item.status}}
+                                                                                </td>
+                                                                                <td md-cell>
+                                                                                    {{item.situacao}}
+                                                                                </td>
+                                                                                <td md-cell>
+                                                                                    <div class="progress md-progress"
+                                                                                        style="height: 20px;margin-bottom: 0 !important;"
+                                                                                        ng-show="item.progress">
+                                                                                        <div class="progress-bar"
+                                                                                            role="progressbar"
+                                                                                            style="width: {{item.progress}}; height: 20px"
+                                                                                            aria-valuenow="25"
+                                                                                            aria-valuemin="0"
+                                                                                            aria-valuemax="100">
+                                                                                            {{item.progress}}
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </td>
+                                                                                <td md-cell>
+                                                                                    {{item.periodoProcessamentoInicio | date:'dd/MM/yyyy'}}
+                                                                                    <span
+                                                                                        ng-if="item.periodoProcessamentoFim">a
+                                                                                        {{item.periodoProcessamentoFim | date:'dd/MM/yyyy'}}</span>
+                                                                                </td>
+                                                                                <td md-cell>
+                                                                                    <a ng-show="item.situacao.value !== 'PENDENTE'"
+                                                                                        href=""
+                                                                                        ng-disabled="!usuarioAdm && !podeGerenciar"
+                                                                                        ng-click="editarFolhaPagamento(item.id)">
+                                                                                        <md-tooltip md-direction="top">
+                                                                                            Editar</md-tooltip>
+                                                                                        <i
+                                                                                            class="fa fa-pencil fa-lg"></i>
+                                                                                    </a>
+                                                                                    <a href=""
+                                                                                        ng-disabled="!usuarioAdm && !podeGerenciar"
+                                                                                        ui-sref="folhaPagamentoDetalhamento({ id: item.id })">
+                                                                                        <md-tooltip md-direction="top">
+                                                                                            Detalhes da
+                                                                                            Folha
+                                                                                        </md-tooltip>
+                                                                                        <i
+                                                                                            class="fa fa-search fa-lg"></i>
+                                                                                    </a>
+                                                                                    <a ng-show="item.situacao.value !== 'PENDENTE'"
+                                                                                        href=""
+                                                                                        ng-disabled="!usuarioAdm && !podeGerenciar"
+                                                                                        ng-click="showDeleteFolha($event, item.id)">
+                                                                                        <md-tooltip md-direction="top">
+                                                                                            Remover
+                                                                                            Folha
+                                                                                        </md-tooltip>
+                                                                                        <i
+                                                                                            class="fa fa-trash-o fa-lg"></i>
+                                                                                    </a>
+                                                                                </td>
+                                                                            </tr>
+                                                                        </tbody>
+                                                                    </table>
+                                                                </md-table-container>
+                                                            </md-card>
+                                                        </article>
+                                                    </div>
+                                                </div>
+                                            </md-content>
+                                        </md-tab>
+                                        <md-tab label="Histórico de Competências">
+                                            <div class="row divider">
+
+                                                <div class="col-md-12">
+                                                    <div class="panel panel-default">
+                                                        <div class="panel-body">
+                                                            <article class="article">
+                                                                <md-card class="row no-margin-h">
+                                                                    <div>
+                                                                        <div layout layout-sm="column" class="col-md-2">
+                                                                            <md-input-container flex>
+                                                                                <label>Ano</label>
+                                                                                <md-select ng-model="anos">
+                                                                                    <md-option
+                                                                                        ng-click="competenciasByAno(ano)"
+                                                                                        ng-repeat="ano in anosCompetencia"
+                                                                                        value="{{ano}}"> {{ano}}
+                                                                                    </md-option>
+                                                                                </md-select>
+                                                                            </md-input-container>
+                                                                        </div>
+                                                                        <div layout layout-sm="column" class="col-md-4">
+                                                                            <md-input-container flex>
+                                                                                <label>Competências</label>
+                                                                                <md-select ng-model="comp">
+                                                                                    <md-option
+                                                                                        ng-click="folhaCompetenciaHistoricoSelect(c.id)"
+                                                                                        ng-repeat="c in competencias"
+                                                                                        ng-value="c.id">
+                                                                                        {{c.mesCompetencia | mes}}/{{c.anoCompetencia}}
+                                                                                    </md-option>
+                                                                                </md-select>
+                                                                            </md-input-container>
+                                                                        </div>
+                                                                    </div>
+                                                                    <md-table-container>
+
+                                                                        <table md-table ng-model="selected"
+                                                                            md-progress="promise">
+                                                                            <thead ng-if="!options.decapitate" md-head
+                                                                                md-order="query.order"
+                                                                                md-on-reorder="loadList">
+                                                                                <tr md-row>
+                                                                                    <th md-column>
+                                                                                        <span>Tipo</span>
+                                                                                    </th>
+                                                                                    <th md-column>
+                                                                                        <span>Status</span>
+                                                                                    </th>
+                                                                                    <th md-column>
+                                                                                        <span>Situação</span>
+                                                                                    </th>
+                                                                                    <th md-column>
+                                                                                        <span>Calculando
+                                                                                            Folha</span>
+                                                                                    </th>
+                                                                                    <th md-column>
+                                                                                        <span>Período
+                                                                                            Processamento</span>
+                                                                                    </th>
+                                                                                    <th ng-if="!detalhes" md-column>
+                                                                                        <span>Ações</span>
+                                                                                    </th>
+                                                                                </tr>
+                                                                            </thead>
+                                                                            <tbody md-body>
+                                                                                <tr md-row md-select="item"
+                                                                                    md-select-id="item" md-auto-select
+                                                                                    ng-repeat="item in historicofolhas">
+                                                                                    <td md-cell>
+                                                                                        {{item.tipoProcessamento.descricao}}
+                                                                                    </td>
+                                                                                    <td md-cell>
+                                                                                        {{item.status}}
+                                                                                    </td>
+                                                                                    <td md-cell>
+                                                                                        {{item.situacao}}
+                                                                                    </td>
+                                                                                    <td md-cell>
+                                                                                    </td>
+                                                                                    <td md-cell>
+                                                                                        {{item.periodoProcessamentoInicio | date:'dd/MM/yyyy'}}
+                                                                                        <span
+                                                                                            ng-if="item.periodoProcessamentoFim">a
+                                                                                            {{item.periodoProcessamentoFim | date:'dd/MM/yyyy'}}</span>
+                                                                                    </td>
+                                                                                    <td md-cell>
+                                                                                        <a href=""
+                                                                                            ui-sref="folhaPagamentoDetalhamentoHistorico({ id: item.id, detalhes: true })">
+                                                                                            <md-tooltip
+                                                                                                md-direction="top">
+                                                                                                Detalhes da
+                                                                                                Folha
+                                                                                            </md-tooltip>
+                                                                                            <i
+                                                                                                class="fa fa-search fa-lg"></i>
+                                                                                        </a>
+                                                                                    </td>
+                                                                                </tr>
+                                                                            </tbody>
+                                                                        </table>
+                                                                    </md-table-container>
+                                                                </md-card>
+                                                            </article>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </md-tab>
+                                    </md-tabs>
+                                </div>
+                            </div>
+                        </div>
+                    </article>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

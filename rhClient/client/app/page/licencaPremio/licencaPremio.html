@@ -1,0 +1,124 @@
+<div class="page" ng-controller="licencaPremioCtrl">
+    <div class="row ui-section">
+        <div class="col-lg-12 clearfix">
+            <h2 class="section-header" style="float: left;">Gestão de Licença Prêmio</h2>
+        </div>
+        <div class="col-md-12">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <article class="article">
+                        <md-card class="no-margin-h">
+                            <div layout="column">
+                                <div layout-padding>
+                                    <div layout layout-sm="column">
+                                        <md-input-container flex>
+                                            <label>Funcionário</label>
+                                            <input ng-model="search" placeholder="Buscar por Nome, Matrícula ou CPF..."
+                                                ng-keypress="($event.keyCode === 13) && loadList()">
+                                        </md-input-container>
+                                        <md-button class="md-icon-button" ng-click="limpaFiltro()">
+                                            <md-tooltip md-direction="top">Limpar Filtros</md-tooltip>
+                                            <md-icon>autorenew</md-icon>
+                                        </md-button>
+                                        <md-button class="md-icon-button" ng-click="loadList()">
+                                            <md-tooltip md-direction="top">Atualizar</md-tooltip>
+                                            <md-icon>refresh</md-icon>
+                                        </md-button>
+                                    </div>
+                                </div>
+                            </div>
+                            <md-table-container>
+                                <table md-table ng-model="selected" md-progress="promise">
+                                    <thead ng-if="!options.decapitate" md-head md-order="query.order"
+                                        md-on-reorder="loadList">
+                                        <tr md-row>
+                                            <th md-column>
+                                                <span>Funcionário</span>
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                    </tbody>
+                                </table>
+                                <div ng-repeat="funcionario in list.data">
+                                    <div class="accordion" ng-click="accordion()">{{funcionario.matricula}} -
+                                        {{funcionario.nome}}
+                                        <a href="" class="icon"
+                                            ui-sref="funcionarioExercicioFormulario({ funcionarioId: funcionario.id})">
+                                            <md-tooltip md-direction="top">Adicionar</md-tooltip>
+                                            <i class="fa fa-plus fa-sm"></i>
+                                        </a>
+                                    </div>
+                                    <div class="accordion-content">
+                                        <p>
+                                            <md-table-container>
+                                                <table md-table md-progress="promise" style="margin-top: 20px">
+                                                    <thead md-head>
+                                                        <tr md-row>
+                                                            <th md-column>
+                                                                <span>Exercício</span>
+                                                            </th>
+                                                            <th md-column>
+                                                                <span>Período Aquisitivo Início</span>
+                                                            </th>
+                                                            <th md-column>
+                                                                <span>Período Aquisitivo Final</span>
+                                                            </th>
+                                                            <th md-column>
+                                                                <span>Ações</span>
+                                                            </th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody md-body>
+                                                        <tr md-row md-select="item" md-select-id="item" md-auto-select
+                                                            ng-repeat="exercicio in funcionario.exercicios">
+                                                            <td md-cell>{{exercicio.exercicio}}</td>
+                                                            <td md-cell>{{exercicio.dataInicio | date:'dd/MM/yyyy'}}
+                                                            </td>
+                                                            <td md-cell>{{exercicio.dataFim | date:'dd/MM/yyyy'}}</td>
+                                                            <td md-cell>
+                                                                <a
+                                                                    ui-sref="funcionarioExercicioFormularioDetalhes({ funcionarioId: funcionario.id, exercicioId: exercicio.id, detalhes: true })">
+                                                                    <md-tooltip md-direction="top">Detalhes Cadastrais
+                                                                    </md-tooltip>
+                                                                    <i class="fa fa-search fa-lg"></i>
+                                                                </a>
+                                                                <a
+                                                                    ui-sref="funcionarioExercicioFormularioEdit({ funcionarioId: funcionario.id, exercicioId: exercicio.id, editar: true })">
+                                                                    <md-tooltip md-direction="top">Editar Exercício
+                                                                    </md-tooltip>
+                                                                    <i class="fa fa-pencil fa-lg"></i>
+                                                                </a>
+                                                                <a ng-show="exercicio.quantLicencaPremio == 0"
+                                                                    ng-click="removerFuncionarioExercicio(exercicio.id)">
+                                                                    <md-tooltip md-direction="top">Excluir</md-tooltip>
+                                                                    <i class="fa fa-trash-o fa-lg"></i>
+                                                                </a>
+                                                                <a
+                                                                    ui-sref="licencaPremioFormulario({ funcionarioId: funcionario.id, exercicioId: exercicio.id })">
+                                                                    <md-tooltip md-direction="top">Adicionar Licença
+                                                                        Prêmio</md-tooltip>
+                                                                    <i class="fa fa-plus fa-sm"></i>
+                                                                </a>
+                                                            </td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </md-table-container>
+                                        </p>
+                                    </div>
+                                </div>
+
+                </div>
+                </md-table-container>
+                <md-table-pagination md-label="{page: 'Página:', rowsPerPage: 'Registros por página:', of: 'de'}"
+                    md-limit="query.limit" md-limit-options="limitOptions" md-page="query.page"
+                    md-total="{{list.count}}" md-on-paginate="loadList" md-page-select></md-table-pagination>
+                </md-card>
+                </article>
+
+            </div>
+        </div>
+    </div>
+</div>
+</div>

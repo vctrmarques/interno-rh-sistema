@@ -1,0 +1,137 @@
+<section class="page container-fluid with-maxwidth chapter" ng-controller="verbasFuncionarioCtrl">
+
+    <div class="row ui-section">
+        <div class="col-lg-9 clearfix">
+            <h2 class="section-header">Verbas do Funcionário</h2>
+        </div>
+        <div class="col-lg-3 clearfix" style="padding-top: 10px;">
+            <div class="pull-right">
+                <md-button class="md-fab md-accent" ui-sref="importadorVerbaFuncionarioGestao()">
+                    <md-tooltip md-direction="bottom">Importação</md-tooltip>
+                    <span class="fa fa-cloud-upload"></span>
+                </md-button>
+            </div>
+        </div>
+        <div class="col-md-12">
+            <article class="article">
+
+                <md-card class="no-margin-h">
+                    <div layout="column">
+                        <div layout-padding>
+                            <div layout layout-sm="column">
+                                <md-input-container flex>
+                                    <label>Funcionário</label>
+                                    <input ng-model="search" placeholder="Buscar por Nome, Matrícula ou CPF..."
+                                    ng-keypress="($event.keyCode === 13) && loadList()">
+                                </md-input-container>
+                                <md-input-container flex>
+                                    <label>Filial</label>
+                                    <md-select ng-model="filialId" placeholder="Selecione uma filial" flex>
+                                        <md-option ng-repeat="filial in listFiliais" ng-value="filial.id">
+                                            {{filial.nomeFilial}}
+                                        </md-option>
+                                    </md-select>
+                                </md-input-container>
+                                <md-input-container flex>
+                                    <label>Situação</label>
+                                    <md-select ng-model="funcionarioVerbaAssociada" flex
+                                        placeholder="Selecione a Situação">
+                                        <md-option ng-value="true">
+                                            Com Verbas
+                                        </md-option>
+                                        <md-option ng-value="false">
+                                            Sem Verbas
+                                        </md-option>
+                                    </md-select>
+                                </md-input-container>
+                                <md-button class="md-icon-button" ng-click="limpaFiltro()">
+                                    <md-tooltip md-direction="top">Limpar Filtros</md-tooltip>
+                                    <md-icon>autorenew</md-icon>
+                                </md-button>
+                                <md-button class="md-icon-button" ng-click="loadList()">
+                                    <md-tooltip md-direction="top">Atualizar</md-tooltip>
+                                    <md-icon>refresh</md-icon>
+                                </md-button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <md-table-container>
+                        <table md-table md-progress="promise">
+                            <thead md-head>
+                                <tr md-row>
+                                    <th md-column>
+                                        <span>Funcionários</span>
+                                    </th>
+                                </tr>
+                            </thead>
+                        </table>
+                    </md-table-container>
+                    <div ng-repeat="funcionario in list.data">
+                        <div class="accordion" ng-click="accordion()">{{funcionario.matricula}} -
+                            {{funcionario.nome}}
+                            <a href="" class="icon"
+                                ui-sref="verbasFuncionarioFormulario({ funcionarioId: funcionario.id})">
+                                <div ng-if="funcionario.verbasFuncionario.length < 1">
+                                    <md-tooltip md-direction="top">Adicionar</md-tooltip>
+                                    <i class="fa fa-plus fa-sm"></i>
+                                </div>
+                                <div ng-if="funcionario.verbasFuncionario.length >= 1">
+                                    <md-tooltip md-direction="top">Editar</md-tooltip>
+                                    <i class="fa fa-pencil fa-sm"></i>
+                                </div>
+                            </a>
+                        </div>
+                        <div class="accordion-content">
+                            <md-table-container>
+                                <table md-table md-progress="promise">
+                                    <thead md-head>
+                                        <tr md-row>
+                                            <th md-column>
+                                                <span>Código</span>
+                                            </th>
+                                            <th md-column>
+                                                <span>Nome</span>
+                                            </th>
+                                            <th md-column>
+                                                <span>Recorrência</span>
+                                            </th>
+                                            <th md-column>
+                                                <span>Tipo</span>
+                                            </th>
+                                            <th md-column>
+                                                <span>Valor</span>
+                                            </th>
+                                            <th md-column>
+                                                <span>ParcelasTotais</span>
+                                            </th>
+                                            <th md-column>
+                                                <span>ParcelasPagas</span>
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody md-body>
+                                        <tr md-row md-select="item" md-select-id="item" md-auto-select
+                                            ng-repeat="item in funcionario.verbasFuncionario">
+                                            <td md-cell>{{item.verba.codigo}}</td>
+                                            <td md-cell>{{item.verba.descricaoVerba}}</td>
+                                            <td md-cell>{{item.recorrencia}}</td>
+                                            <td md-cell>{{item.tipo}}</td>
+                                            <td md-cell>{{item.valor}}</td>
+                                            <td md-cell>{{item.parcelas}}</td>
+                                            <td md-cell>{{item.parcelasPagas}}</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </md-table-container>
+                        </div>
+                    </div>
+                    <md-table-pagination md-label="{page: 'Página:', rowsPerPage: 'Registros por página:', of: 'de'}"
+                        md-limit="query.limit" md-limit-options="limitOptions" md-page="query.page"
+                        md-total="{{list.count}}" md-on-paginate="loadList" md-page-select>
+                    </md-table-pagination>
+                </md-card>
+            </article>
+        </div>
+    </div>
+</section>

@@ -1,0 +1,306 @@
+<div class="page" ng-controller="dependenteFormCtrl">
+    <div class="row ui-section">
+        <div class="col-lg-8 clearfix">
+            <h2 class="section-header">{{!detalhes ? 'Formulário Dependente' : 'Detalhes do Dependente'}}</h2>
+        </div>
+        <div class="col-md-12">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <div class="row">
+                        <div class="col-lg-12 col-lg-offset-0">
+                            <div layout="column" ng-cloak class="md-inline-form inputdemoBasicUsage">
+                                <div layout-padding>
+                                    <div>
+                                        <div layout layout-sm="column">
+                                            <md-input-container flex>
+                                                <label>Descrição da Empresa</label>
+                                                <input ng-disabled="true" ng-model="dependentes.funcionario.empresa.nomeFilial">
+                                            </md-input-container>
+                                        </div>
+                                        <div layout layout-sm="column">
+                                            <md-input-container flex>
+                                                <label>Matrícula</label>
+                                                <input ng-disabled="true" ng-model="dependentes.funcionario.matricula">
+                                            </md-input-container>
+                                            <md-input-container flex>
+                                                <label>Nome do Funcionário</label>
+                                                <input ng-disabled="true" ng-model="dependentes.funcionario.nome">
+                                            </md-input-container>
+                                        </div>
+                                    </div>
+                                    <form ng-hide="detalhes" name="dependentesForm" ng-submit="save()">
+                                        <h4>Dependentes</h4>
+                                        <div layout layout-sm="column">
+                                            <md-input-container class="md-block">
+                                                <label>Tipo de Dependente</label>
+                                                <md-select required ng-disabled="detalhes" ng-model="dependente.tipo" name="tipo"
+                                                    ng-change="validarForm()">
+                                                    <md-option ng-repeat="tipoDependente in tiposDependentes" value="{{tipoDependente.value}}">
+                                                        {{tipoDependente.label}}
+                                                    </md-option> 
+                                                </md-select>
+                                                <div ng-messages="dependentesForm.tipo.$error" multiple role="alert">
+                                                    <div ng-message="required">Campo de preenchimento
+                                                        obrigatório.</div>
+                                                </div>
+                                            </md-input-container>
+                                            <md-input-container flex>
+                                                <label>Nome Dependente</label>
+                                                <input required ng-disabled="detalhes" ng-model="dependente.nome" name="nome"
+                                                    ng-change="validarForm()">
+                                                    <div ng-messages="dependentesForm.nome.$error" multiple role="alert">
+                                                        <div ng-message="required">Campo de preenchimento
+                                                            obrigatório.</div>
+                                                    </div>
+                                            </md-input-container>
+                                            <md-input-container class="md-block">
+                                                <label>Naturalidade</label>
+                                                <input ng-disabled="detalhes" ng-model="dependente.naturalidade" name="naturalidade"
+                                                    ng-change="validarForm()">
+                                            </md-input-container>
+                                        </div>
+                                        <div layout layout-sm="column">
+                                            <div layout layout-sm="column">
+                                                <md-input-container flex>
+                                                    <label>Início Dependente</label>
+                                                    <md-icon class="material-icons icon-momentpicker" ng-class="md-datepicker-calendar-icon"
+                                                        aria-label="md-calendar">date_range</md-icon>
+                                                    <input name="inicioMotivo" moment-picker="dependente.inicioMotivo"
+                                                        placeholder="Selecione a data" ng-model="dependente.inicioMotivo"
+                                                        format="DD/MM/YYYY" locale="pt-br" start-view="month"
+                                                        ng-model-options="{ updateOn: 'blur' }" ng-disabled="detalhes">
+                                                </md-input-container>
+                                            </div>
+                                            <div layout layout-sm="column">
+                                                <md-input-container flex>
+                                                    <label>Fim Dependente</label>
+                                                    <md-icon class="material-icons icon-momentpicker" ng-class="md-datepicker-calendar-icon"
+                                                        aria-label="md-calendar">date_range</md-icon>
+                                                    <input name="fimMotivo" min-date="dependente.inicioMotivo"
+                                                        moment-picker="dependente.fimMotivo" placeholder="Selecione a data"
+                                                        ng-model="dependente.fimMotivo" format="DD/MM/YYYY" locale="pt-br"
+                                                        start-view="month" ng-model-options="{ updateOn: 'blur' }"
+                                                        ng-disabled="detalhes">
+                                                </md-input-container>
+                                            </div>
+                                            <md-input-container flex>
+                                                <label>Sexo</label>
+                                                <md-select required ng-disabled="detalhes" ng-model="dependente.sexo"
+                                                    name="sexo" ng-change="validarForm()">
+                                                    <md-option ng-repeat="sexo in sexos" value="{{sexo.nome}}">
+                                                        {{sexo.nome}}
+                                                    </md-option>
+                                                </md-select>
+                                                <div ng-messages="dependentesForm.sexo.$error" multiple role="alert">
+                                                    <div ng-message="required">Campo de preenchimento
+                                                        obrigatório.</div>
+                                                </div>
+                                            </md-input-container>
+                                            <div layout layout-sm="column">
+                                                <md-input-container flex>
+                                                    <label>Data de Nascimento</label>
+                                                    <md-icon class="material-icons icon-momentpicker" ng-class="md-datepicker-calendar-icon"
+                                                        aria-label="md-calendar">date_range</md-icon>
+                                                    <input name="dataNascimento" moment-picker="dependente.dataNascimento"
+                                                        placeholder="Selecione a data" ng-model="dependente.dataNascimento"
+                                                        format="DD/MM/YYYY" locale="pt-br" start-view="month"
+                                                        ng-model-options="{ updateOn: 'blur' }" ng-disabled="detalhes">
+                                                </md-input-container>
+                                            </div>
+                                            <md-input-container flex>
+                                                <label>CPF</label>
+                                                <input ng-disabled="detalhes" name="numeroCpf" type="text" ng-model="dependente.numeroCpf"
+                                                    ui-br-cpf-mask>
+                                            </md-input-container>
+                                            <md-input-container flex>
+                                                <label>Identidade</label>
+                                                <input ng-disabled="detalhes" ng-model="dependente.identidade" name="identidade">
+                                            </md-input-container>
+                                        </div>
+                                        <h4>Endereço</h4>
+                                        <div layout layout-sm="column">
+                                            <md-input-container flex>
+                                                <label>Logradouro</label>
+                                                <input ng-disabled="detalhes" ng-model="dependente.logradouro" name="logradouro">
+                                            </md-input-container>
+                                            <md-input-container class="md-block">
+                                                <label>Número</label>
+                                                <input ng-disabled="detalhes" ng-model="dependente.numero" name="numero">
+                                            </md-input-container>
+                                            <md-input-container ng-if="dependente.unidadeFederativaId" class="md-block">
+                                                <label>Município</label>
+                                                <md-select ng-required="true" ng-disabled="detalhes" name="municipio"
+                                                    ng-model="dependente.municipioId" ng-change="validarForm()">
+                                                    <md-option ng-repeat="municipio in list.municipio" ng-value="municipio.id">
+                                                        {{municipio.descricao}}
+                                                    </md-option>
+                                                </md-select>
+                                                <div ng-messages="dependentesForm.municipio.$error" multiple role="alert">
+                                                    <div ng-message="required">Campo de preenchimento
+                                                        obrigatório.</div>
+                                                </div>
+                                            </md-input-container>
+                                            <md-input-container class="md-block">
+                                                <label>UF</label>
+                                                <md-select required ng-disabled="detalhes" name="unidadeFederativaId" ng-model="dependente.unidadeFederativaId"
+                                                    ng-change="getMunicipios(dependente.unidadeFederativaId); validarForm()">
+                                                    <md-option ng-repeat="unidadeFederativa in list.unidadesFederativas"
+                                                        value="{{unidadeFederativa.id}}">
+                                                        {{unidadeFederativa.sigla}} - {{unidadeFederativa.estado}}
+                                                    </md-option>
+                                                </md-select>
+                                                <div ng-messages="dependentesForm.unidadeFederativaId.$error" multiple role="alert">
+                                                    <div ng-message="required">Campo de preenchimento
+                                                        obrigatório.</div>
+                                                </div>
+                                            </md-input-container>
+                                            <md-input-container class="md-block">
+                                                <label>CEP</label>
+                                                <input ng-disabled="detalhes" ng-model="dependente.cep" name="cep"
+                                                    ui-br-cep-mask>
+                                            </md-input-container>
+                                        </div>
+                                        <h4>Documentos Comprobatórios</h4>
+                                        <div layout layout-sm="column">
+                                            <div class="col-sm-6 p-l-0">
+                                                <div class="col-sm-6 p-l-0">
+                                                    <md-input-container flex>
+                                                        <label>Número do Documento</label>
+                                                        <input ng-disabled="detalhes" ng-model="dependente.numDocumentoComprobatorio"
+                                                            name="numDocumentoComprobatorio" ui-number-mask="0">
+                                                    </md-input-container>
+                                                </div>
+                                                <div class="col-sm-6 p-l-0">
+                                                    <md-input-container flex>
+                                                        <label>Data do Documento</label>
+                                                        <md-icon class="material-icons icon-momentpicker" ng-class="md-datepicker-calendar-icon"
+                                                            aria-label="md-calendar">date_range</md-icon>
+                                                        <input name="dataDocumentoComprobatorio" moment-picker="dependente.dataDocumentoComprobatorio"
+                                                            placeholder="Selecione a data" ng-model="dependente.dataDocumentoComprobatorio"
+                                                            format="DD/MM/YYYY" locale="pt-br" start-view="month"
+                                                            ng-model-options="{ updateOn: 'blur' }" ng-disabled="detalhes">
+                                                    </md-input-container>
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-6 p-r-0">
+                                                <div layout="column" ng-cloak class="md-inline-form inputdemoBasicUsage"
+                                                    style="margin-top: -35px">
+                                                    <h4>Dependência</h4>
+                                                    <div layout layout-sm="column" style="margin-top: -10px">
+                                                        <md-input-container flex>
+                                                            <label>Imposto de Renda</label>
+                                                            <md-switch ng-disabled="detalhes" ng-disabled="detalhes"
+                                                                ng-model="dependente.dependenciaIr" aria-label="Ativo">{{
+                                                                dependente.dependenciaIr ?
+                                                                'Sim':'Não'}}
+                                                            </md-switch>
+                                                        </md-input-container>
+                                                        <md-input-container flex>
+                                                            <label>Salário Família</label>
+                                                            <md-switch ng-disabled="detalhes" ng-disabled="detalhes"
+                                                                ng-model="dependente.dependenciaSf" aria-label="Ativo">{{
+                                                                dependente.dependenciaSf ?
+                                                                'Sim':'Não'}}
+                                                            </md-switch>
+                                                        </md-input-container>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                </div>
+
+                                <div class="col-md-12 text-center" style="margin-top: 20px">
+                                    <button ng-if="!detalhes" ng-disabled="!verifyPermission" ng-click="adicionarDependente()"
+                                        ui-wave class="btn btn-primary btn-w-md">Inserir</button>
+                                </div>
+
+                                <md-table-container>
+                                    <table md-table ng-model="selected" ng-if="dependentes.dependentes.length > 0"
+                                        md-progress="promise" style="margin-top: 20px">
+                                        <thead ng-if="!options.decapitate" md-head md-order="query.order" md-on-reorder="loadList">
+                                            <tr md-row>
+                                                <th md-column md-order-by="nome">
+                                                    <span>Nome do Dependente</span>
+                                                </th>
+                                                <th md-column>
+                                                    <span>Início Motivo Dependente</span>
+                                                </th>
+                                                <th md-column>
+                                                    <span>Fim Motivo Dependente</span>
+                                                </th>
+                                                <th md-column ng-if="!botoesGestao && !detalhes && (item.qntdBeneficios == 0)">
+                                                    <span>Ações</span>
+                                                </th>
+                                            </tr>
+                                        </thead>
+                                        <tbody md-body>
+                                            <tr md-row md-select="item" md-select-id="item" md-auto-select ng-repeat="item in dependentes.dependentes">
+                                                <td md-cell>{{item.nome}}</td>
+                                                <td md-cell>{{item.inicioMotivo | date : "dd/MM/y"}}</td>
+                                                <td md-cell>{{item.fimMotivo | date : "dd/MM/y"}}</td>
+                                                <td md-cell ng-if="!botoesGestao && !detalhes && (item.qntdBeneficios == 0)">
+                                                    <a ng-if="!botoesGestao && !detalhes && item.id" ui-sref="dependenteBeneficioFormulario({ dependenteId: item.id })">
+                                                        <md-tooltip md-direction="top">Adicionar Benefícios</md-tooltip>
+                                                        <i class="fa fa-tasks fa-lg"></i>
+                                                    </a>
+                                                    <a ng-if="!botoesGestao && !detalhes && (item.qntdBeneficios == 0)"
+                                                        ng-click="editarDependente($index)">
+                                                        <md-tooltip md-direction="top">Editar Dependente</md-tooltip>
+                                                        <i class="fa fa-pencil fa-lg"></i>
+                                                    </a>
+                                                    <a ng-if="!botoesGestao && !detalhes && (item.qntdBeneficios == 0)"
+                                                        ng-click="removerDependente($index)">
+                                                        <md-tooltip md-direction="top">Excluir</md-tooltip>
+                                                        <i class="fa fa-trash-o fa-lg"></i>
+                                                    </a>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </md-table-container>
+
+                                <!-- <div ng-if="detalhes" layout layout-sm="column">
+                                    <table md-table md-progress="promise">
+                                        <thead md-head>
+                                            <tr md-row>
+                                                <th md-column>
+                                                    <span>Criado em:</span>
+                                                </th>
+                                                <th md-column>
+                                                    <span>Atualizado em:</span>
+                                                </th>
+                                                <th md-column>
+                                                    <span>Criado por:</span>
+                                                </th>
+                                                <th md-column>
+                                                    <span>Atualizado por:</span>
+                                                </th>
+                                            </tr>
+                                        </thead>
+                                        <tbody md-body>
+                                            <tr md-row>
+                                                <td md-cell>{{dependentes.criadoEm | date:'dd/MM/yy - HH:mm'}}</td>
+                                                <td md-cell>{{dependentes.alteradoEm | date:'dd/MM/yy - HH:mm'}}</td>
+                                                <td md-cell>{{dependentes.criadoPor}}</td>
+                                                <td md-cell>{{dependentes.alteradoPor}}</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div> -->
+
+                                <div class="row">
+                                    <div class="col-md-12 text-center" style="margin-top: 40px">
+                                        <button ng-if="!detalhes" ng-disabled="dependenteForm.$invalid" type="submit"
+                                            ui-wave class="btn btn-primary btn-w-md" ng-click="save()">Salvar</button>
+                                        <p class="btn btn-default btn-w-md" ui-wave data-ng-click="goBack()">Voltar</p>
+                                    </div>
+                                </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

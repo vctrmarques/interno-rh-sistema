@@ -1,0 +1,9 @@
+package com.rhlinkcon.repository.requisicaoPessoal;
+
+import com.rhlinkcon.payload.relatorio.relatorioRecrutamentoESelecao.RelatorioRecrutamentoESelecaoRequest;
+import com.rhlinkcon.payload.relatorio.relatorioRecrutamentoESelecao.RelatorioRecrutamentoESelecaoResponse;
+
+public interface RequisicaoPessoalRepositoryCustom {
+
+	RelatorioRecrutamentoESelecaoResponse getAllForReport(RelatorioRecrutamentoESelecaoRequest filtro, boolean grafico);
+}

@@ -1,0 +1,80 @@
+{
+	// Place your snippets for html here. Each snippet is defined under a snippet name and has a prefix, body and 
+	// description. The prefix is what is used to trigger the snippet and the body will be expanded and inserted. Possible variables are:
+	// $1, $2 for tab stops, $0 for the final cursor position, and ${1:label}, ${2:another} for placeholders. Placeholders with the 
+	// same ids are connected.
+	// Example:
+	// "Print to console": {
+	// 	"prefix": "log",
+	// 	"body": [
+	// 		"console.log('$1');",
+	// 		"$2"
+	// 	],
+	// 	"description": "Log output to console"
+	// }
+	"Botão Limpar Objeto(s) Selecionado(s)": {
+		"prefix": "clearbuttom",
+		"body": [
+			"<clear-button model='$1' disabled='detalhes'></clear-button>",
+			""
+		],
+		"description": "Botão Limpar Objeto(s) Selecionado(s)"
+	},
+	"Select de Enum ou Dado Básico": {
+		"prefix": "selectComponent",
+		"body": [
+			"<md-input-container flex>",
+			"    <label>$1</label>",
+			"    <select-component ng-disabled='detalhes' ng-required='$2'",
+			"        ng-model='$3' name='$3'",
+			"        end-point='$4' ng-change='$5'>",
+			"    </select-component>",
+			"    <div ng-messages='formExample.$3.\\$error' multiple",
+			"        role='alert'>",
+			"        <div ng-message='required'>Campo de preenchimento",
+			"            obrigatório.</div>",
+			"    </div>",
+			"</md-input-container>",
+			"<clear-button model='$3' disabled='detalhes'></clear-button>",
+			""
+		],
+		"description": "Select de Enum ou Dado Básico"
+	},
+	"Select Múltiplo de Enum ou Dado Básico": {
+		"prefix": "selectMultiploComponent",
+		"body": [
+			"<md-input-container flex>",
+			"    <label>$1</label>",
+			"    <select-multiplo-component ng-disabled='detalhes' ng-required='$2'",
+			"        ng-model='$3' name='$3'",
+			"        end-point='$4' ng-change='$5'>",
+			"    </select-multiplo-component>",
+			"    <div ng-messages='formExample.$3.\\$error' multiple",
+			"        role='alert'>",
+			"        <div ng-message='required'>Campo de preenchimento",
+			"            obrigatório.</div>",
+			"    </div>",
+			"</md-input-container>",
+			"<clear-button model='$3' disabled='detalhes'></clear-button>",
+			""
+		],
+		"description": "Select Múltiplo de Enum ou Dado Básico"
+	},
+	"Autocomplete de Dado Básico": {
+		"prefix": "autocompleteComponent",
+		"body": [
+			"<autocomplete-component disabled='detalhes' label='$1' required='$2'",
+			"    model='$3' input-name='$3'",
+			"    end-point='$4' change='$5'>",
+			"</autocomplete-component>",
+			"<div ng-messages='formExample.$3.\\$error' multiple",
+			"    role='alert'>",
+			"    <div ng-message='required'>Campo de preenchimento",
+			"        obrigatório.</div>",
+			"</div>",
+			"<clear-button model='$3' disabled='detalhes'></clear-button>",
+			""
+		],
+		"description": "Autocomplete de Dado Básico"
+	}
+}

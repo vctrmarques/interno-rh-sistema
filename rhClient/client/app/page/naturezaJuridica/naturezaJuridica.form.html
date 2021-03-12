@@ -1,0 +1,87 @@
+<div class="page" ng-controller="naturezaJuridicaFormCtrl">
+    <div class="row ui-section">
+        <div class="col-lg-8 clearfix">
+            <h2 class="section-header">{{!detalhes ? 'Formulário Natureza Jurídica' : 'Detalhes da Natureza Jurídica'}}</h2>
+        </div>
+        <div class="col-md-12">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div layout="column" ng-cloak class="md-inline-form inputdemoBasicUsage">
+                                <div layout-padding>
+                                    <form ng-disabled="detalhes" name="naturezaJuridicaForm" ng-submit="save()">
+
+                                        <div layout layout-sm="column">
+                                            <md-input-container class="md-block">
+                                                <label>Código Natureza Jurídica</label>
+                                                <input ng-required="true" ng-disabled="detalhes" ng-model="naturezaJuridica.codigo" name="codigo">
+                                                <div ng-messages="naturezaJuridicaForm.codigo.$error" role="alert" multiple>
+                                                    <div ng-message="required">Campo de preenchimento obrigatório.</div>
+                                                </div>
+                                            </md-input-container>
+                                            <md-input-container flex>
+                                                <label>Nome Natureza Jurídica</label>
+                                                <input ng-required="true" ng-disabled="detalhes" ng-model="naturezaJuridica.nome" name="nome">
+                                                <div ng-messages="naturezaJuridicaForm.nome.$error" role="alert" multiple>
+                                                    <div ng-message="required">Campo de preenchimento obrigatório.</div>
+                                                </div>
+                                            </md-input-container>
+                                        </div>
+
+                                        <div layout layout-sm="column">
+                                            <md-input-container flex>
+                                                <label>Grupamento</label>
+                                                <md-select required ng-disabled="detalhes" ng-model="naturezaJuridica.grupamento" name="grupamento">
+                                                    <md-option ng-repeat="grupamento in grupamentos" value="{{grupamento.nome}}">
+                                                        {{grupamento.nome}}
+                                                    </md-option>
+                                                </md-select>
+                                            </md-input-container>
+                                        </div>
+
+                                        <div ng-if="detalhes" layout layout-sm="column">
+                                            <table md-table md-progress="promise">
+                                                <thead md-head>
+                                                    <tr md-row>
+                                                        <th md-column>
+                                                            <span>Criado em:</span>
+                                                        </th>
+                                                        <th md-column>
+                                                            <span>Atualizado em:</span>
+                                                        </th>
+                                                        <th md-column>
+                                                            <span>Criado por:</span>
+                                                        </th>
+                                                        <th md-column>
+                                                            <span>Atualizado por:</span>
+                                                        </th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody md-body>
+                                                    <tr md-row>
+                                                        <td md-cell>{{naturezaJuridica.criadoEm | date:'dd/MM/yy - HH:mm'}}</td>
+                                                        <td md-cell>{{naturezaJuridica.alteradoEm | date:'dd/MM/yy - HH:mm'}}</td>
+                                                        <td md-cell>{{naturezaJuridica.criadoPor}}</td>
+                                                        <td md-cell>{{naturezaJuridica.alteradoPor}}</td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+
+                                        <div class="row">
+                                            <div class="col-md-12 text-center">
+                                                <button ng-if="!detalhes" ng-disabled="naturezaJuridicaForm.$invalid" type="submit" ui-wave class="btn btn-primary btn-w-md">Salvar</button>
+                                                <p class="btn btn-default btn-w-md" ui-wave data-ng-click="goBack()">Voltar</p>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

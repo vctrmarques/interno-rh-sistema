@@ -1,0 +1,133 @@
+<section class="page container-fluid with-maxwidth chapter" ng-controller="arquivoExportacaoSiprevCtrl">
+
+    <div class="row ui-section">
+        <div class="col-lg-9 clearfix">
+            <h2 class="section-header">Geração de Arquivo para Exportação - SIPREV</h2>
+        </div>
+        <div class="col-lg-3 clearfix" style="padding-top: 10px;">
+        </div>
+        <div class="col-md-12">
+            <article class="article">
+
+                <md-card class="no-margin-h">
+                    <div layout="column">
+                        <div layout-padding>
+                            <form ng-disabled="detalhes" name="arqExportSiprevForm">
+                                <div layout layout-sm="column">
+
+                                    <md-input-container flex>
+                                        <label>Situação Funcional</label>
+                                        <md-select ng-model="situacaoFuncionalSelecionada" ng-disabled="detalhes"
+                                            ng-change='changeSitFuncional()' ng-required="true"
+                                            data-md-container-class="selectdemoSelectHeader"
+                                            md-on-close="searchTerm = ''" name="situacaoFuncionalSelecionada">
+                                            <md-select-header class="demo-select-header">
+                                                <input ng-model="searchTerm" type="search"
+                                                    ng-keydown="$event.stopPropagation();" placeholder="Busca..."
+                                                    class="demo-header-searchbox md-text">
+                                            </md-select-header>
+                                            <md-option ng-value="obj" ng-disabled="obj.label !== 'APOSENTADO'"
+                                                ng-repeat="obj in situacaoFuncionalList | filter:searchTerm">
+                                                {{obj.label}}
+                                            </md-option>
+                                        </md-select>
+                                        <div ng-messages='arqExportSiprevForm.situacaoFuncionalSelecionada.$error'
+                                            multiple role='alert'>
+                                            <div ng-message='required'>Campo de preenchimento
+                                                obrigatório.</div>
+                                        </div>
+                                    </md-input-container>
+
+                                    <md-input-container flex>
+                                        <label>Tipo de Exportação</label>
+                                        <md-select ng-model="tipoExportacaoSelecionada"
+                                            ng-disabled="detalhes || !tipoExportacaoList || tipoExportacaoList.length === 0"
+                                            ng-required="true" data-md-container-class="selectdemoSelectHeader"
+                                            md-on-close="searchTerm = ''" name="tipoExportacaoSelecionada">
+                                            <md-select-header class="demo-select-header">
+                                                <input ng-model="searchTerm" type="search"
+                                                    ng-keydown="$event.stopPropagation();" placeholder="Busca..."
+                                                    class="demo-header-searchbox md-text">
+                                            </md-select-header>
+                                            <md-option ng-value="obj" ng-disabled="obj !== 'Servidor'"
+                                                ng-repeat="obj in tipoExportacaoList | filter:searchTerm">
+                                                {{obj}}
+                                            </md-option>
+                                        </md-select>
+                                        <div ng-messages='arqExportSiprevForm.tipoExportacaoSelecionada.$error' multiple
+                                            role='alert'>
+                                            <div ng-message='required'>Campo de preenchimento
+                                                obrigatório.</div>
+                                        </div>
+                                    </md-input-container>
+
+                                    <md-input-container flex>
+                                        <label>Formato do Arquivo</label>
+                                        <md-select ng-model="formatoArqSelecionado" ng-disabled="detalhes"
+                                            ng-required="true" name="formatoArqSelecionado">
+                                            <md-option ng-value="'xml'">
+                                                XML
+                                            </md-option>
+                                            <md-option ng-value="'excel'">
+                                                Excel
+                                            </md-option>
+                                        </md-select>
+                                        <div ng-messages='arqExportSiprevForm.formatoArqSelecionado.$error' multiple
+                                            role='alert'>
+                                            <div ng-message='required'>Campo de preenchimento
+                                                obrigatório.</div>
+                                        </div>
+                                    </md-input-container>
+
+                                    <md-input-container flex>
+                                        <label>Operação</label>
+                                        <md-select ng-model="operacaoSelecionada" ng-disabled="detalhes"
+                                            ng-required="true" name="operacaoSelecionada">
+                                            <md-option ng-value="'I'">
+                                                Incluir
+                                            </md-option>
+                                            <md-option ng-value="'A'">
+                                                Alterar
+                                            </md-option>
+                                            <md-option ng-value="'E'">
+                                                Excluir
+                                            </md-option>
+                                        </md-select>
+                                        <div ng-messages='arqExportSiprevForm.operacaoSelecionada.$error' multiple
+                                            role='alert'>
+                                            <div ng-message='required'>Campo de preenchimento
+                                                obrigatório.</div>
+                                        </div>
+                                    </md-input-container>
+                                </div>
+                                <div layout layout-sm="column">
+                                    <md-input-container flex>
+                                        <label>Nome do Arquivo</label>
+                                        <input ng-disabled="detalhes" ng-required="true" ng-model="nomeArquivo"
+                                            name="nomeArquivo" max="255">
+                                        <div ng-messages='arqExportSiprevForm.nomeArquivo.$error' multiple role='alert'>
+                                            <div ng-message='required'>Campo de preenchimento
+                                                obrigatório.</div>
+                                        </div>
+                                    </md-input-container>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-12 text-center">
+                                        <button class="btn  btn-w-md"
+                                            ng-click="situacaoFuncionalSelecionada = null; tipoExportacaoSelecionada = null; operacaoSelecionada = null; nomeArquivo = null">
+                                            Limpar
+                                            <md-tooltip md-direction="top">Limpar Filtros</md-tooltip>
+                                        </button>
+                                        <button class="btn btn-primary btn-w-md" ng-click="showRelatorio()">
+                                            Gerar Arquivo
+                                        </button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </md-card>
+            </article>
+        </div>
+    </div>
+</section>

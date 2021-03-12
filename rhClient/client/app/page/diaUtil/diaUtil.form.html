@@ -1,0 +1,54 @@
+<div class="page" ng-controller="diaUtilFormCtrl">
+    <div class="row ui-section">
+        <div class="col-lg-8 clearfix">
+            <h2 class="section-header">{{!detalhes ? 'Formulário Categoria de Dia Útil' : 'Detalhes Categoria de
+                Dia Útil'}}</h2>
+        </div>
+        <div class="col-md-12">
+            <div class="panel panel-default">
+                <div class="panel-body">                    
+                    <div class="row">
+                        <div class="col-lg-3"></div>
+                        <div class="col-lg-6">
+                            <div class="row">
+                                <div class="col-lg-2"></div>
+                                <div ng-if="selecionarMes" class="col-lg-8" style="text-align: center;">
+                                    <h2 class="md-title ng-scope">Desabilitar Finais de Semana</h2>
+                                    <div class="col-lg-6">
+                                        <strong >Sábados</strong>
+                                        <md-checkbox ng-disabled="detalhes" ng-model="todosOsSabados" ng-change="clickSabado(todosOsSabados)" aria-label="Checkbox 1"></md-checkbox>                                         
+                                    </div>
+                                    <div class="col-lg-6">
+                                        <strong >Domingos</strong>
+                                        <md-checkbox ng-disabled="detalhes" ng-model="todosOsDomingos" ng-change="clickDomingo(todosOsDomingos)" aria-label="Checkbox 1"></md-checkbox>
+                                    </div>                    
+                                </div>
+                                <div class="col-lg-2"></div>                               
+                            </div>                            
+                            <form ng-disabled="detalhes" name="categoriaDiaUtilForm" ng-submit="save()">
+                                <div layout="column" ng-cloak class="md-inline-form inputdemoBasicUsage">
+                                    <div layout-padding>
+                                        <div layout layout-sm="column">
+                                            <div>
+                                                <multiple-date-picker ng-model="diaUtil.arrayListDiasUteis" day-click="oneDaySelectionOnly" highlight-days="highlightDays" enable-select-month="selecionarMes" change-year-past="anosPassados" change-year-future="anosFuturos" sunday-first-day="true" month="mes" disable-navigation="desabilitarNavegador" week-days-off="daysOff" year-changed="logYearChanged"></multiple-date-picker>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-12 text-center">
+                                        <button ng-if="!detalhes" ng-disabled="categoriaDoencaForm.$invalid" type="submit"
+                                            ui-wave class="btn btn-primary btn-w-md">Salvar</button>
+                                        <p class="btn btn-default btn-w-md" ui-wave data-ng-click="goBack()">Voltar</p>
+                                    </div>
+                                </div>
+                            </form>    
+                        </div>
+                        <div class="col-lg-3"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</div>

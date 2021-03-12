@@ -1,0 +1,381 @@
+<div class="page" ng-controller="tempoServicoFormCtrl">
+    <div class="row ui-section">
+        <div class="col-lg-8 clearfix">
+            <h2 class="section-header">{{!detalhes ? 'Tempo de Serviço' : 'Detalhes do Tempo de Serviço'}}</h2>
+        </div>
+        <div class="col-md-12">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <form ng-disabled="detalhes" name="tempoServicoForm" ng-submit="save()">
+                                <div layout="column" ng-cloak class="md-inline-form inputdemoBasicUsage">
+                                    <md-tabs md-dynamic-height md-border-bottom>
+                                        <md-tab label="Dados do Funcionário">
+                                            <md-content class="md-padding">
+                                                <div class="divider divider"></div>
+                                                <md-autocomplete md-input-name="funcionario" ng-disabled="detalhes" ng-required="true" md-no-cache="noCache" md-floating-label="Nome Responsável" 
+                                                md-selected-item="tempoServico.funcionario" md-search-text="searchFuncionario" md-items="funcionario in querySearchFuncionario(searchFuncionario)" 
+                                                md-item-text="funcionario.nome" md-delay="100" md-min-length="3" md-selected-item-change="funcionarioSelecionado()">
+                                                    <md-item-template>
+                                                        <span  md-highlight-text="searchFuncionario" md-highlight-flags="^i">
+                                                            {{funcionario.nome}}</span>
+                                                    </md-item-template>
+                                                    <md-not-found>
+                                                        Item
+                                                        "{{searchFuncionario}}"
+                                                        não
+                                                        encontrado.
+                                                    </md-not-found>
+                                                    <div ng-messages="tempoServicoForm.funcionario.$error">
+                                                        <div ng-message="required">Campo de preenchimento obrigatório.</div>
+                                                    </div> 
+                                                </md-autocomplete>
+                                                
+                                                <div layout layout-sm="column">
+                                                    <md-input-container flex>
+                                                        <label>Protocolo CTC/CTS</label>
+                                                        <input ng-disabled="detalhes" ng-model="tempoServico.protocoloCtcCts" name="protocoloCtcCts" required>
+                                                        <div ng-messages="tempoServicoForm.protocoloCtcCts.$error">
+                                                            <div ng-message="required">Campo de preenchimento obrigatório.</div>
+                                                        </div>
+                                                    </md-input-container>
+                                                    <md-input-container flex>
+                                                        <label>Salário</label>
+                                                        <input ng-disabled="detalhes" ui-number-mask="2" ng-model="tempoServico.salario" name="salario" required>
+                                                        <div ng-messages="tempoServicoForm.salario.$error">
+                                                            <div ng-message="required">Campo de preenchimento obrigatório.</div>
+                                                        </div>
+                                                    </md-input-container>
+                                                    <md-input-container flex>
+                                                        <label>índice de Contribuição Previdenciária</label>
+                                                        <md-select ng-disabled="detalhes" ng-model="tempoServico.indiceContribuicao"
+                                                            name="indiceContribuicao" required>
+                                                            <md-option ng-repeat="indiceContribuicao in list.indiceContribuicaoPrevidencia" value="{{indiceContribuicao.value}}">
+                                                                {{indiceContribuicao.label}}
+                                                            </md-option>
+                                                        </md-select>
+                                                        <div ng-messages="tempoServicoForm.indiceContribuicao.$error">
+                                                            <div ng-message="required">Campo de preenchimento obrigatório.</div>
+                                                        </div> 
+                                                    </md-input-container>
+                                                </div>
+                                                <div layout layout-sm="column">
+                                                    <md-input-container flex>
+                                                        <label>Último Cargo</label>
+                                                        <input ng-disabled="detalhes" ng-model="tempoServico.ultimoCargo" name="ultimoCargo" required>
+                                                        <div ng-messages="tempoServicoForm.ultimoCargo.$error">
+                                                            <div ng-message="required">Campo de preenchimento obrigatório.</div>
+                                                        </div>
+                                                    </md-input-container>
+                                                    <md-input-container flex>
+                                                        <label>Categoria</label>
+                                                        <md-select ng-disabled="detalhes" ng-model="tempoServico.categoriaSefipId"
+                                                            name="categoriaSefip" required>
+                                                            <md-option ng-repeat="categoriaSefip in list.sefip" value="{{categoriaSefip.id}}">
+                                                                {{categoriaSefip.descricao}}
+                                                            </md-option>
+                                                        </md-select>
+                                                        <div ng-messages="tempoServicoForm.categoriaSefip.$error">
+                                                            <div ng-message="required">Campo de preenchimento obrigatório.</div>
+                                                        </div> 
+                                                    </md-input-container>
+                                                </div>
+                                                <div layout layout-sm="column">
+                                                    <md-input-container flex>
+                                                        <label>Informações Para Impressão de Certidão</label>
+                                                        <textarea ng-disabled="detalhes" ng-model="tempoServico.descricaoCertidao" flex></textarea>
+                                                    </md-input-container>
+                                                </div>
+                                            </md-content>
+                                        </md-tab>
+                                        <md-tab label="Dados da Averbação">
+                                            <md-content class="md-padding">
+                                                <div class="divider divider"></div>
+                                                <div layout layout-sm="column">
+                                                    <md-input-container flex>
+                                                        <label>Empresa/Descrição</label>
+                                                        <input ng-disabled="detalhes" ng-model="tempoServico.descricaoEmpresa" name="descricaoEmpresa" required>
+                                                        <div ng-messages="tempoServicoForm.descricaoEmpresa.$error">
+                                                            <div ng-message="required">Campo de preenchimento obrigatório.</div>
+                                                        </div>
+                                                    </md-input-container>
+                                                    <md-input-container class="md-block">
+                                                        <label>Efeito Averbação</label>
+                                                        <md-select ng-disabled="detalhes" ng-model="tempoServico.efeitoAverbacaoId"
+                                                            name="efeitoAverbacao" required>
+                                                            <md-option ng-repeat="efeitoAverbacao in list.efeitoAverbacao" value="{{efeitoAverbacao.id}}">
+                                                                {{efeitoAverbacao.descricao}}
+                                                            </md-option>
+                                                        </md-select>
+                                                        <div ng-messages="tempoServicoForm.efeitoAverbacao.$error">
+                                                            <div ng-message="required">Campo de preenchimento obrigatório.</div>
+                                                        </div> 
+                                                    </md-input-container>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-md-5">
+                                                        <div layout layout-sm="column">
+                                                            <md-input-container style="margin-top: 0%;" flex>
+                                                                <label>Averbado</label>
+                                                                <md-switch ng-disabled="detalhes" name="averbado"
+                                                                    ng-model="tempoServico.averbado"
+                                                                    aria-label="Averbado">
+                                                                    {{tempoServico.averbado ? 'Sim':'Não'}}
+                                                                </md-switch>
+                                                            </md-input-container>
+                                                            <md-input-container flex>
+                                                                <label>Tipo de Averbação</label>
+                                                                <md-select ng-disabled="detalhes" ng-model="tempoServico.tipoAverbacao"
+                                                                    name="tipoAverbacao" required>
+                                                                    <md-option ng-repeat="tipoAverbacao in list.tipoAverbacao" value="{{tipoAverbacao.value}}">
+                                                                        {{tipoAverbacao.label}}
+                                                                    </md-option>
+                                                                </md-select>
+                                                                <div ng-messages="tempoServicoForm.tipoAverbacao.$error">
+                                                                    <div ng-message="required">Campo de preenchimento obrigatório.</div>
+                                                                </div> 
+                                                            </md-input-container>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-7">
+                                                        <div layout layout-sm="colu-mn">
+                                                            <md-input-container class="md-block">
+                                                                <label>Data de Início</label>
+                                                                <md-icon class="material-icons icon-momentpicker"
+                                                                    ng-class="md-datepicker-calendar-icon" aria-label="md-calendar">date_range</md-icon>
+                                                                <input name="dataInicio" moment-picker="tempoServico.dataInicio"
+                                                                    placeholder="Selecione a data" ng-model="tempoServico.dataInicio"
+                                                                    format="DD/MM/YYYY" locale="pt-br" start-view="month"
+                                                                    ng-model-options="{ updateOn: 'blur' }" ng-disabled="detalhes"
+                                                                    ng-required="true" change="validaEstabilidade()">
+                                                                <div class="has-error" style="margin-top: 5px"
+                                                                    ng-messages="tempoServicoForm.dataInicio.$error"
+                                                                    multiple role="alert">
+                                                                    <div ng-message="required">Campo de preenchimento
+                                                                        obrigatório.</div>
+                                                                </div>
+                                                            </md-input-container>
+                                                            <md-input-container class="md-block">
+                                                                <label>Data Término</label>
+                                                                <md-icon class="material-icons icon-momentpicker"
+                                                                    ng-class="md-datepicker-calendar-icon" aria-label="md-calendar">date_range</md-icon>
+                                                                <input name="dataTermino" moment-picker="tempoServico.dataTermino"
+                                                                    placeholder="Selecione a data" ng-model="tempoServico.dataTermino"
+                                                                    format="DD/MM/YYYY" locale="pt-br" start-view="month"
+                                                                    ng-model-options="{ updateOn: 'blur' }" ng-disabled="detalhes"
+                                                                    ng-required="true" change="validaEstabilidade()">
+                                                                <div class="has-error" style="margin-top: 5px"
+                                                                    ng-messages="tempoServicoForm.dataTermino.$error"
+                                                                    multiple role="alert">
+                                                                    <div ng-message="required">Campo de preenchimento
+                                                                        obrigatório.</div>
+                                                                </div>
+                                                            </md-input-container>
+                                                            <md-input-container flex>
+                                                                <label>Qtd. Dias</label>
+                                                                <input ng-disabled="detalhes" ui-number-mask="0" ui-hide-group-sep ng-model="tempoServico.qtdDias" name="qtdDias" required>
+                                                                <div ng-messages="tempoServicoForm.qtdDias.$error">
+                                                                    <div ng-message="required">Campo de preenchimento obrigatório.</div>
+                                                                </div>
+                                                            </md-input-container>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </md-content>
+                                        </md-tab>
+                                        <md-tab label="Dados da Publicação">
+                                            <md-content class="md-padding">
+                                                <div class="divider divider"></div>
+                                                <div class="row">
+                                                    <div class="col-md12">
+                                                        <div layout layout-sm="column">
+                                                            <md-input-container class="md-block">
+                                                                <label>Nº do Processo</label>
+                                                                <input ng-disabled="detalhes" ng-model="tempoServico.numeroProcesso" name="numeroProcesso" required>
+                                                                <div ng-messages="tempoServicoForm.numeroProcesso.$error">
+                                                                    <div ng-message="required">Campo de preenchimento obrigatório.</div>
+                                                                </div>
+                                                            </md-input-container>
+                                                            <md-input-container flex>
+                                                                <label>Classificação do Ato</label>
+                                                                <md-select ng-disabled="detalhes" ng-model="tempoServico.classificacaoAtoId"
+                                                                    name="classificacaoAto" required>
+                                                                    <md-option ng-repeat="classificacaoAto in list.classificacaoAto" value="{{classificacaoAto.id}}">
+                                                                        {{classificacaoAto.descricao}}
+                                                                    </md-option>
+                                                                </md-select>
+                                                                <div ng-messages="tempoServicoForm.classificacaoAto.$error">
+                                                                    <div ng-message="required">Campo de preenchimento obrigatório.</div>
+                                                                </div> 
+                                                            </md-input-container>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-md-12">
+                                                        <div layout layout-sm="column">
+                                                            <md-input-container flex>
+                                                                <label>Nº Diário Oficial</label>
+                                                                <input ng-disabled="detalhes" ng-model="tempoServico.numeroDiarioOficial" name="numeroDiarioOficial" required>
+                                                                <div ng-messages="tempoServicoForm.numeroDiarioOficial.$error">
+                                                                    <div ng-message="required">Campo de preenchimento obrigatório.</div>
+                                                                </div>
+                                                            </md-input-container>
+                                                            <md-input-container class="md-block">
+                                                                <label>Ano de Publicação</label>
+                                                                <input ng-disabled="detalhes" ng-model="tempoServico.anoPublicacao" name="anoPublicacao" ui-number-mask="0" ui-hide-group-sep required>
+                                                                <div ng-messages="tempoServicoForm.anoPublicacao.$error">
+                                                                    <div ng-message="required">Campo de preenchimento obrigatório.</div>
+                                                                </div>
+                                                            </md-input-container>
+                                                            <md-input-container class="md-block">
+                                                                <label>Data do Diário Oficial</label>
+                                                                <md-icon class="material-icons icon-momentpicker"
+                                                                    ng-class="md-datepicker-calendar-icon" aria-label="md-calendar">date_range</md-icon>
+                                                                <input name="dataDiarioOficial" moment-picker="tempoServico.dataDiarioOficial"
+                                                                    placeholder="Selecione a data" ng-model="tempoServico.dataDiarioOficial"
+                                                                    format="DD/MM/YYYY" locale="pt-br" start-view="month"
+                                                                    ng-model-options="{ updateOn: 'blur' }" ng-disabled="detalhes"
+                                                                    ng-required="true" change="validaEstabilidade()">
+                                                                <div class="has-error" style="margin-top: 5px"
+                                                                    ng-messages="tempoServicoForm.dataDiarioOficial.$error"
+                                                                    multiple role="alert">
+                                                                    <div ng-message="required">Campo de preenchimento
+                                                                        obrigatório.</div>
+                                                                </div>
+                                                            </md-input-container>
+                                                            <md-input-container class="md-block">
+                                                                <label>Data</label>
+                                                                <md-icon class="material-icons icon-momentpicker"
+                                                                    ng-class="md-datepicker-calendar-icon" aria-label="md-calendar">date_range</md-icon>
+                                                                <input name="data" moment-picker="tempoServico.data"
+                                                                    placeholder="Selecione a data" ng-model="tempoServico.data"
+                                                                    format="DD/MM/YYYY" locale="pt-br" start-view="month"
+                                                                    ng-model-options="{ updateOn: 'blur' }" ng-disabled="detalhes"
+                                                                    ng-required="true" change="validaEstabilidade()">
+                                                                <div class="has-error" style="margin-top: 5px"
+                                                                    ng-messages="tempoServicoForm.data.$error"
+                                                                    multiple role="alert">
+                                                                    <div ng-message="required">Campo de preenchimento
+                                                                        obrigatório.</div>
+                                                                </div>
+                                                            </md-input-container>
+                                                            <md-input-container flex>
+                                                                <label>Nº Ato</label>
+                                                                <input ng-disabled="detalhes" ng-model="tempoServico.numeroAto" name="numeroAto" required>
+                                                                <div ng-messages="tempoServicoForm.numeroAto.$error">
+                                                                    <div ng-message="required">Campo de preenchimento obrigatório.</div>
+                                                                </div>
+                                                            </md-input-container>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </md-content>
+                                        </md-tab>
+                                        <md-tab label="Dados da Instituição">
+                                            <md-content class="md-padding">
+                                                <div class="row">
+                                                    <div class="col-md-12">
+                                                        <div layout layout-sm="column">
+                                                            <md-input-container flex>
+                                                                <label>Endereço</label>
+                                                                <input ng-disabled="detalhes" ng-model="tempoServico.endereco" name="endereco" required>
+                                                                <div ng-messages="tempoServicoForm.endereco.$error">
+                                                                    <div ng-message="required">Campo de preenchimento obrigatório.</div>
+                                                                </div>
+                                                            </md-input-container>
+                                                            <md-input-container flex>
+                                                                <label>Complemento</label>
+                                                                <input ng-disabled="detalhes" ng-model="tempoServico.complemento" name="complemento">
+                                                            </md-input-container>
+                                                            <md-input-container class="md-block">
+                                                                <label>Número</label>
+                                                                <input ng-disabled="detalhes" ng-model="tempoServico.numero" name="numero" required>
+                                                                <div ng-messages="tempoServicoForm.numero.$error">
+                                                                    <div ng-message="required">Campo de preenchimento obrigatório.</div>
+                                                                </div>
+                                                            </md-input-container>
+                                                            <md-input-container class="md-block">
+                                                                <label>Bairro</label>
+                                                                <input ng-disabled="detalhes" ng-model="tempoServico.bairro" name="bairro" required>
+                                                                <div ng-messages="tempoServicoForm.bairro.$error">
+                                                                    <div ng-message="required">Campo de preenchimento obrigatório.</div>
+                                                                </div>
+                                                            </md-input-container>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-md-12">
+                                                        <div layout layout-sm="column">
+                                                            <md-input-container class="md-block">
+                                                                <label>Cidade</label>
+                                                                <input ng-disabled="detalhes" ng-model="tempoServico.cidade" name="cidade" required>
+                                                                <div ng-messages="tempoServicoForm.cidade.$error">
+                                                                    <div ng-message="required">Campo de preenchimento obrigatório.</div>
+                                                                </div>
+                                                            </md-input-container>
+                                                            <md-input-container class="md-block">
+                                                                <label>UF</label>
+                                                                <md-select ng-disabled="detalhes" ng-model="tempoServico.ufId"
+                                                                    name="uf" required>
+                                                                    <md-option ng-repeat="uf in list.unidadeFederativa" value="{{uf.id}}">
+                                                                        {{uf.sigla}} - {{uf.estado}}
+                                                                    </md-option>
+                                                                </md-select>
+                                                                <div ng-messages="tempoServicoForm.uf.$error">
+                                                                    <div ng-message="required">Campo de preenchimento obrigatório.</div>
+                                                                </div> 
+                                                            </md-input-container>
+                                                            <md-input-container class="md-block">
+                                                                <label>CEP</label>
+                                                                <input ng-disabled="detalhes" ng-model="tempoServico.cep"
+                                                                    name="cep" ui-br-cep-mask required>
+                                                                <div ng-messages="tempoServicoForm.cep.$error" role="alert"
+                                                                    multiple>
+                                                                    <div ng-message="cep">CEP Inválido.</div>
+                                                                    <div ng-message="required">Campo de preenchimento obrigatório.</div>
+                                                                </div>
+                                                            </md-input-container>
+                                                            <md-input-container class="md-block">
+                                                                <label>Telefone</label>
+                                                                <input ng-disabled="detalhes" ng-model="tempoServico.telefone"
+                                                                    name="telefone" minlength="10" ui-br-phone-number-mask required>
+                                                                <div ng-messages="tempoServicoForm.telefone.$error">
+                                                                    <div ng-message="brPhoneNumber">Informe um número detelefone válido.</div>
+                                                                    <div ng-message="minlength">Cadastre um telefone ao menos com DDD.</div>
+                                                                    <div ng-message="required">Campo de preenchimento obrigatório.</div>
+                                                                </div>
+                                                            </md-input-container>
+                                                            <md-input-container flex>
+                                                                <label>CNPJ</label>
+                                                                <input ng-disabled="detalhes" ng-model="tempoServico.cnpj"
+                                                                    name="cnpj" ui-br-cnpj-mask ng-required="true">
+                                                                <div ng-messages="tempoServicoForm.cnpj.$error" role="alert" multiple>
+                                                                    <div ng-message="required">Campo de preenchimento obrigatório.</div>
+                                                                    <div ng-message="cnpj">CNPJ Inválido.</div>
+                                                                </div>
+                                                            </md-input-container>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </md-content>
+                                        </md-tab>
+                                    </md-tabs>
+                                    <div class="row">
+                                        <div class="col-md-12 text-center">
+                                            <button ng-if="!detalhes" ng-disabled="tempoServicoForm.$invalid"
+                                                type="submit" ui-wave class="btn btn-primary btn-w-md">Salvar</button>
+                                            <p class="btn btn-default btn-w-md" ui-wave data-ng-click="goBack()">Voltar</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

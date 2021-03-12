@@ -1,0 +1,3 @@
+INSERT INTO papel VALUES ('ROLE_USUARIO_GESTAO', NULL);
+INSERT INTO papel VALUES ('ROLE_REQUISICAO_PESSOAL_GESTAO', (SELECT m.id FROM menu m WHERE m.nome = 'Requisição de Pessoal'));
+INSERT INTO papel VALUES ('ROLE_RECRUTAMENTO_SELECAO_GESTAO', (SELECT m.id FROM menu m WHERE m.nome = 'Gestão de Requisições'));

@@ -1,0 +1,57 @@
+<md-dialog style="min-width: 500px;min-height: 450px;">
+<form ng-cloak>
+	<md-toolbar>
+	<div style="background-color: #01722c" class="md-toolbar-tools">
+		<h2>Detalhes do funcionário</h2>
+		<span flex></span> <a href="" ng-click="cancel()"> <i class="fa fa-close"></i>
+		</a>
+	</div>
+	</md-toolbar>
+	<md-dialog-content>
+	<div class="page">
+		<div class="row">
+			<div class="panel panel-default">
+				<div class="panel-body">
+					<div class="row">
+							
+							<div layout="column" ng-cloak class="md-inline-form inputdemoBasicUsage">
+								<md-table-container>
+								<table md-table>
+									<thead md-head md-order="query.order" md-on-reorder="loadList">
+										<tr md-row>
+											<th md-column colspan="2"><strong style="color: #01722c;font-size: 16px">{{funcionarioDetalhe.nome}}</strong></th>
+										</tr>
+									</thead>
+									<tbody md-body>
+										<tr md-row>
+											<td md-cell width="33">Matrícula:</td>
+											<td md-cell>{{funcionarioDetalhe.matricula}}</td>
+										</tr>
+										<tr md-row>
+											<td md-cell>Filial:</td>
+											<td md-cell>{{funcionarioDetalhe.filial.nomeFilial}}</td>
+										</tr>
+										<tr md-row>
+											<td md-cell>Lotação:</td>
+											<td md-cell>{{funcionarioDetalhe.lotacao.descricao}}</td>
+										</tr>
+										<tr md-row>
+											<td md-cell>Cargo:</td>
+											<td md-cell>{{funcionarioDetalhe.cargo.nome}}</td>
+										</tr>
+									</tbody>
+								</table>
+								</md-table-container>
+							</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	</md-dialog-content>
+	<md-dialog-actions>
+		<button class="btn btn-primary btn-w-md" ng-click="cancel()">Voltar</button>
+	</md-dialog-actions>
+
+</form>
+</md-dialog>

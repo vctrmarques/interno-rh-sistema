@@ -1,0 +1,1149 @@
+<div class="page" ng-controller="pensaoPrevidenciariaFormCtrl">
+	<div class="row ui-section">
+		<div class="col-lg-8 clearfix">
+			<h2 class="section-header">
+				{{!detalhes ? 'Formulário de Pensão Previdenciária' : 'Detalhes de Pensão Previdenciária'}}</h2>
+		</div>
+		<div class="col-md-12">
+			<div class="panel panel-default">
+				<div class="panel-body">
+					<div class="row">
+						<div class="col-lg-12">
+							<div layout="column" ng-cloak class="md-inline-form inputdemoBasicUsage">
+								<form ng-disabled="detalhes" name="pensaoPrevidenciariaForm">
+									<div layout-padding>
+
+										<div class="row">
+											<div class="col-md-12">
+												<h4>Ex-segurado</h4>
+											</div>
+										</div>
+										<div class="row">
+											<div layout layout-sm="column" class="col-md-10">
+												<md-autocomplete ng-disabled="pensaoPrevidenciaria.id>0" flex
+													ng-required="false" md-no-cache="noCache"
+													md-floating-label="Ex-segurado" md-selected-item="exSegurado"
+													md-search-text="searchExSegurado"
+													md-items="item in querySearchExSegurado(searchExSegurado)"
+													md-item-text="item.nome" md-delay="1000" md-min-length="3"
+													md-selected-item-change="exSeguradoSelecionado()">
+													<md-item-template>
+														<span md-highlight-text="searchExSegurado"
+															md-highlight-flags="^i">{{item.matricula}} -
+															{{item.nome}} - {{item.cpf}}</span>
+													</md-item-template>
+													<md-not-found> Item "{{searchExSegurado}}" não encontrado.
+													</md-not-found>
+												</md-autocomplete>
+												<div ng-messages="exSegurado.nome.$error">
+													<div ng-message="required">Campo de preenchimento obrigatório.</div>
+												</div>
+											</div>
+											<div layout layout-sm="column" class="col-md-2">
+
+											</div>
+										</div>
+
+										<div class="row" ng-show="funcionario">
+											<div layout layout-sm="column" class="col-md-3">
+												<md-input-container flex> <label>Matrícula</label> <input
+														ng-disabled="true" ng-model="funcionario.matricula" />
+											</div>
+											<div layout layout-sm="column" class="col-md-9">
+												<md-input-container flex> <label>Nome</label> <input ng-disabled="true"
+														ng-model="funcionario.nome" />
+											</div>
+										</div>
+										<div class="row" ng-show="funcionario">
+											<div layout layout-sm="column" class="col-md-3">
+												<md-input-container flex> <label>Identidade</label> <input
+														ng-disabled="true" ng-model="funcionario.identidade" />
+											</div>
+											<div layout layout-sm="column" class="col-md-3">
+												<md-input-container flex> <label>Data Expedição</label> <input
+														ng-disabled="true" ng-model="funcionario.dataExpedicaoRg"
+														ng-value="funcionario.dataExpedicaoRg | date: dd/MM/yy" />
+											</div>
+											<div layout layout-sm="column" class="col-md-3">
+												<md-input-container flex> <label>CPF</label> <input ng-disabled="true"
+														ng-model="funcionario.cpf" ui-br-cpf-mask />
+											</div>
+											<div layout layout-sm="column" class="col-md-3">
+												<md-input-container flex> <label>Data Óbito</label> <input
+														ng-disabled="true" ng-model="funcionario.dataExpedicaoRg"
+														ng-value="funcionario.dataExpedicaoRg | date: dd/MM/yy" />
+											</div>
+										</div>
+										<div class="row" ng-show="funcionario">
+											<div layout layout-sm="column" class="col-md-12">
+												<md-input-container flex> <label>Origem</label> <input
+														ng-disabled="true" ng-model="origem" />
+											</div>
+										</div>
+										<div class="row" ng-show="funcionario">
+											<div layout layout-sm="column" class="col-md-9">
+												<md-input-container flex> <label>Situação Atual</label> <input
+														ng-disabled="true"
+														ng-model="funcionario.situacaoFuncional.descricao" />
+											</div>
+											<div layout layout-sm="column" class="col-md-3">
+												<md-input-container flex> <label>Data Situação</label> <input
+														ng-disabled="true"
+														ng-model="funcionario.dataInicioSituacaoFuncional"
+														ng-value="funcionario.dataInicioSituacaoFuncional | date: dd/MM/yy" />
+											</div>
+											<div layout layout-sm="column" class="col-md-9">
+												<md-input-container flex> <label>Vínculo</label> <input
+														ng-disabled="true" ng-model="funcionario.vinculo.descricao" />
+											</div>
+										</div>
+
+
+										<md-tabs md-dynamic-height md-border-bottom ng-show="funcionario">
+											<!-- Início da aba DADOS DO PENSIONISTA -->
+											<md-tab label="Dados do pensionista">
+												<md-content class="md-padding">
+													<div class="divider divider"></div>
+													<div class="panel panel-default">
+														<div class="panel-body">
+															<div class="row">
+																<div layout layout-sm="column" class="col-md-3">
+																	<md-input-container flex> <label>Matrícula</label>
+																		<input ng-disabled="detalhes" autocomplete="off"
+																			ng-required="true"
+																			ng-model="pensaoPrevidenciaria.matricula"
+																			name="matricula">
+																		<div ng-messages="pensaoPrevidenciariaForm.matricula.$error"
+																			multiple>
+																			<div ng-message="required">Campo de
+																				preenchimento obrigatório.</div>
+																		</div>
+																	</md-input-container>
+																</div>
+																<div layout layout-sm="column" class="col-md-9">
+																	<md-input-container flex> <label>Nome</label> <input
+																			ng-disabled="detalhes" autocomplete="off"
+																			ng-required="true"
+																			ng-model="pensaoPrevidenciaria.nome"
+																			name="nome">
+																		<div ng-messages="pensaoPrevidenciariaForm.nome.$error"
+																			multiple>
+																			<div ng-message="required">Campo de
+																				preenchimento obrigatório.</div>
+																		</div>
+																	</md-input-container>
+																</div>
+															</div>
+															<div class="row">
+
+																<div layout layout-sm="column" class="col-md-3">
+																	<md-input-container class="md-block" flex>
+																		<label>Data de Nascimento</label>
+																		<md-icon
+																			class="material-icons icon-momentpicker"
+																			ng-class="md-datepicker-calendar-icon"
+																			aria-label="md-calendar">date_range
+																		</md-icon> <input name="dataNascimento" required
+																			moment-picker="pensaoPrevidenciaria.dataNascimento"
+																			placeholder="Selecione a data"
+																			ng-model="pensaoPrevidenciaria.dataNascimento"
+																			format="DD/MM/YYYY" locale="pt-br"
+																			start-view="month" ng-disabled="detalhes"
+																			ng-model-options="{ updateOn: 'blur' }">
+																		<div ng-messages="pensaoPrevidenciariaForm.dataNascimento.$error"
+																			multiple>
+																			<div ng-message="required">Campo de
+																				preenchimento obrigatório.</div>
+																		</div>
+																	</md-input-container>
+																</div>
+
+																<div layout layout-sm="column" class="col-md-2">
+																	<md-input-container class="md-block" flex>
+																		<label>Gênero</label>
+																		<md-select ng-disabled="detalhes" required
+																			ng-model="pensaoPrevidenciaria.genero"
+																			name="genero">
+																			<md-option ng-repeat="g in list.generos"
+																				value="{{g.value}}"> {{g.label}}
+																			</md-option>
+																		</md-select>
+																		<div ng-messages="pensaoPrevidenciariaForm.genero.$error"
+																			multiple>
+																			<div ng-message="required">Campo de
+																				preenchimento obrigatório.</div>
+																		</div>
+																	</md-input-container>
+																</div>
+
+																<div layout layout-sm="column" class="col-md-3">
+																	<md-input-container class="md-block" flex>
+																		<label>Estado Civil</label>
+																		<md-select ng-disabled="detalhes" required
+																			ng-model="pensaoPrevidenciaria.estadoCivil"
+																			name="estadoCivil">
+																			<md-option
+																				ng-repeat="ec in list.estadoCivil"
+																				value="{{ec.value}}"> {{ec.label}}
+																			</md-option>
+																		</md-select>
+																		<div ng-messages="pensaoPrevidenciariaForm.estadoCivil.$error"
+																			multiple>
+																			<div ng-message="required">Campo de
+																				preenchimento obrigatório.</div>
+																		</div>
+																	</md-input-container>
+																</div>
+
+																<div layout layout-sm="column" class="col-md-4">
+																	<md-input-container class="md-block" flex>
+																		<label>Grau de Instrução</label>
+																		<md-select ng-disabled="detalhes" required
+																			ng-model="pensaoPrevidenciaria.grauInstrucao"
+																			name="grauInstrucao">
+																			<md-option
+																				ng-repeat="gi in list.grauInstrucao"
+																				value="{{gi.value}}"> {{gi.label}}
+																			</md-option>
+																		</md-select>
+																		<div ng-messages="pensaoPrevidenciariaForm.grauInstrucao.$error"
+																			multiple>
+																			<div ng-message="required">Campo de
+																				preenchimento obrigatório.</div>
+																		</div>
+																	</md-input-container>
+																</div>
+
+															</div>
+															<div class="row">
+																<div layout layout-sm="column" class="col-md-4">
+																	<md-input-container class="md-block" flex>
+																		<label>UF Naturalidade</label>
+																		<md-select ng-disabled="detalhes" required
+																			name="ufNaturalidade"
+																			ng-model="ufNaturalidade"
+																			ng-change="getMunicipios(ufNaturalidade, true)">
+																			<md-option ng-value=null><em>-- Selecione
+																					--</em></md-option>
+																			<md-option ng-repeat="uf in list.uf"
+																				value="{{uf.id}}">
+																				{{uf.sigla}} - {{uf.estado}}
+																			</md-option>
+																		</md-select>
+																	</md-input-container>
+																</div>
+
+																<div layout layout-sm="column" class="col-md-3">
+																	<md-input-container class="md-block" flex>
+																		<label>Município Naturalidade</label>
+																		<md-select ng-required="true"
+																			ng-disabled="(ufNaturalidade != null && detalhes) ? true : false"
+																			name="naturalidade"
+																			ng-model="pensaoPrevidenciaria.naturalidade">
+																			<md-option ng-value=null><em>-- Selecione
+																					--</em></md-option>
+																			<md-option
+																				ng-repeat="n in list.naturalidade"
+																				ng-value="n.id">
+																				{{n.descricao}}
+																			</md-option>
+																		</md-select>
+																	</md-input-container>
+																</div>
+
+																<div layout layout-sm="column" class="col-md-3">
+																	<md-input-container flex> <label>Titulo de
+																			eleitor</label> <input
+																			ng-disabled="detalhes" autocomplete="off"
+																			ng-required="false" minlength="12"
+																			maxlength="12"
+																			ng-model="pensaoPrevidenciaria.tituloEleitor"
+																			name="tituloEleitor">
+																		<div ng-messages="pensaoPrevidenciariaForm.tituloEleitor.$error"
+																			ng-if="pensaoPrevidenciariaForm.tituloEleitor.$invalid "
+																			multiple role="alert">
+																			<div ng-message="minlength">Título de
+																				Eleitor deve conter 12 dígitos</div>
+																		</div>
+																	</md-input-container>
+																</div>
+
+																<div layout layout-sm="column" class="col-md-2">
+																	<md-input-container class="md-block">
+																		<label>Status</label>
+																		<md-switch ng-disabled="detalhes"
+																			ng-model="pensaoPrevidenciaria.status"
+																			aria-label="Ativo">
+																			{{pensaoPrevidenciaria.status ?
+																			'Ativo(a)':'Inativo(a)'}}
+																		</md-switch>
+																	</md-input-container>
+																</div>
+
+															</div>
+															<div class="row">
+
+																<div layout layout-sm="column" class="col-md-6">
+																	<md-input-container flex> <label>Nome da mãe</label>
+																		<input ng-disabled="detalhes" autocomplete="off"
+																			ng-required="false"
+																			ng-model="pensaoPrevidenciaria.nomeMae"
+																			name="nomeMae">
+																	</md-input-container>
+																</div>
+
+																<div layout layout-sm="column" class="col-md-6">
+																	<md-input-container flex> <label>Nome do pai</label>
+																		<input ng-disabled="detalhes" autocomplete="off"
+																			ng-required="false"
+																			ng-model="pensaoPrevidenciaria.nomePai"
+																			name="nomePai">
+																	</md-input-container>
+																</div>
+
+															</div>
+
+															<div class="row">
+																<div layout layout-sm="column" class="col-md-2">
+																	<md-input-container flex> <label>CPF</label>
+																		<input ng-disabled="detalhes" autocomplete="off"
+																			ng-required="false" ui-br-cpf-mask
+																			ng-model="pensaoPrevidenciaria.cpf"
+																			name="cpf">
+																		<div ng-if="pensaoPrevidenciariaForm.cpf.$invalid "
+																			multiple role="alert">
+																			<div style=" color: red">O CPF usado é
+																				inválido</div>
+																		</div>
+																	</md-input-container>
+																</div>
+																<div layout layout-sm="column" class="col-md-2">
+																	<md-input-container flex> <label>RG</label>
+																		<input ng-disabled="detalhes" autocomplete="off"
+																			ng-required="false"
+																			ng-model="pensaoPrevidenciaria.identidade"
+																			name="identidade">
+																	</md-input-container>
+																</div>
+																<div layout layout-sm="column" class="col-md-3">
+																	<md-input-container class="md-block" flex>
+																		<label>Data Expedição</label>
+																		<md-icon
+																			class="material-icons icon-momentpicker"
+																			ng-class="md-datepicker-calendar-icon"
+																			aria-label="md-calendar">date_range
+																		</md-icon> <input name="dataExpedicaoRg"
+																			ng-model-options="{ updateOn: 'blur' }"
+																			moment-picker="pensaoPrevidenciaria.dataExpedicaoRg"
+																			placeholder="Selecione a data"
+																			ng-model="pensaoPrevidenciaria.dataExpedicaoRg"
+																			format="DD/MM/YYYY" locale="pt-br"
+																			start-view="month" ng-disabled="detalhes">
+																		<div ng-messages="pensaoPrevidenciariaForm.dataExpedicaoRg.$error"
+																			multiple>
+																			<div ng-message="required">Campo de
+																				preenchimento obrigatório.</div>
+																		</div>
+																	</md-input-container>
+																</div>
+																<div layout layout-sm="column" class="col-md-2">
+																	<md-input-container flex> <label>Tipo
+																			Sanguíneo</label>
+																		<md-select ng-disabled="detalhes"
+																			ng-model="pensaoPrevidenciaria.tipoSanguineo"
+																			name="tipoSanguineo" ng-required="false">
+																			<md-option
+																				ng-repeat="s in list.tipoSanguineo"
+																				value="{{s.value}}"> {{s.label}}
+																			</md-option>
+																		</md-select>
+																	</md-input-container>
+																</div>
+																<div layout layout-sm="column" class="col-md-2">
+																	<md-input-container class="md-block" flex>
+																		<label>Cor da Pele</label>
+																		<md-select ng-disabled="detalhes"
+																			ng-model="pensaoPrevidenciaria.corPele"
+																			name="corPele">
+																			<md-option ng-repeat="g in list.corPeles"
+																				value="{{g.value}}"> {{g.label}}
+																			</md-option>
+																		</md-select>
+																		<div ng-messages="pensaoPrevidenciariaForm.corPele.$error"
+																			multiple>
+																			<div ng-message="required">Campo de
+																				preenchimento obrigatório.</div>
+																		</div>
+																	</md-input-container>
+																</div>
+															</div>
+															<div class="row">
+																<div layout layout-sm="column" class="col-md-2">
+																	<md-input-container class="md-block" flex>
+																		<label>Nacionalidade</label>
+																		<md-select
+																			ng-model-options="{trackBy: '$value.id' }"
+																			ng-disabled="detalhes"
+																			ng-model="pensaoPrevidenciaria.nacionalidade">
+																			<md-option
+																				ng-repeat="item in nacionalidadeList"
+																				ng-value="item">
+																				{{item.descricao}}
+																			</md-option>
+																		</md-select>
+																	</md-input-container>
+																</div>
+																<div layout layout-sm="column" class="col-md-2">
+																	<md-input-container flex> <label>E-mail</label>
+																		<input ng-disabled="detalhes" autocomplete="off"
+																			ng-required="false"
+																			ng-model="pensaoPrevidenciaria.emailPessoal"
+																			name="emailPessoal">
+																	</md-input-container>
+																</div>
+																<div layout layout-sm="column" class="col-md-2">
+																	<md-input-container flex> <label>Telefone
+																			Fixo</label>
+																		<input ng-disabled="detalhes" autocomplete="off"
+																			ng-required="false" ui-br-phone-number-mask
+																			ng-model="pensaoPrevidenciaria.telefoneFixo"
+																			name="telefoneFixo">
+																	</md-input-container>
+																</div>
+																<div layout layout-sm="column" class="col-md-2">
+																	<md-input-container flex> <label>Celular</label>
+																		<input ng-disabled="detalhes" autocomplete="off"
+																			ng-required="false" ui-br-phone-number-mask
+																			ng-model="pensaoPrevidenciaria.celular"
+																			name="celular">
+																	</md-input-container>
+																</div>
+																<div layout layout-sm="column" class="col-md-2">
+																	<md-input-container flex> <label>Observação</label>
+																		<input ng-disabled="detalhes" autocomplete="off"
+																			ng-required="false"
+																			ng-model="pensaoPrevidenciaria.observacao"
+																			name="observacao">
+																	</md-input-container>
+																</div>
+															</div>
+
+															<div class="row">
+																<div class="col-md-12">
+																	<h4>Endereço</h4>
+																</div>
+															</div>
+															<div class="row">
+																<div layout layout-sm="column" class="col-md-3">
+																	<md-input-container flex> <label>CEP</label> <input
+																			ng-disabled="detalhes" autocomplete="off"
+																			ng-required="false"
+																			ng-model="pensaoPrevidenciaria.cep"
+																			name="cep" ui-br-cep-mask>
+																	</md-input-container>
+																</div>
+
+																<div layout layout-sm="column" class="col-md-7">
+																	<md-input-container flex> <label>Logradouro</label>
+																		<input ng-disabled="detalhes" autocomplete="off"
+																			ng-required="false"
+																			ng-model="pensaoPrevidenciaria.logradouro"
+																			name="logradouro">
+																	</md-input-container>
+																</div>
+
+																<div layout layout-sm="column" class="col-md-2">
+																	<md-input-container flex> <label>Número</label>
+																		<input ng-disabled="detalhes" autocomplete="off"
+																			ng-required="false"
+																			ng-model="pensaoPrevidenciaria.numeroLogradouro"
+																			name="numeroLogradouro">
+																	</md-input-container>
+																</div>
+															</div>
+															<div class="row">
+																<div layout layout-sm="column" class="col-md-8">
+																	<md-input-container flex> <label>Complemento</label>
+																		<input ng-disabled="detalhes" autocomplete="off"
+																			ng-required="false"
+																			ng-model="pensaoPrevidenciaria.complementoLogradouro"
+																			name="complementoLogradouro">
+																	</md-input-container>
+																</div>
+
+																<div layout layout-sm="column" class="col-md-4">
+																	<md-input-container flex> <label>Bairro</label>
+																		<input ng-disabled="detalhes" autocomplete="off"
+																			ng-required="false"
+																			ng-model="pensaoPrevidenciaria.bairro"
+																			name="bairro">
+																	</md-input-container>
+																</div>
+															</div>
+
+															<div class="row">
+																<div layout layout-sm="column" class="col-md-3">
+																	<md-input-container class="md-block" flex>
+																		<label>UF</label>
+																		<md-select ng-disabled="detalhes" required
+																			name="unidadeFederativa"
+																			ng-model="unidadeFederativa"
+																			ng-change="getMunicipios(unidadeFederativa, false)">
+																			<md-option ng-value=null><em>-- Selecione
+																					--</em></md-option>
+																			<md-option ng-repeat="uf in list.uf"
+																				value="{{uf.id}}">
+																				{{uf.sigla}} - {{uf.estado}}
+																			</md-option>
+																		</md-select>
+																	</md-input-container>
+																</div>
+
+																<div layout layout-sm="column" class="col-md-5">
+																	<md-input-container class="md-block" flex>
+																		<label>Município</label>
+																		<md-select ng-required="true"
+																			ng-disabled="(unidadeFederativa != null && detalhes) ? true : false"
+																			name="municipio"
+																			ng-model="pensaoPrevidenciaria.municipio">
+																			<md-option ng-value=null><em>-- Selecione
+																					--</em></md-option>
+																			<md-option ng-repeat="m in list.municipios"
+																				ng-value="m.id">
+																				{{m.descricao}}
+																			</md-option>
+																		</md-select>
+																	</md-input-container>
+																</div>
+															</div>
+															<div class="row">
+																<div class="col-md-12">
+																	<h4>Dependência</h4>
+																</div>
+															</div>
+															<div class="row">
+																<div layout layout-sm="column" class="col-md-4">
+																	<md-input-container class="md-block" flex>
+																		<label>Família</label>
+																		<md-select ng-disabled="detalhes"
+																			ng-model="pensaoPrevidenciaria.tipoFamilia"
+																			name="tipoFamilia">
+																			<md-option ng-repeat="f in list.tipoFamilia"
+																				value="{{f.value}}"> {{f.label}}
+																			</md-option>
+																		</md-select>
+																	</md-input-container>
+																</div>
+
+																<div layout layout-sm="column" class="col-md-4">
+																	<md-input-container class="md-block" flex>
+																		<label>Grau Parentesco</label>
+																		<md-select ng-disabled="detalhes"
+																			ng-model="pensaoPrevidenciaria.grauParentesco"
+																			name="grauParentesco">
+																			<md-option
+																				ng-repeat="gp in list.grauParentesco"
+																				value="{{gp.value}}"> {{gp.label}}
+																			</md-option>
+																		</md-select>
+																	</md-input-container>
+																</div>
+
+																<div layout layout-sm="column" class="col-md-4">
+																	<md-input-container class="md-block" flex>
+																		<label>Motivo</label>
+																		<md-select ng-disabled="detalhes"
+																			ng-model="pensaoPrevidenciaria.motivo"
+																			name="motivo">
+																			<md-option ng-repeat="m in list.motivo"
+																				value="{{m.value}}"> {{m.label}}
+																			</md-option>
+																		</md-select>
+																	</md-input-container>
+																</div>
+															</div>
+															<div class="row">
+																<div class="col-md-12">
+																	<h4>Responsável</h4>
+																</div>
+															</div>
+															<div class="row">
+																<div layout layout-sm="column" class="col-md-8">
+																	<md-autocomplete ng-disabled="detalhes" flex
+																		ng-required="false" md-no-cache="noCache"
+																		md-floating-label="Responsável Legal"
+																		md-selected-item="responsavelLegal"
+																		md-search-text="searchResponsavelLegal"
+																		md-items="responsavelLegal in querySearchResponsavelLegal(searchResponsavelLegal)"
+																		md-item-text="responsavelLegal.nome"
+																		md-delay="1000" md-min-length="3"
+																		md-selected-item-change="responsavelLegalSelecionado()">
+																		<md-item-template>
+																			<span
+																				md-highlight-text="searchResponsavelLegal"
+																				md-highlight-flags="^i">
+																				{{responsavelLegal.nome}}</span>
+																		</md-item-template>
+																		<md-not-found> Item "{{searchResponsavelLegal}}"
+																			não encontrado. </md-not-found>
+																	</md-autocomplete>
+																</div>
+
+																<div layout layout-sm="column" class="col-md-4">
+																	<md-input-container flex> <label>CPF
+																			Responsável</label> <input
+																			ng-disabled="true" autocomplete="off"
+																			ng-model="responsavelLegal.cpf"
+																			ui-br-cpf-mask />
+																</div>
+															</div>
+															<div class="row">
+																<div layout layout-sm="column" class="col-md-3">
+																	<md-input-container class="md-block" flex>
+																		<label>Data de Início</label>
+																		<md-icon
+																			class="material-icons icon-momentpicker"
+																			ng-class="md-datepicker-calendar-icon"
+																			aria-label="md-calendar">date_range
+																		</md-icon> <input
+																			ng-model-options="{ updateOn: 'blur' }"
+																			name="dataInicioResponsavel"
+																			moment-picker="pensaoPrevidenciaria.dataInicioResponsavel"
+																			placeholder="Selecione a data"
+																			ng-model="pensaoPrevidenciaria.dataInicioResponsavel"
+																			format="DD/MM/YYYY" locale="pt-br"
+																			start-view="month" ng-disabled="detalhes">
+																	</md-input-container>
+																</div>
+
+																<div layout layout-sm="column" class="col-md-3">
+																	<md-input-container class="md-block" flex>
+																		<label>Data de Vencimento</label>
+																		<md-icon
+																			class="material-icons icon-momentpicker"
+																			ng-class="md-datepicker-calendar-icon"
+																			aria-label="md-calendar">date_range
+																		</md-icon> <input
+																			ng-model-options="{ updateOn: 'blur' }"
+																			name="dataVencimentoResponsavel"
+																			moment-picker="pensaoPrevidenciaria.dataVencimentoResponsavel"
+																			placeholder="Selecione a data"
+																			ng-model="pensaoPrevidenciaria.dataVencimentoResponsavel"
+																			format="DD/MM/YYYY" locale="pt-br"
+																			start-view="month" ng-disabled="detalhes">
+																	</md-input-container>
+																</div>
+
+																<div layout layout-sm="column" class="col-md-6">
+																	<md-input-container flex> <label>Número do
+																			Processo</label> <input
+																			ng-disabled="detalhes" autocomplete="off"
+																			ng-required="false"
+																			ng-model="pensaoPrevidenciaria.numeroProcessoResponsavel"
+																			name="numeroProcessoResponsavel">
+																	</md-input-container>
+																</div>
+															</div>
+
+															<div class="row">
+																<div class="col-md-12">
+																	<h4>Documento Responsável</h4>
+																</div>
+																<div layout layout-sm="column" class="col-md-12">
+																	<md-input-container flex><input type="file"
+																			ng-required="false" nv-file-select
+																			uploader="uploader"
+																			file-on-change="onFileChange"
+																			accept=".pdf" /> </md-input-container>
+																</div>
+															</div>
+
+														</div>
+													</div>
+
+												</md-content>
+											</md-tab> <!-- Fim da aba DADOS DO PENSIONISTA -->
+
+											<!-- feito até essa linha -->
+
+											<!-- Início da aba DADOS DO PAGAMENTO -->
+											<md-tab label="Dados do pagamento">
+												<md-content class="md-padding">
+													<div class="divider divider"></div>
+													<div class="panel panel-default">
+														<!-- <div class="panel-heading">Curso</div> -->
+														<div class="panel-body">
+
+															<div class="row">
+																<div class="col-md-12">
+																	<h4>Benefício</h4>
+																</div>
+															</div>
+
+															<div class="row">
+																<div layout layout-sm="column" class="col-md-3">
+																	<md-input-container class="md-block" flex>
+																		<label>Primeiro pagamento</label>
+																		<md-icon
+																			class="material-icons icon-momentpicker"
+																			ng-class="md-datepicker-calendar-icon"
+																			aria-label="md-calendar">date_range
+																		</md-icon> <input name="dataPrimeiroPagamento"
+																			required
+																			ng-model-options="{ updateOn: 'blur' }"
+																			moment-picker="pensaoPrevidenciariaPagamento.dataPrimeiroPagamento"
+																			placeholder="Selecione a data"
+																			ng-model="pensaoPrevidenciariaPagamento.dataPrimeiroPagamento"
+																			format="DD/MM/YYYY" locale="pt-br"
+																			start-view="month" ng-disabled="detalhes">
+																		<div ng-messages="pensaoPrevidenciariaForm.dataPrimeiroPagamento.$error"
+																			multiple>
+																			<div ng-message="required">Campo de
+																				preenchimento obrigatório.</div>
+																		</div>
+																	</md-input-container>
+																</div>
+
+																<div layout layout-sm="column" class="col-md-2">
+																	<md-input-container class="md-block" flex>
+																		<label>Tipo rateio</label>
+																		<md-select ng-disabled="detalhes"
+																			ng-model="pensaoPrevidenciariaPagamento.tipoRateio"
+																			name="tipoRateio">
+																			<md-option
+																				ng-repeat="obj in list.tipoRateio"
+																				ng-value="obj.value"> {{obj.label}}
+																			</md-option>
+																		</md-select>
+																	</md-input-container>
+																</div>
+
+																<div layout layout-sm="column" class="col-md-1">
+																	<md-input-container flex> <label>Valor
+																			Rateio</label>
+																		<input ng-disabled="detalhes" autocomplete="off"
+																			ng-model="pensaoPrevidenciariaPagamento.valorRateio"
+																			name="valorRateio" ui-number-mask="2">
+																	</md-input-container>
+																</div>
+
+																<div layout layout-sm="column" class="col-md-3">
+																	<md-input-container class="md-block" flex>
+																		<label>Tipo pensão</label>
+																		<md-select ng-disabled="detalhes" required
+																			ng-model="pensaoPrevidenciariaPagamento.tipoPensao"
+																			name="tipoPensao">
+																			<md-option
+																				ng-repeat="obj in list.tipoPensao"
+																				value="{{obj.value}}"> {{obj.label}}
+																			</md-option>
+																		</md-select>
+																		<div ng-messages="pensaoPrevidenciariaForm.tipoPensao.$error"
+																			multiple>
+																			<div ng-message="required">Campo de
+																				preenchimento obrigatório.</div>
+																		</div>
+																	</md-input-container>
+																</div>
+
+																<div layout layout-sm="column" class="col-md-3">
+																	<md-input-container class="md-block" flex>
+																		<label>Com paridade</label>
+																		<md-select ng-disabled="detalhes" required
+																			ng-model="pensaoPrevidenciariaPagamento.comParidade"
+																			name="comParidade">
+																			<md-option
+																				ng-repeat="obj in list.comParidade"
+																				value="{{obj.value}}"> {{obj.label}}
+																			</md-option>
+																		</md-select>
+																		<div ng-messages="pensaoPrevidenciariaForm.comParidade.$error"
+																			multiple>
+																			<div ng-message="required">Campo de
+																				preenchimento obrigatório.</div>
+																		</div>
+																	</md-input-container>
+																</div>
+															</div>
+
+															<div class="row">
+																<div layout layout-sm="column" class="col-md-2">
+																	<md-input-container flex> <label>Número processo
+																			Pensão</label> <input ng-disabled="detalhes"
+																			autocomplete="off" maxlength="30"
+																			ui-hide-group-sep
+																			ng-model="pensaoPrevidenciariaPagamento.numeroProcessoPensao"
+																			name="numeroProcessoPensao">
+																	</md-input-container>
+																</div>
+
+																<div layout layout-sm="column" class="col-md-3">
+																	<md-input-container class="md-block" flex>
+																		<label>Fim benefício</label>
+																		<md-icon
+																			class="material-icons icon-momentpicker"
+																			ng-class="md-datepicker-calendar-icon"
+																			aria-label="md-calendar">date_range
+																		</md-icon> <input name="dataFimBeneficio"
+																			ng-model-options="{ updateOn: 'blur' }"
+																			moment-picker="pensaoPrevidenciariaPagamento.dataFimBeneficio"
+																			placeholder="Selecione a data"
+																			ng-model="pensaoPrevidenciariaPagamento.dataFimBeneficio"
+																			format="DD/MM/YYYY" locale="pt-br"
+																			start-view="month" ng-disabled="detalhes">
+																	</md-input-container>
+																</div>
+
+																<div layout layout-sm="column" class="col-md-3">
+																	<md-input-container class="md-block" flex>
+																		<label>Limite retroativo</label>
+																		<md-icon
+																			class="material-icons icon-momentpicker"
+																			ng-class="md-datepicker-calendar-icon"
+																			aria-label="md-calendar">date_range
+																		</md-icon> <input name="dataLimiteRetroativo"
+																			ng-model-options="{ updateOn: 'blur' }"
+																			required
+																			moment-picker="pensaoPrevidenciariaPagamento.dataLimiteRetroativo"
+																			placeholder="Selecione a data"
+																			ng-model="pensaoPrevidenciariaPagamento.dataLimiteRetroativo"
+																			format="DD/MM/YYYY" locale="pt-br"
+																			start-view="month" ng-disabled="detalhes">
+																		<div ng-messages="pensaoPrevidenciariaForm.dataLimiteRetroativo.$error"
+																			multiple>
+																			<div ng-message="required">Campo de
+																				preenchimento obrigatório.</div>
+																		</div>
+																	</md-input-container>
+																</div>
+
+																<div layout layout-sm="column" class="col-md-2">
+																	<md-input-container class="md-block" flex>
+																		<label>Tipo cota</label>
+																		<md-select ng-disabled="detalhes"
+																			ng-model="pensaoPrevidenciariaPagamento.tipoCota"
+																			name="tipoCota">
+																			<md-option ng-repeat="obj in list.tipoCota"
+																				value="{{obj.value}}"> {{obj.label}}
+																			</md-option>
+																		</md-select>
+																	</md-input-container>
+																</div>
+
+																<div layout layout-sm="column" class="col-md-2">
+																	<md-input-container flex> <label>Número
+																			reserva</label> <input
+																			ng-disabled="detalhes" autocomplete="off"
+																			ng-model="pensaoPrevidenciariaPagamento.numeroReserva"
+																			name="numeroReserva">
+																	</md-input-container>
+																</div>
+															</div>
+
+															<div class="row">
+																<div class="col-md-12">
+																	<h4>Conta para crédito</h4>
+																</div>
+															</div>
+
+															<div class="row">
+
+																<div layout layout-sm="column" class="col-md-2">
+																	<md-input-container class="md-block" flex>
+																		<label>Tipo de conta</label>
+																		<md-select ng-disabled="detalhes" required
+																			ng-model="pensaoPrevidenciariaPagamento.tipoConta"
+																			name="tipoConta">
+																			<md-option ng-repeat="obj in list.tipoConta"
+																				value="{{obj.value}}"> {{obj.label}}
+																			</md-option>
+																		</md-select>
+																		<div ng-messages="pensaoPrevidenciariaForm.tipoConta.$error"
+																			multiple>
+																			<div ng-message="required">Campo de
+																				preenchimento obrigatório.</div>
+																		</div>
+																	</md-input-container>
+																</div>
+
+																<div layout layout-sm="column" class="col-md-2">
+																	<md-autocomplete ng-disabled="detalhes" flex
+																		ng-required="true" md-no-cache="noCache"
+																		md-floating-label="Banco"
+																		md-selected-item="banco"
+																		md-search-text="searchBanco"
+																		md-items="banco in querySearchBanco(searchBanco)"
+																		md-item-text="banco.nome" md-delay="1000"
+																		md-min-length="3"
+																		md-selected-item-change="bancoSelecionado()">
+																		<md-item-template>
+																			<span md-highlight-text="searchBanco"
+																				md-highlight-flags="^i">{{banco.codigo}}
+																				-- {{banco.nome}}</span>
+																		</md-item-template>
+																		<md-not-found> Item "{{searchBanco}}" não
+																			encontrado. </md-not-found>
+																	</md-autocomplete>
+																	<div ng-messages="banco.nome.$error">
+																		<div ng-message="required">Campo de
+																			preenchimento obrigatório.</div>
+																	</div>
+																</div>
+
+																<div layout layout-sm="column" class="col-md-2">
+																	<md-autocomplete flex
+																		ng-disabled="!bancoSelecionadoId"
+																		ng-required="true" md-no-cache="noCache"
+																		md-floating-label="Agência"
+																		md-selected-item="agencia"
+																		md-search-text="searchAgencia"
+																		md-items="agencia in querySearchAgencia(searchAgencia)"
+																		md-item-text="agencia.nome" md-delay="1000"
+																		md-min-length="3"
+																		md-selected-item-change="agenciaSelecionada()">
+																		<md-item-template>
+																			<span md-highlight-text="searchAgencia"
+																				md-highlight-flags="^i">{{agencia.numero}}-{{agencia.digito}}
+																				-- {{agencia.nome}}</span>
+																		</md-item-template>
+																		<md-not-found> Item "{{searchAgencia}}" não
+																			encontrado. </md-not-found>
+																	</md-autocomplete>
+																	<div ng-messages="agencia.nome.$error">
+																		<div ng-message="required">Campo de
+																			preenchimento obrigatório.</div>
+																	</div>
+																</div>
+
+																<div layout layout-sm="column" class="col-md-2">
+																	<md-input-container flex> <label>Nº Conta</label>
+																		<input ng-disabled="detalhes" autocomplete="off"
+																			required
+																			ng-model="pensaoPrevidenciariaPagamento.numeroConta"
+																			name="numeroConta">
+																		<div ng-messages="pensaoPrevidenciariaForm.numeroConta.$error"
+																			multiple>
+																			<div ng-message="required">Campo de
+																				preenchimento obrigatório.</div>
+																		</div>
+																	</md-input-container>
+																</div>
+
+																<div layout layout-sm="column" class="col-md-2">
+																	<md-input-container flex> <label>Dígito</label>
+																		<input ng-disabled="detalhes" autocomplete="off"
+																			required
+																			ng-model="pensaoPrevidenciariaPagamento.digito"
+																			name="digito">
+																		<div ng-messages="pensaoPrevidenciariaForm.digito.$error"
+																			multiple>
+																			<div ng-message="required">Campo de
+																				preenchimento obrigatório.</div>
+																		</div>
+																	</md-input-container>
+																</div>
+
+																<div layout layout-sm="column" class="col-md-2">
+																	<md-input-container flex>
+																		<label>Operação</label>
+																		<md-select ng-disabled="!bancoSelecionadoId"
+																			ng-model="pensaoPrevidenciariaPagamento.operacao"
+																			name="operacao">
+																			<md-option ng-repeat="g in list.operacao"
+																				value="{{g.value}}">
+																				{{g.label}} - {{g.value}}
+																			</md-option>
+																		</md-select>
+																	</md-input-container>
+																</div>
+															</div>
+
+															<div class="row">
+																<div class="col-md-6">
+																	<h4>Isenções IR</h4>
+
+																	<div layout layout-sm="column">
+																		<md-input-container flex>
+																			<label>Data de Início de Insenção</label>
+																			<md-icon
+																				class="material-icons icon-momentpicker"
+																				ng-class="md-datepicker-calendar-icon"
+																				aria-label="md-calendar">date_range
+																			</md-icon>
+																			<input name="dataInicialIsencaoIr"
+																				moment-picker="pensaoPrevidenciariaPagamento.dataInicialIsencaoIr"
+																				placeholder="Selecione a data"
+																				ng-model="pensaoPrevidenciariaPagamento.dataInicialIsencaoIr"
+																				format="DD/MM/YYYY" locale="pt-br"
+																				start-view="month"
+																				ng-model-options="{ updateOn: 'blur' }"
+																				ng-disabled="detalhes">
+																		</md-input-container>
+																		<md-input-container flex>
+																			<label>Data Final de Insenção</label>
+																			<md-icon
+																				class="material-icons icon-momentpicker"
+																				ng-class="md-datepicker-calendar-icon"
+																				aria-label="md-calendar">date_range
+																			</md-icon>
+																			<input name="dataFinalIsencaoIr"
+																				moment-picker="pensaoPrevidenciariaPagamento.dataFinalIsencaoIr"
+																				placeholder="Selecione a data"
+																				ng-model="pensaoPrevidenciariaPagamento.dataFinalIsencaoIr"
+																				format="DD/MM/YYYY" locale="pt-br"
+																				start-view="month"
+																				ng-model-options="{ updateOn: 'blur' }"
+																				ng-disabled="detalhes">
+																		</md-input-container>
+																	</div>
+																</div>
+																<div class="col-md-6">
+																	<h4>Isenções Previdência</h4>
+																	<div class="row">
+																		<div class="col-md-12">
+																			<div layout layout-sm="column">
+																				<md-input-container flex>
+																					<label>Data de Início de
+																						Insenção</label>
+																					<md-icon
+																						class="material-icons icon-momentpicker"
+																						ng-class="md-datepicker-calendar-icon"
+																						aria-label="md-calendar">
+																						date_range
+																					</md-icon>
+																					<input
+																						name="dataInicialIsencaoPrevidencia"
+																						moment-picker="pensaoPrevidenciariaPagamento.dataInicialIsencaoPrevidencia"
+																						placeholder="Selecione a data"
+																						ng-model="pensaoPrevidenciariaPagamento.dataInicialIsencaoPrevidencia"
+																						format="DD/MM/YYYY"
+																						locale="pt-br"
+																						start-view="month"
+																						ng-model-options="{ updateOn: 'blur' }"
+																						ng-disabled="detalhes">
+																				</md-input-container>
+																				<md-input-container flex>
+																					<label>Data Final de
+																						Insenção</label>
+																					<md-icon
+																						class="material-icons icon-momentpicker"
+																						ng-class="md-datepicker-calendar-icon"
+																						aria-label="md-calendar">
+																						date_range
+																					</md-icon>
+																					<input
+																						name="dataFinalIsencaoPrevidencia"
+																						moment-picker="pensaoPrevidenciariaPagamento.dataFinalIsencaoPrevidencia"
+																						placeholder="Selecione a data"
+																						ng-model="pensaoPrevidenciariaPagamento.dataFinalIsencaoPrevidencia"
+																						format="DD/MM/YYYY"
+																						locale="pt-br"
+																						start-view="month"
+																						ng-model-options="{ updateOn: 'blur' }"
+																						ng-disabled="detalhes">
+																				</md-input-container>
+																			</div>
+																		</div>
+																	</div>
+																</div>
+															</div>
+
+															<!-- <div class="row">
+																<div layout layout-sm="column" class="col-md-4">
+																	<md-input-container class="md-block" flex>
+																		<label>Condições</label>
+																		<md-select ng-disabled="detalhes"
+																			ng-model="pensaoPrevidenciariaPagamento.condicaoIsencao"
+																			name="condicaoIsencao">
+																			<md-option
+																				ng-repeat="obj in list.condicaoIsencao"
+																				value="{{obj.value}}">
+																				{{obj.label}}
+																			</md-option>
+																		</md-select>
+																	</md-input-container>
+																</div>
+
+																<div layout layout-sm="column" class="col-md-3">
+																	<md-input-container class="md-block" flex>
+																		<label>Data inicial</label>
+																		<md-icon
+																			class="material-icons icon-momentpicker"
+																			ng-class="md-datepicker-calendar-icon"
+																			aria-label="md-calendar">date_range
+																		</md-icon> <input name="dataInicioIsencao"
+																			ng-model-options="{ updateOn: 'blur' }"
+																			moment-picker="pensaoPrevidenciariaPagamento.dataInicioIsencao"
+																			placeholder="Selecione a data"
+																			ng-model="pensaoPrevidenciariaPagamento.dataInicioIsencao"
+																			format="DD/MM/YYYY" locale="pt-br"
+																			start-view="month" ng-disabled="detalhes">
+																	</md-input-container>
+																</div>
+
+																<div layout layout-sm="column" class="col-md-3">
+																	<md-input-container class="md-block" flex>
+																		<label>Data final</label>
+																		<md-icon
+																			class="material-icons icon-momentpicker"
+																			ng-class="md-datepicker-calendar-icon"
+																			aria-label="md-calendar">date_range
+																		</md-icon> <input name="dataFimIsencao"
+																			ng-model-options="{ updateOn: 'blur' }"
+																			moment-picker="pensaoPrevidenciariaPagamento.dataFimIsencao"
+																			placeholder="Selecione a data"
+																			ng-model="pensaoPrevidenciariaPagamento.dataFimIsencao"
+																			format="DD/MM/YYYY" locale="pt-br"
+																			start-view="month" ng-disabled="detalhes">
+																	</md-input-container>
+																</div>
+															</div> -->
+														</div>
+													</div>
+												</md-content>
+											</md-tab>
+										</md-tabs>
+									</div>
+								</form>
+							</div>
+						</div>
+						<div ng-if="detalhes" layout layout-sm="column">
+							<table md-table md-progress="promise">
+								<thead md-head>
+									<tr md-row>
+										<th md-column><span>Criado em:</span></th>
+										<th md-column><span>Atualizado em:</span></th>
+										<th md-column><span>Criado por:</span></th>
+										<th md-column><span>Atualizado por:</span></th>
+									</tr>
+								</thead>
+								<tbody md-body>
+									<tr md-row>
+										<td md-cell>
+											{{pensaoPrevidenciaria.criadoEm | date: 'dd MMM yyyy'}}</td>
+										<td md-cell>
+											{{pensaoPrevidenciaria.alteradoEm | date: 'dd MMM yyyy'}}
+										</td>
+										<td md-cell>{{pensaoPrevidenciaria.criadoPor}}</td>
+										<td md-cell>{{pensaoPrevidenciaria.alteradoPor}}</td>
+
+									</tr>
+								</tbody>
+							</table>
+						</div>
+						<br>
+						<div class="row">
+							<div class="col-md-12 text-center">
+								<button ng-disabled="(pensaoPrevidenciariaForm.$invalid || detalhes) ? true : false"
+									ng-click="save()" ui-wave class="btn btn-primary btn-w-md">Salvar</button>
+								<p class="btn btn-default btn-w-md" ui-wave data-ng-click="goBack()">
+									Voltar</p>
+							</div>
+						</div>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

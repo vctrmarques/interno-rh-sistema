@@ -1,0 +1,87 @@
+<md-dialog class="fullscreen-dialog">
+    <form ng-cloak>
+        <md-toolbar>
+            <div style="background-color: #01722c" class="md-toolbar-tools">
+                <h2>Associar Funções</h2>
+                <span flex></span>
+                <a href="" ng-click="cancel()">
+                    <i class="fa fa-close"></i>
+                </a>
+            </div>
+        </md-toolbar>
+        <md-dialog-content>
+            <div class="page">
+                <div class="row ui-section">
+                    <div class="col-md-12">
+                        <div class="panel panel-default">
+                            <div class="panel-body">
+                                <div class="row">
+                                    <div class="col-lg-12">
+                                        <div layout="column" ng-cloak class="md-inline-form inputdemoBasicUsage">
+                                            <div layout-padding>
+                                                <div layout layout-sm="column">
+
+                                                    <md-autocomplete md-no-cache="noCache" md-floating-label="Buscar Função" md-selected-item="funcao" md-search-text="search" md-items="item in querySearchFuncao(search)" md-item-text="item.nome" md-delay="100" md-min-length="3">
+                                                        <md-item-template>
+                                                            <span  md-highlight-text="search" md-highlight-flags="^i">
+                                                                {{item.nome}}</span>
+                                                        </md-item-template>
+                                                        <md-not-found>
+                                                            Item
+                                                            "{{search}}"
+                                                            não
+                                                            encontrado.
+                                                        </md-not-found>
+                                                    </md-autocomplete>                                                        
+                                                    <md-input-container flex>
+                                                        <label>Quant. Permitidos</label>
+                                                        <input ng-model="funcao.quantPermitido" name="quantPermitido">                                                        
+                                                    </md-input-container>
+                                                    <md-input-container class="md-block">
+                                                        <button ng-click="funcaoSelecionada()"
+                                                            style="background-color: #01722C;color: #FFF;"><i class="fa fa-plus fa-md"></i></button>
+                                                    </md-intput-container>                                                                                                      
+                                                </div>
+                                                <div layout layout-sm="column" ng-if="definicaoOrganico.lotacoes[index].funcoes.length > 0">
+                                                    <md-table-container flex>
+                                                        <table md-table>
+                                                            <thead md-head>
+                                                                <tr md-row>
+                                                                    <th md-column>Função</th>
+                                                                    <th md-column>Quantidade Permitido</th>
+                                                                    <th md-column>Quantidade Atual</th>                                                                    
+                                                                    <th md-column>Ações</th>
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody md-body>
+                                                                <tr md-row ng-repeat="funcao in definicaoOrganico.lotacoes[index].funcoes">
+                                                                    <td md-cell>{{funcao.nome}}</td>
+                                                                    <td md-cell>{{funcao.quantPermitido}}</td>
+                                                                    <td md-cell>0</td>                                                                    
+                                                                    <td md-cell ng-if="!detalhes">
+                                                                        <a ng-click="removeFuncao($index)">
+                                                                            <md-tooltip md-direction="top">Excluir</md-tooltip>
+                                                                            <i class="fa fa-trash-o fa-lg"></i>
+                                                                        </a>
+                                                                    </td>
+                                                                </tr>
+                                                            </tbody>
+                                                        </table>
+                                                    </md-table-container>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="md-dialog-content text-center">
+                <button class="btn btn-primary btn-w-md" ng-click="clickDialog()">Associar</button>
+            </div>
+        </md-dialog-content>
+
+    </form>
+</md-dialog>

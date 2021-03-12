@@ -1,0 +1,14 @@
+--Criação da tabela evento. 
+--Roberto Araujo.
+
+IF NOT EXISTS(SELECT * FROM SYS.TABLES WHERE name = 'evento')
+CREATE TABLE evento
+(
+    id 				BIGINT 		PRIMARY KEY 	NOT NULL IDENTITY,
+	descricao 		VARCHAR(255) 				NOT NULL,
+	situacao		VARCHAR(255)				NOT NULL,
+	created_at 		datetime2(7)	 			NOT NULL,
+	updated_at 		datetime2(7) 				NOT NULL,
+	created_by 		bigint								,
+	updated_by 		bigint								  
+)

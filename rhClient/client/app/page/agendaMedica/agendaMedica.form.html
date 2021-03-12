@@ -1,0 +1,250 @@
+<section class="page-form-ele page" ng-controller="agendaMedicaFormCtrl">
+    <div class="row ui-section">
+        <div class="col-lg-8 clearfix">
+            <h2 class="section-header">
+                <h2 class="section-header">{{!detalhes ? 'Formulário de Agenda Médica' : 'Detalhes de Agenda Médica'}}
+                </h2>
+        </div>
+        <div class="col-md-12">
+            <section class="panel panel-default">
+                <div class="panel-body">
+                    <div class="row">
+                        <div class="col-lg-8 col-lg-offset-2">
+
+                            <div layout="column" ng-cloak class="md-inline-form inputdemoBasicUsage">
+                                <div layout-padding>
+
+                                    <form name="agendaMedicaForm" ng-disabled="detalhes" ng-submit="save()">
+
+                                        <div layout layout-sm="column">
+                                            <md-autocomplete ng-disabled="detalhes" flex md-no-cache="noCache"
+                                                md-floating-label="Nome do Médico" md-selected-item="medico"
+                                                md-search-text="searchNomeMedico" md-clear-button="true"
+                                                md-items="medico in querySearchMedico(searchNomeMedico)"
+                                                md-item-text="medico.descricao" md-delay="1000" md-min-length="3"
+                                                md-item-text="medico.nome" md-delay="1000" md-min-length="3"
+                                                ng-required=true md-selected-item-change="medicoSelecionado()">
+                                                <md-item-template> <span md-highlight-text="searchNomeMedico"
+                                                        md-highlight-flags="^i">{{medico.descricao}}
+                                                    </span>
+                                                </md-item-template>
+                                                <md-not-found> Item "{{searchNomeMedico}}"
+                                                    não encontrado. </md-not-found>
+                                            </md-autocomplete>
+                                        </div>
+
+                                        <div layout layout-sm="column">
+                                            <md-input-container flex>
+                                                <label>Especialidade Médica</label>
+                                                <md-select ng-required=true 
+                                                    ng-model="agendaMedica.especialidadeMedicaId"
+                                                    placeholder="Selecione uma Especialidade Médica"
+                                                    data-md-container-class="selectdemoSelectHeader"
+                                                    name="especialidadeMedica" ng-disabled="!searchNomeMedico || detalhes" multiple>
+                                                    <md-select-header class="demo-select-header">
+                                                    </md-select-header>
+                                                    <md-optgroup label="especialidadeMedicaList">
+                                                        <md-option ng-repeat="item in list.especialidadeMedicaList"
+                                                            ng-value="item.id">
+                                                            {{item.nome}}
+                                                        </md-option>
+                                                    </md-optgroup>
+                                                </md-select>
+                                                <div multiple ng-messages="agendaMedicaForm.especialidadeMedica.$error"
+                                                    role="alert">
+                                                    <div ng-message="required">Campo de preenchimento obrigatório.</div>
+                                                </div>
+                                            </md-input-container>
+                                        </div>
+
+                                        </br>
+
+                                        <div layout layout-sm="column">
+                                            <md-input-container flex>
+                                                <label>Data inicial</label>
+                                                <md-icon class="material-icons icon-momentpicker"
+                                                    ng-class="md-datepicker-calendar-icon" aria-label="md-calendar">
+                                                    date_range
+                                                </md-icon>
+                                                <input moment-picker="agendaMedica.dataInicial"
+                                                    placeholder="Insira a data inicial" name="dataInicial"
+                                                    autocomplete="off" ng-required="true" ng-disabled="detalhes"
+                                                    ng-model="agendaMedica.dataInicial" format="DD/MM/YYYY"
+                                                    locale="pt-br" start-view="month"
+                                                    min-date="menorData" ng-model-options="{ updateOn: 'blur' }">
+                                                <div ng-messages="agendaMedicaForm.dataInicial.$error" multiple
+                                                    role="alert">
+                                                    <div ng-message="required">Campo de preenchimento obrigatório.</div>
+                                                </div>
+                                            </md-input-container>
+                                            <md-input-container flex>
+                                                <label>Data final</label>
+                                                <md-icon class="material-icons icon-momentpicker"
+                                                    ng-class="md-datepicker-calendar-icon" aria-label="md-calendar">
+                                                    date_range
+                                                </md-icon>
+                                                <input moment-picker="agendaMedica.dataFinal"
+                                                    placeholder="Insira a data final" name="dataFinal"
+                                                    autocomplete="off" ng-disabled="!agendaMedica.dataInicial || detalhes"
+                                                    min-date="agendaMedica.dataInicial" ng-required="true"
+                                                    ng-model="agendaMedica.dataFinal" format="DD/MM/YYYY" locale="pt-br"
+                                                    start-view="month" ng-model-options="{ updateOn: 'blur' }">
+                                                <div ng-messages="agendaMedicaForm.dataFinal.$error" multiple
+                                                    role="alert">
+                                                    <div ng-message="required">Campo de preenchimento obrigatório.</div>
+                                                </div>
+                                            </md-input-container>
+                                        </div>
+                                        <div layout layout-sm="column">
+                                            <md-input-container flex>
+                                                <label>Horário Inicial</label>
+                                                <input type="time" name="agendaMedica.horaInicial" autocomplete="off"
+                                                    ng-model="agendaMedica.horaInicial" placeholder="HH:mm:ss"
+                                                    value="{{agendaMedica.horaInicial}}" ng-disabled="detalhes"
+                                                    min="00:00:00" max="23:59:00" ng-required="true"/>
+                                                <div ng-messages="agendaMedicaForm.agendaMedica.horaInicial.$error"
+                                                    multiple role="alert">
+                                                    <div ng-message="required">Campo de preenchimento obrigatório.</div>
+                                                </div>
+                                            </md-input-container>
+                                            <md-input-container flex>
+                                                <label>Horário Final</label>
+                                                <input type="time" name="agendaMedica.horaFinal" autocomplete="off"
+                                                    ng-model="agendaMedica.horaFinal" placeholder="HH:mm:ss"
+                                                    min="00:00:00" max="23:59:00" ng-required="true"
+                                                    ng-disabled="!agendaMedica.horaInicial || detalhes"
+                                                    ng-change="validarHorario(agendaMedica.horaInicial,agendaMedica.horaFinal)" />
+                                                <div ng-messages="agendaMedicaForm.agendaMedica.horaFinal.$error"
+                                                    multiple role="alert">
+                                                    <div ng-message="required">Campo de preenchimento obrigatório.</div>
+                                                </div>
+                                            </md-input-container>
+                                            <md-input-container flex>
+                                                <label>Intervalo</label>
+                                                <md-select ng-model="agendaMedica.intervalo" name="intervalo"
+                                                    ng-required="true" ng-disabled="detalhes">
+                                                    <md-option ng-value=null><em>-- Selecione --</em></md-option>
+                                                    <md-option ng-repeat="intervalo in list.intervaloList"
+                                                        ng-value="intervalo">
+                                                        {{intervalo}}
+                                                    </md-option>
+                                                </md-select>
+                                                <div ng-messages="agendaMedicaForm.intervalo.$error" multiple
+                                                    role="alert">
+                                                    <div ng-message="required">Campo de preenchimento obrigatório.</div>
+                                                </div>
+                                            </md-input-container>
+                                        </div>
+
+                                        <div class="divider divider-dashed"></div>
+                                        <div class="divider divider-lg"></div>
+
+                                        <div class="callout callout-info">
+                                            <p>Após preencher os dados, clique no botão abaixo "Gerar Agenda" para
+                                                visualizar a agenda antes de salvar. Você também pode clicar em
+                                                "Personalizar Agenda"
+                                                para selecionar dias da semana.</p>
+                                        </div>
+
+                                        <div class="row">
+                                            <div class="col-md-12 text-center">
+                                                <md-button class="md-raised btn-w-md md-accent" style="width: 200px;"
+                                                    ng-click="showPersonaliza()" ng-disabled="detalhes"> Personalizar Agenda
+                                                </md-button>
+                                                <md-button class="md-raised btn-w-md md-accent" style="width: 200px;"
+                                                    ng-click="gerar()" ng-disabled="detalhes"
+                                                    >Gerar
+                                                    Agenda
+                                                </md-button>
+                                            </div>
+                                        </div>
+
+                                        <div class="divider divider-lg"></div>
+                                        <div class="divider divider-lg divider-dashed"></div>
+                                        <div class="divider divider-lg"></div>
+
+                                        <div class="panel panel-default" ng-show="list.data.length  > 0">
+                                            <div class="panel-heading">
+                                                <div class="panel-title text-center">Agenda</div>
+                                            </div>
+                                            <div class="panel-body">
+                                                <div class="row">
+                                                    <div class="col-md-12 text-center">
+                                                        <p><b>{{agendaMedica.personalizar ? 'SEMANAL': ''}}</b></p>
+                                                        <md-checkbox ng-disabled="detalhes"
+                                                            ng-model="agendaMedica.checkeAllClean"
+                                                            ng-change="isAllCleanSelected()">
+                                                            <span>Marcar todos</span>
+                                                        </md-checkbox>
+                                                    </div>
+                                                </div>
+                                                <div class="row" style="max-height: 500px; overflow: auto;">
+
+                                                    <div class="divider divider-lg divider-solid" style="margin: 15px;">
+                                                    </div>
+
+                                                    <div class="col-md-1"></div>
+                                                    <div
+                                                        ng-repeat="agendaMedica in list.data | limitTo: query.limit : (query.page -1) * query.limit">
+                                                        <div class="col-md-2 text-center"
+                                                            style="border-right: #e2edeb dashed 1px; border-left: #e2edeb dashed 1px;">
+                                                            <p style="font-weight: bold;">
+                                                                {{agendaMedica.diaSemana | uppercase}}</p>
+                                                            <p>{{agendaMedica.data | date:'dd/MM/yyyy'}}</p>
+                                                            <div>
+                                                                <md-checkbox ng-model="agendaMedica.checkeAll"
+                                                                    ng-click="isAllSelected(agendaMedica)" ng-disabled="detalhes">
+                                                                    <span>Marcar </br> Todos</span>
+                                                                </md-checkbox>
+                                                            </div>
+                                                            <div class="divider divider-dashed"></div>
+                                                            <span
+                                                                ng-repeat="agendaMedicaData in agendaMedica.agendaMedicaData">
+                                                                <div>
+                                                                    <md-checkbox ng-disabled="detalhes"
+                                                                        ng-model="agendaMedicaData.checkHorario">
+                                                                        <span
+                                                                            style="font-size: 16px;">{{agendaMedicaData.hora}}</span>
+                                                                    </md-checkbox>
+                                                                </div>
+                                                            </span>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-1"></div>
+                                                </div>
+                                                <div class="divider"></div>
+                                                <md-table-pagination ng-show="list.data.length > 0"
+                                                    md-label="{page: 'Página:', rowsPerPage: 'Registros por página:', of: 'de'}"
+                                                    md-limit="query.limit" md-limit-options="limitOptions"
+                                                    md-page="query.page" md-total="{{list.data.length}}" md-page-select>
+                                                </md-table-pagination>
+                                            </div>
+                                        </div>
+
+                                        <audit-data show="detalhes" data="agendaMedica"></audit-data>
+
+                                        <div class="row">
+                                            <div class="col-md-12 text-center">
+                                                <button ng-if="!detalhes"
+                                                    ng-disabled="agendaMedicaForm.$invalid || (!list.data || list.data.length === 0)"
+                                                    type="submit" ui-wave class="btn btn-primary btn-w-md">
+                                                    <md-tooltip
+                                                        ng-if="agendaMedicaForm.$invalid || (!list.data || list.data.length === 0)"
+                                                        md-direction="top">
+                                                        Preencha todos os campos obrigatórios.</md-tooltip>
+                                                    Salvar
+                                                </button>
+                                                <p class="btn btn-default btn-w-md" ui-wave data-ng-click="goBack()">
+                                                    Voltar</p>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div>
+</section>

@@ -1,0 +1,145 @@
+<div class="page" ng-controller="adiantamentoPagamentoCtrl">
+    <div class="row ui-section">
+        <h2 class="section-header" style="float: left;">Adiantamento de salario</h2>
+        <div style="float: right">
+            <md-button class="md-fab md-primary" ng-href="" ng-click="showRelatorioGeral()">
+                <md-tooltip md-direction="bottom">Relatório</md-tooltip>
+                <span class="fa fa-file-pdf-o"></span>
+            </md-button>
+            <md-button class="md-fab md-accent" ng-href="#!/adiantamentoPagamento/formulario">
+                <md-tooltip md-direction="bottom">Novo adiantamento de pagamento</md-tooltip>
+                <span class="fa fa-plus"></span>
+            </md-button>
+            <span class="space"></span>
+        </div>
+
+        <div class="col-sm-12">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <div layout="column">
+                        <div layout-padding>
+                            <div layout layout-sm="column">
+                                <md-input-container flex>
+                                    <label>Nome Filial</label>
+                                    <md-select ng-model="filialIdBusca" ng-change="carregarListaLotacoes(filialIdBusca)" placeholder="Selecione uma filial" flex>
+                                        <md-option ng-repeat="filial in list.listFiliais" ng-value="filial.id">
+                                            {{filial.nomeFilial}}
+                                        </md-option>
+                                    </md-select>                                            
+                                </md-input-container>
+                                <md-input-container flex>
+                                    <label>Lotação</label>
+                                    <md-select ng-model="lotacaoIdBusca" placeholder="Selecione uma lotação" flex>
+                                        <md-option ng-repeat="lotacao in list.listLotacoes" ng-value="lotacao.id">
+                                            {{lotacao.descricao}}
+                                        </md-option>
+                                    </md-select>                                            
+                                </md-input-container>
+                                <md-input-container flex>
+                                    <label>Nome</label>
+                                    <input ng-model="nomeBusca" placeholder="Buscar por nome..."
+                                    ng-keypress="($event.keyCode === 13) && loadList()">
+                                </md-input-container>
+                                <md-input-container flex>
+                                    <label>Matricula</label>
+                                    <input ng-model="matriculaBusca" placeholder="Buscar por matricula..."
+                                    ng-keypress="($event.keyCode === 13) && loadList()">
+                                </md-input-container>
+                                <md-input-container flex>
+                                    <label>Status</label>
+                                    <md-select name="status" ng-model="statusBusca">
+                                        <md-option ng-repeat="status in list.statusAdiantamento" ng-value="status">
+                                            {{status}}
+                                        </md-option>
+                                    </md-select>
+                                </md-input-container>
+                                <md-input-container flex>
+                                    <label>Competência</label>
+                                    <md-icon class="material-icons icon-momentpicker" ng-class="md-datepicker-calendar-icon"
+                                        aria-label="md-calendar">date_range</md-icon>
+                                    <input name="competencia" moment-picker="competenciaBusca"
+                                        placeholder="Selecione a data" ng-model="competenciaBusca"
+                                        format="YYYY/MM" locale="pt-br" start-view="month"
+                                        ng-model-options="{ updateOn: 'blur' }">
+                                </md-input-container>
+                                <!-- <md-button class="md-icon-button" ng-click="showRelatorioGeral()">
+                                    <md-tooltip md-direction="top">Relatorio</md-tooltip>
+                                    <span class="fa fa-file-text fa-lg"></span>
+                                </md-button> -->
+                                <md-button class="md-icon-button" ng-click="limpaFiltro();loadList()">
+                                    <md-tooltip md-direction="top">Limpar Filtros</md-tooltip>
+                                    <md-icon>autorenew</md-icon>
+                                </md-button>
+                                <md-button class="md-icon-button" ng-click="loadList()">
+                                    <md-tooltip md-direction="top">Atualizar</md-tooltip>
+                                    <md-icon>refresh</md-icon>
+                                </md-button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <md-table-container>
+                        <table md-table ng-model="selected" md-progress="promise">
+                            <thead ng-if="!options.decapitate" md-head md-order="query.order" md-on-reorder="loadList">
+                                <tr md-row>
+                                    <th md-column>
+                                        <md-checkbox ng-model="checked" ng-click="checkAll(checked)" aria-label="CheckBox" style="float: left; padding-right: 40px;"></md-checkbox>
+                                    </th>
+                                    <th md-column>
+                                        <span>Matrícula</span>
+                                    </th>
+                                    <th md-column>
+                                        <span>Funcionário</span>
+                                    </th>
+                                    <th md-column>
+                                        <span>% Adiantam</span>
+                                    </th>
+                                    <th md-column>
+                                        <span>Valor salarial</span>
+                                    </th>
+                                    <th md-column>
+                                        <span>Data inicio</span>
+                                    </th>
+                                    <th md-column>
+                                        <span>Data fim</span>
+                                    </th>
+                                    <!-- <th md-column style="width: 6%;">
+                                        <span>Ações</span>
+                                    </th> -->
+                                </tr>
+                            </thead>
+                            <tbody md-body>
+                                <tr md-row md-select="item" md-select-id="item" md-auto-select ng-repeat="item in list.data">
+                                    <td md-cell>
+                                        <md-checkbox ng-model="selectedList[$index][item.id]" ng-checked="checkall" aria-label="CheckBox"></md-checkbox>
+                                    </td>
+                                    <td md-cell>{{item.funcionarioResponse.matricula}}</td>
+                                    <td md-cell>{{item.funcionarioResponse.nome}}</td>
+                                    <td md-cell>{{item.percentualAdiantamento}}</td>
+                                    <td md-cell>{{item.funcionarioResponse.referenciaSalarialResponse.valor}}</td>
+                                    <td md-cell>{{item.dataInicio | date:'dd/MM/yyyy'}}</td>
+                                    <td md-cell>{{item.dataFim | date:'dd/MM/yyyy'}}</td>
+                                    <!-- <td md-cell>
+                                        <a ng-if="item.status == 'Ativo'" ui-sref="adiantamentoPagamentoFormularioEdit({ id: item.id })">
+                                            <md-tooltip md-direction="top">Editar</md-tooltip>
+                                            <span class="fa fa-pencil fa-lg"></span>
+                                        </a>
+
+                                        <a ng-click="showRelatorioIndividual(item.funcionarioResponse.id);">
+                                            <md-tooltip md-direction="top">Termo de Rescisão</md-tooltip>
+                                            <span class="fa fa-eye fa-lg"></span>
+                                        </a>
+                                    </td> -->
+                                </tr>
+                            </tbody>
+                        </table>
+                    </md-table-container>
+                    
+                    <button type="submit" ui-wave class="btn btn-danger btn-w-md" ng-click="showConfirmDelete($event)">
+                        Excluir
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

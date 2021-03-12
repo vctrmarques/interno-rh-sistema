@@ -1,0 +1,48 @@
+<div class="card"  ng-controller="authCtrl">
+
+    <form name="material_login_form" class="md-form-login form-validation" data-ng-submit="submitForm()">
+        <!-- <form class="form-horizontal"> -->
+        <div class="card-content">
+            <section class="logo text-center">
+                <div>
+                    <img src="assets/images/Brasao_Prefeitura_Goiania_Prev_vert.png" class="imgLogin" style="width: 80px !important;">
+                </div>
+                <h1>
+                    {{main.brand}}
+                </h1>
+            </section>
+
+            <fieldset>
+                <div class="form-group">
+                    <div class="ui-input-group">
+                        <input type="text" required class="form-control" name="username" id="username"
+                            ng-model="user.username">
+                        <span class="input-bar"></span>
+                        <label>Usuário*</label>
+                        <div ng-messages="material_login_form.username.$error" multiple ng-if='material_login_form.username.$dirty'>
+                            <div ng-message="required">Este campo é obrigatório.</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="ui-input-group">
+                        <input type="password" name="password" id="password" required class="form-control"
+                            ng-model="user.password">
+                        <span class="input-bar"></span>
+                        <label>Senha*</label>
+                        <div ng-messages="material_login_form.password.$error" multiple ng-if='material_login_form.password.$dirty'>
+                            <div ng-message="required">Este campo é obrigatório.</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="divider"></div>
+                <div class="alert alert-danger" data-ng-show="showErrorOnSubmitFailed" style="padding: 0px !important;">
+                    <p>Login ou senha estão incorretos</p>
+                </div>
+            </fieldset>
+        </div>
+        <div class="card-action no-border" style="padding: 0px 50px 13px 50px !important;">
+            <button ng-disabled="!canSubmit()" type="submit" ui-wave class="btn btn-primary btn-w-md">Login</button>
+        </div>
+    </form>
+</div>

@@ -1,0 +1,48 @@
+<md-dialog style="min-width: 500px;">
+    <form ng-cloak>
+        <md-toolbar>
+            <div style="background-color: #01722c" class="md-toolbar-tools">
+                <h2>Arquivos gerados</h2>
+                <span flex></span>
+                <a ng-click="cancel()">
+                    <i class="fa fa-close"></i>
+                </a>
+            </div>
+        </md-toolbar>
+
+        <md-dialog-content>
+            <div class="page">
+                <div class="row">
+                    <div flex class="col-sm-12">
+                        <table class="table" ng-if="lista.anexos.length > 0">
+                            <thead>
+                                <tr>
+                                    <th>Descrição</th>
+                                    <th>Tamanho</th>
+                                    <th>Ações</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr ng-repeat="item in lista.anexos">
+                                    <td><strong>{{ item.description }}</strong></td>
+                                    <td>{{ item.size/1024/1024|number:2 }} MB</td>
+                                    <td nowrap>
+                                        <a href="{{item.fileDownloadUri}}" target="_blank" class="btn btn-success btn-xs"> <md-tooltip md-direction="top">Download</md-tooltip> 
+                                            <i class="fa fa-download fa-lg"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <div class="well well-sm" ng-show="lista.anexos.length == 0">Nenhum arquivo encontrado</div>
+                    </div>
+                </div>
+               
+	        </div>
+
+            <div class="md-dialog-content text-center">
+				<button class="btn btn-default btn-w-md" ng-click="cancel()">Voltar</button>
+            </div>
+        </md-dialog-content>
+    </form>
+</md-dialog>

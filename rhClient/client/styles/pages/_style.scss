@@ -1,0 +1,672 @@
+.selecionado {
+    background-color: #fff8af;
+}
+
+.nome-usuario-label {
+    font-weight: normal;
+    color: $brand-primary;
+}
+
+.desc-paycheck-item {
+    font-weight: bold !important;
+    font-size: 10px !important;
+    margin: 0 !important;
+}
+
+.value-paycheck-item {
+    float: right;
+    margin: 0 !important;
+    font-size: 12px !important;
+}
+
+.td-paycheck {
+    padding:3px 10px !important;
+}
+
+.paycheck-items td {
+    font-size: 12px;
+    padding: 8px !important;
+    border-top: none !important;
+}
+
+.border-left-paycheck {
+    border-left: 1px solid #ddd !important;
+}
+
+.paycheck-items th {
+    border-bottom: 1px solid #ddd !important;
+    padding: 8px !important;
+}
+
+.padrao-check-box-externo {
+    margin-left: 53px;
+    height: 92px;
+    width: 200px;
+}
+
+.padrao-check-box-interno {
+    width: 200px;
+    margin-left: 81px;
+    margin-top: 35px;
+}
+
+.imgHome {
+    max-width: 100%;
+    height: auto;
+    padding: 70px 40% 200px 40%;
+}
+
+.imgLogin {
+    width: 130px;
+    height: auto;
+}
+
+.imgHeader {
+    max-width: 100%;
+    height: 85px;
+    width: 200px;
+    padding-top: -15%;
+}
+
+.input-table-border {
+    border-bottom-style: solid; 
+    border-top-style: none; 
+    border-left-style: none;
+}
+
+.cropArea {
+    padding: 15px;
+    overflow: hidden;
+    width:500px;
+    height:350px;
+}
+
+.d-block{
+    display: block
+}
+
+.d-none{
+    display: none
+}
+.p-l-0{
+    padding-left: 0px;
+}
+.p-r-0{
+    padding-right: 0px;
+}
+.p-t-0{
+    padding-top: 0px;
+}
+.m-t-0{
+    margin-top: 0px;
+}
+.m-b-0{
+    margin-bottom: 0px;
+}
+
+/*Form Wizard*/
+.bs-wizard > .bs-wizard-step > .progress {background-color:#CCC;}
+.bs-wizard {margin-top: 40px;width: 100%;}
+.bs-wizard {border-bottom: solid 1px #e0e0e0; padding: 0 0 10px 0;}
+.bs-wizard > .bs-wizard-step {padding: 0; position: relative;}
+.bs-wizard > .bs-wizard-step + .bs-wizard-step {}
+.bs-wizard > .bs-wizard-step .bs-wizard-stepnum {color: #595959; font-size: 16px; margin-bottom: 5px;}
+.bs-wizard > .bs-wizard-step > .bs-wizard-dot {border: solid 7px #56697b;position: absolute; width: 60px; height: 60px; display: block; background: RGB(67,145,132) ; top: 45px; left: 50%; margin-top: -15px; margin-left: -30px; border-radius: 50%;} 
+.bs-wizard > .bs-wizard-step > .progress {position: relative; border-radius: 0px; height: 8px; box-shadow: none; margin: 55px 0;}
+.bs-wizard > .bs-wizard-step > .progress > .progress-bar {width:0px; box-shadow: none; background: #56697b;}
+.bs-wizard > .bs-wizard-step.complete > .progress > .progress-bar {width:100%;}
+.bs-wizard > .bs-wizard-step.active > .progress > .progress-bar {width:50%;}
+.bs-wizard > .bs-wizard-step:first-child.active > .progress > .progress-bar {width:0%;}
+.bs-wizard > .bs-wizard-step:last-child.active > .progress > .progress-bar {width: 100%;}
+.bs-wizard > .bs-wizard-step.disabled > .bs-wizard-dot {background-color: #CCC;border: solid 7px #CCC;}
+.bs-wizard > .bs-wizard-step.disabled > .bs-wizard-dot:after {opacity: 0;}
+.bs-wizard > .bs-wizard-step:first-child  > .progress {left: 50%; width: 50%;}
+.bs-wizard > .bs-wizard-step:last-child  > .progress {width: 50%;}
+
+@font-face {
+    font-family: 'Durant';
+    src: url('../assets/fonts/arial-rounded-mt-bold/arial-rounded-mt-bold.ttf')  format('truetype');
+    font-weight: bold;
+    }
+
+/*END Form Wizard*/
+
+//O CSS abaixo serve apenas para solucionar o problema dos MD SELECT ficarem dando scroll top na página. 
+//a documentação deixa claro que trata-se de um bug desta versão do materia.
+//Testes foram realizados e não foi identificado "contra indicações" ou "impactos" negativos deste CSS.
+body {
+    position: initial !important;
+    top: initial !important;
+    overflow: initial !important;
+}
+html {
+    overflow: initial !important;
+}
+
+// css de formatação pros campos de data momentpicker-
+.has-error {
+    color: rgb(213,0,0);
+}
+
+.required:after {
+    content: " *";
+}
+
+
+.icon-momentpicker {
+    color: rgba(0,0,0,0.54);
+}
+
+//ajuste z-index sobreescrevendo css mimificado para auto complete BusaMenu no header 
+.md-virtual-repeat-container.md-autocomplete-suggestions-container {
+    position: absolute;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.25);
+    z-index: 2000;
+    height: 100%; 
+}
+
+//Inserção do CSS do accordion
+div.accordion {
+    width: 100%;
+    background-color: whitesmoke;
+    border: none;
+    outline: none;
+    text-align: left;
+    padding: 15px 20px;
+    font-size: 18px;
+    color: #444;
+    cursor: pointer;
+    transition: background-color 0.2s linear;
+  }
+
+  div.accordion.odd {
+    background-color: rgb(253, 253, 253);
+  }
+  
+  a.icon {
+    padding-right: 15px;
+    float: right;
+  }
+  
+  div.accordion:after {
+    content: '\f055';
+    font-family: "fontawesome";
+    font-size: 14px;
+    float: left;
+    padding-right: 15px;
+  }
+  
+  div.accordion.is-open:after {
+    content: '\f056';
+  }
+  
+  div.accordion:hover, div.accordion.is-open {
+    background-color: #ddd;
+  }
+  
+  .accordion-content {
+    background-color: white;
+    border-left: 1px solid whitesmoke;
+    border-right: 1px solid whitesmoke;
+    padding: 0 20px;
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.2s ease-in-out;
+  }
+  @media print { 
+    .noprint { display:none; } 
+    }
+  
+    .center{
+        text-align: center;
+    }
+
+    .right {
+        float: right;
+    }
+    .left {
+        float: left;
+    }
+
+    .btn-title-center{
+        margin-top: 50px;
+    }
+
+    .btn-form{
+        margin-top: 10px;
+    }
+
+    .md-select-menu-container {
+        z-index: 99999 !important;
+    }
+
+    .editor {
+        min-height: 300px;
+        resize: none;
+    }
+
+    .spanTag {
+        color: rgb(66,66,66);
+        line-height: 32px;
+        background-color: rgb(224,224,224);
+        margin: 8px 8px 0 0;
+        padding: 6px 12px;
+        border-radius: 16px;
+        font-size: 12px;
+    }
+
+    .editor span {
+        color: rgb(66,66,66);
+        line-height: 32px;
+        background-color: rgb(224,224,224);
+        margin: 8px 8px 0 0;
+        padding: 6px 12px;
+        border-radius: 16px;
+        font-size: 12px;
+    }
+    
+    .menu-highlighted {
+        font-weight: bold;
+    }
+    
+    .product-search, .user-search {
+        box-shadow: 0 5px 15px rgba(0,0,0,.5);
+        border-radius: 6px;
+        -webkit-box-shadow: 0 3px 9px rgba(0,0,0,.5);
+        box-shadow: 0 3px 9px rgba(0,0,0,.5);
+        background-clip: padding-box;
+        outline: 0;
+    }
+    
+    .product-search {
+        max-width: 500px;
+    }
+    
+    .product-search .list-group-item.active {
+        background-color: #f5f5f5;
+    }
+    
+    .product-search:hover, .user-search:hover {
+        cursor: pointer;
+    }
+    
+    .product-search .product-photo-container {
+        float: left;
+        width: 100px;
+    }
+    
+    .product-search .product-photo {
+        max-width: 80px;
+        max-height: 50px;
+        border-radius: 3px;
+        margin: auto;
+    }
+    
+    .product-search .list-group-item-heading, .product-search .list-group-item-text {
+        margin-left: 10px;
+    }
+    
+    .user-search .list-group-item.active {
+        color: #fff;
+        background-color: #428bca;
+        border-color: #428bca;
+    }
+    
+    .user-search .list-group-item.active .text-muted {
+        color: #ccc;
+    }
+    
+    .user-search .list-group-item.active .text-primary {
+        color: #fff;
+    }
+    
+    .user-search .list-group-item {
+        padding: 5px;
+    }
+    
+    .user-search .user-photo {
+        max-width: 30px;
+        max-height: 30px;
+        border-radius: 15px;
+    }
+    
+    .documentation-attr {
+        margin-top: 20px;
+        margin-bottom: 10px;
+        font-weight: bold;
+    }
+    
+    .documentation-element {
+        margin-top: 30px;
+        margin-bottom: 10px;
+        font-size: 20px;
+        font-weight: bold;
+    }
+    
+    .section-heading {
+        margin-top: 30px;
+    }
+    
+    .demo-scrollable-menu {
+        height: auto;
+        max-height: 300px;
+        overflow-y: auto;
+    }
+
+    //Inserção do CSS do accordionBefore
+div.accordionBefore {
+    width: 100%;
+    background-color: whitesmoke;
+    border: none;
+    outline: none;
+    text-align: left;
+    padding: 15px 20px;
+    font-size: 18px;
+    color: #444;
+    cursor: pointer;
+    transition: background-color 0.2s linear;
+  }
+  
+  a.icon {
+    padding-right: 15px;
+    float: right;
+  }
+  
+  div.accordionBefore:before {
+    content: '\f055';
+    font-family: "fontawesome";
+    font-size: 14px;
+    float: left;
+    padding-right: 15px;
+  }
+  
+  div.accordionBefore.is-open:before {
+    content: '\f056';
+  }
+  
+  div.accordionBefore:hover, div.accordionBefore.is-open {
+    background-color: #ddd;
+  }
+  
+  .accordionBefore-content {
+    background-color: white;
+    border-left: 1px solid whitesmoke;
+    border-right: 1px solid whitesmoke;
+    padding: 0 20px;
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.2s ease-in-out;
+  }
+  @media print { 
+    .noprint { display:none; } 
+    }
+  
+    .center{
+        text-align: center;
+    }
+
+    .right {
+        float: right;
+    }
+    .left {
+        float: left;
+    }
+
+    .btn-title-center{
+        margin-top: 50px;
+    }
+
+    .btn-form{
+        margin-top: 10px;
+    }
+
+    .md-select-menu-container {
+        z-index: 99999 !important;
+    }
+
+    .editor {
+        min-height: 300px;
+        resize: none;
+    }
+
+    .spanTag {
+        color: rgb(66,66,66);
+        line-height: 32px;
+        background-color: rgb(224,224,224);
+        margin: 8px 8px 0 0;
+        padding: 6px 12px;
+        border-radius: 16px;
+        font-size: 12px;
+    }
+
+    .editor span {
+        color: rgb(66,66,66);
+        line-height: 32px;
+        background-color: rgb(224,224,224);
+        margin: 8px 8px 0 0;
+        padding: 6px 12px;
+        border-radius: 16px;
+        font-size: 12px;
+    }
+    
+    .menu-highlighted {
+        font-weight: bold;
+    }
+    
+    .product-search, .user-search {
+        box-shadow: 0 5px 15px rgba(0,0,0,.5);
+        border-radius: 6px;
+        -webkit-box-shadow: 0 3px 9px rgba(0,0,0,.5);
+        box-shadow: 0 3px 9px rgba(0,0,0,.5);
+        background-clip: padding-box;
+        outline: 0;
+    }
+    
+    .product-search {
+        max-width: 500px;
+    }
+    
+    .product-search .list-group-item.active {
+        background-color: #f5f5f5;
+    }
+    
+    .product-search:hover, .user-search:hover {
+        cursor: pointer;
+    }
+    
+    .product-search .product-photo-container {
+        float: left;
+        width: 100px;
+    }
+    
+    .product-search .product-photo {
+        max-width: 80px;
+        max-height: 50px;
+        border-radius: 3px;
+        margin: auto;
+    }
+    
+    .product-search .list-group-item-heading, .product-search .list-group-item-text {
+        margin-left: 10px;
+    }
+    
+    .user-search .list-group-item.active {
+        color: #fff;
+        background-color: #428bca;
+        border-color: #428bca;
+    }
+    
+    .user-search .list-group-item.active .text-muted {
+        color: #ccc;
+    }
+    
+    .user-search .list-group-item.active .text-primary {
+        color: #fff;
+    }
+    
+    .user-search .list-group-item {
+        padding: 5px;
+    }
+    
+    .user-search .user-photo {
+        max-width: 30px;
+        max-height: 30px;
+        border-radius: 15px;
+    }
+    
+    .documentation-attr {
+        margin-top: 20px;
+        margin-bottom: 10px;
+        font-weight: bold;
+    }
+    
+    .documentation-element {
+        margin-top: 30px;
+        margin-bottom: 10px;
+        font-size: 20px;
+        font-weight: bold;
+    }
+    
+    .section-heading {
+        margin-top: 30px;
+    }
+    
+    .demo-scrollable-menu {
+        height: auto;
+        max-height: 300px;
+        overflow-y: auto;
+    }
+
+    /* Inicio Do Elemento De Criação Da Árvore */
+
+* {margin: 0; padding: 0;}
+
+.tree ul {
+    padding-top: 20px; position: relative;
+	
+	transition: all 0.5s;
+	-webkit-transition: all 0.5s;
+	-moz-transition: all 0.5s;
+}
+
+.tree li {
+	float: left; text-align: center;
+	list-style-type: none;
+	position: relative;
+	padding: 20px 5px 0 5px;
+	
+	transition: all 0.5s;
+	-webkit-transition: all 0.5s;
+	-moz-transition: all 0.5s;
+}
+
+/*We will use ::before and ::after to draw the connectors*/
+
+.tree li::before, .tree li::after{
+	content: '';
+	position: absolute; top: 0; right: 50%;
+	border-top: 1px solid #ccc;
+	width: 50%; height: 20px;
+}
+.tree li::after{
+	right: auto; left: 50%;
+	border-left: 1px solid #ccc;
+}
+
+/*We need to remove left-right connectors from elements without 
+any siblings*/
+.tree li:only-child::after, .tree li:only-child::before {
+	display: none;
+}
+
+/*Remove space from the top of single children*/
+.tree li:only-child{ padding-top: 0;}
+
+/*Remove left connector from first child and 
+right connector from last child*/
+.tree li:first-child::before, .tree li:last-child::after{
+	border: 0 none;
+}
+/*Adding back the vertical connector to the last nodes*/
+.tree li:last-child::before{
+	border-right: 1px solid #ccc;
+	border-radius: 0 5px 0 0;
+	-webkit-border-radius: 0 5px 0 0;
+	-moz-border-radius: 0 5px 0 0;
+}
+.tree li:first-child::after{
+	border-radius: 5px 0 0 0;
+	-webkit-border-radius: 5px 0 0 0;
+	-moz-border-radius: 5px 0 0 0;
+}
+
+/*Time to add downward connectors from parents*/
+.tree ul ul::before{
+	content: '';
+	position: absolute; top: 0; left: 50%;
+	border-left: 1px solid #ccc;
+	width: 0; height: 20px;
+}
+
+.tree li a{
+	border: 1px solid #ccc;
+	padding: 5px 10px;
+	text-decoration: none;
+	color: #666;
+	font-family: arial, verdana, tahoma;
+	font-size: 11px;
+	display: inline-block;
+	
+	border-radius: 5px;
+	-webkit-border-radius: 5px;
+	-moz-border-radius: 5px;
+	
+	transition: all 0.5s;
+	-webkit-transition: all 0.5s;
+	-moz-transition: all 0.5s;
+}
+
+/*Time for some hover effects*/
+/*We will apply the hover effect the the lineage of the element also*/
+.tree li a:hover, .tree li a:hover+ul li a {
+	background: #c8e4f8; color: #000; border: 1px solid #94a0b4;
+}
+/*Connector styles on hover*/
+.tree li a:hover+ul li::after, 
+.tree li a:hover+ul li::before, 
+.tree li a:hover+ul::before, 
+.tree li a:hover+ul ul::before{
+	border-color:  #94a0b4;
+}
+
+/* Fim Do Elemento De Criação Da Árvore */
+
+md-radio-button .md-label {
+    margin-left: 25px;
+    margin-top: 4px;
+}
+
+.font-weight-bold {
+    font-weight: bold;
+}
+
+
+.selectdemoSelectHeader {
+    /* Please note: All these selectors are only applied to children of elements with the 'selectdemoSelectHeader' class */ }
+    .selectdemoSelectHeader .demo-header-searchbox {
+      border: none;
+      outline: none;
+      height: 100%;
+      width: 100%;
+      padding: 0; }
+    .selectdemoSelectHeader .demo-select-header {
+      box-shadow: 0 1px 0 0 rgba(0, 0, 0, 0.1), 0 0 0 0 rgba(0, 0, 0, 0.14), 0 0 0 0 rgba(0, 0, 0, 0.12);
+      padding-left: 10.667px;
+      height: 48px;
+      cursor: pointer;
+      position: relative;
+      display: flex;
+      align-items: center;
+      width: auto; }
+    .selectdemoSelectHeader md-content._md {
+      max-height: 240px; }

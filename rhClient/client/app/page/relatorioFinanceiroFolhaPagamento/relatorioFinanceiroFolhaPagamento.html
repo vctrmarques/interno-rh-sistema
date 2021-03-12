@@ -1,0 +1,359 @@
+<div class="page" ng-controller="relatorioFinanceiroFolhaPagamentoCtrl">
+    <div class="row ui-section">
+        <div class="col-lg-12 clearfix">
+            <h2 class="section-header" style="float: left;">Relatório Financeiro</h2>
+            <div style="float: right">
+                <span class="space"></span>
+            </div>
+            <div style="float: right">
+                <span class="space"></span>
+            </div>
+        </div>
+        <div class="col-md-12">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <article class="article">
+                        <div class="row">
+                            <div layout="column" ng-cloak class="md-inline-form inputdemoBasicUsage">
+                                <div layout-padding>
+
+                                    <md-tabs md-dynamic-height md-border-bottom>
+                                        <md-tab label="Gerar Relatório">
+                                            <md-content class="md-padding">
+                                                <form id="folha-pag" name="relatorioFinanceiroForm" ng-submit="save()">
+                                                    <div class="row">
+                                                        <div class="col-md-3">
+                                                            <h4>Parâmetros do Relatório</h4>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div layout layout-sm="column" class="col-md-8">
+                                                            <md-input-container flex>
+                                                                <label>Nome do Relatório</label>
+                                                                <input ng-model="relatorioFinanceiro.descricao"
+                                                                    name="nome" required>
+                                                                <div ng-messages="relatorioFinanceiroForm.descricao.$error"
+                                                                    multiple role="alert">
+                                                                    <div ng-message="required">Campo de preenchimento
+                                                                        obrigatório.</div>
+                                                                </div>
+                                                            </md-input-container>
+                                                        </div>
+                                                        <div layout layout-sm="column" class="col-md-4">
+                                                            <md-input-container flex ng-if="loadedSituacaoFuncional">
+                                                                <label>Situação Funcional</label>
+                                                                <md-select ng-required="true"
+                                                                    ng-model="relatorioFinanceiro.situacoesFuncionais"
+                                                                    placeholder="Selecione as Situações Funcionais"
+                                                                    data-md-container-class="selectdemoSelectHeader"
+                                                                    multiple>
+                                                                    <md-select-header class="demo-select-header">
+                                                                    </md-select-header>
+                                                                    <md-optgroup label="situacaoFuncional">
+                                                                        <md-option ng-value="sf.id"
+                                                                            ng-repeat="sf in situacoesFuncionais">
+                                                                            {{ sf.descricao }}
+                                                                        </md-option>
+                                                                    </md-optgroup>
+                                                                </md-select>
+                                                            </md-input-container>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div layout layout-sm="column" class="col-md-6">
+                                                            <md-input-container flex>
+                                                                <label>Filiais</label>
+                                                                <md-select ng-required="true"
+                                                                    ng-model="relatorioFinanceiro.filiais"
+                                                                    placeholder="Selecione as Filiais"
+                                                                    data-md-container-class="selectdemoSelectHeader"
+                                                                    multiple ng-change="loadLotacoesByFilial()">
+                                                                    <md-select-header class="demo-select-header">
+                                                                    </md-select-header>
+                                                                    <md-optgroup label="filial">
+                                                                        <md-option ng-value="f.id"
+                                                                            ng-repeat="f in filiais">
+                                                                            {{ f.nomeFilial }}
+                                                                        </md-option>
+                                                                    </md-optgroup>
+                                                                </md-select>
+                                                            </md-input-container>
+                                                        </div>
+                                                        <div layout layout-sm="column" class="col-md-6">
+                                                            <md-input-container flex ng-if="loadedLotacao">
+                                                                <label>Lotação</label>
+                                                                <md-select ng-required="true"
+                                                                    ng-model="relatorioFinanceiro.lotacoes"
+                                                                    placeholder="Selecione as Lotações"
+                                                                    data-md-container-class="selectdemoSelectHeader"
+                                                                    multiple>
+                                                                    <md-select-header class="demo-select-header">
+                                                                    </md-select-header>
+                                                                    <md-optgroup label="lotacao">
+                                                                        <md-option ng-value="l.id"
+                                                                            ng-repeat="l in lotacoes">
+                                                                            {{ l.descricao }}
+                                                                        </md-option>
+                                                                    </md-optgroup>
+                                                                </md-select>
+                                                            </md-input-container>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div layout layout-sm="column" class="col-md-3">
+                                                            <md-input-container flex>
+                                                                <label>Situação do Relatório</label>
+                                                                <md-select name="situacaoRelatorio"
+                                                                    ng-model="relatorioFinanceiro.status"
+                                                                    ng-required="true">
+                                                                    <md-option
+                                                                        ng-repeat="status in statusRelatorioFinanceiroEnumList"
+                                                                        value="{{status.value}}"
+                                                                        ng-disabled="{{status.value == 'SALVO'}}">
+                                                                        {{ status.label }}
+                                                                    </md-option>
+                                                                </md-select>
+                                                                <div ng-messages="relatorioFinanceiro.status.$error"
+                                                                    multiple>
+                                                                    <div ng-message="required">Campo de preenchimento
+                                                                        obrigatório.</div>
+                                                                </div>
+                                                            </md-input-container>
+                                                        </div>
+                                                        <div layout layout-sm="column" class="col-md-3">
+                                                            <md-autocomplete md-input-name="competencia"
+                                                                ng-disabled="relatorioFinanceiro.status == 'PREVIA'"
+                                                                ng-required="relatorioFinanceiro.status != 'PREVIA'"
+                                                                md-selected-item-change="selectCompetencia()"
+                                                                md-no-cache="noCache"
+                                                                md-floating-label="Competência  - digite o ano"
+                                                                md-selected-item="relatorioFinanceiro.competenciaObject"
+                                                                md-search-text="searchCompetencia"
+                                                                md-items="f in querySearchCompetencia(searchCompetencia)"
+                                                                md-item-text="f.mesCompetencia+'/'+f.anoCompetencia"
+                                                                md-delay="100" md-min-length="3">
+                                                                <md-item-template>
+                                                                    <div>{{f.mesCompetencia | mes}}/{{f.anoCompetencia}}
+                                                                    </div>
+                                                                </md-item-template>
+                                                            </md-autocomplete>
+                                                        </div>
+                                                        <div layout layout-sm="column" class="col-md-6">
+                                                            <button ng-disabled="relatorioFinanceiroForm.$invalid "
+                                                                type="submit" ui-wave class="btn btn-primary btn-w-md">
+                                                                <md-tooltip ng-if="relatorioFinanceiroForm.$invalid"
+                                                                    md-direction="top">Preencha
+                                                                    todos os campos
+                                                                    obrigatórios.</md-tooltip>
+                                                                Gerar Relatório
+                                                            </button>
+                                                            <button ui-wave class="btn btn-default btn-w-md"
+                                                                ng-click="limparCampos()">
+                                                                Limpar Campos
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                </form>
+                                                <div class="row divider">
+                                                    <div class="col-md-12">
+                                                        <article class="article">
+                                                            <md-card class="no-margin-h">
+                                                                <md-table-container>
+
+                                                                    <table md-table md-progress="promise">
+                                                                        <thead md-head>
+                                                                            <tr md-row>
+                                                                                <th md-column>
+                                                                                    <span>Relatório</span>
+                                                                                </th>
+                                                                                <th md-column>
+                                                                                    <span>Situação</span>
+                                                                                </th>
+                                                                                <th md-column>
+                                                                                    <span>Filiais</span>
+                                                                                </th>
+                                                                                <th md-column>
+                                                                                    <span>Lotações</span>
+                                                                                </th>
+                                                                                <th md-column>
+                                                                                    <span>Competência</span>
+                                                                                </th>
+                                                                                <th md-column style="width: 75px;">
+                                                                                    <span>Ações</span>
+                                                                                </th>
+                                                                            </tr>
+                                                                        </thead>
+                                                                        <tbody md-body>
+                                                                            <tr md-row ng-repeat="item in relatorios">
+                                                                                <td md-cell>
+                                                                                    {{ item.descricao }}
+                                                                                </td>
+                                                                                <td md-cell>
+                                                                                    {{ item.historicoAtual.status }}
+                                                                                </td>
+                                                                                <td md-cell>
+                                                                                    {{ item.filiaisConcat }}
+                                                                                </td>
+                                                                                <td md-cell>
+                                                                                    {{ item.lotacoesConcat }}
+                                                                                </td>
+                                                                                <td md-cell>
+                                                                                    {{item.folhaCompetencia.mesAno}}
+                                                                                </td>
+                                                                                <td md-cell>
+                                                                                    <a href=""
+                                                                                        ng-click="dialogAlterarStatus(item)">
+                                                                                        <md-tooltip md-direction="top">
+                                                                                            Alterar Situação
+                                                                                        </md-tooltip>
+                                                                                        <i
+                                                                                            class="fa fa-exchange fa-lg"></i>
+                                                                                    </a>
+                                                                                    <a href=""
+                                                                                        ng-if="item.historicoAtual.status =='CALCULADA'"
+                                                                                        ng-click="showInserirSalvarRelatorio($event,item.id)">
+                                                                                        <md-tooltip md-direction="top">
+                                                                                            Salvar</md-tooltip>
+                                                                                        <i class="fa fa-save fa-lg"></i>
+                                                                                    </a>
+                                                                                    <a href=""
+                                                                                        ng-click="showDeleteRelatorio($event,item.id)">
+                                                                                        <md-tooltip md-direction="top">
+                                                                                            Excluir Relatório
+                                                                                        </md-tooltip>
+                                                                                        <i
+                                                                                            class="fa fa-trash-o fa-lg"></i>
+                                                                                    </a>
+                                                                                    <a href="{{item.anexo.fileDownloadUri}}"
+                                                                                        target="_blank">
+                                                                                        <md-tooltip md-direction="top">
+                                                                                            Download
+                                                                                        </md-tooltip> <i
+                                                                                            class="fa fa-download fa-lg"></i>
+                                                                                    </a>
+                                                                                </td>
+                                                                            </tr>
+                                                                        </tbody>
+                                                                    </table>
+                                                                </md-table-container>
+                                                            </md-card>
+                                                        </article>
+                                                    </div>
+                                                </div>
+                                            </md-content>
+                                        </md-tab>
+                                        <md-tab label="Histórico de Relatórios">
+                                            <form>
+                                                <div layout layout-sm="column" class="col-md-10">
+                                                    <md-autocomplete flex md-input-name="competenciaSearch"
+                                                        md-selected-item-change="selectCompetenciaSearch()"
+                                                        md-no-cache="noCache"
+                                                        md-floating-label="Digite o ano da competência"
+                                                        md-selected-item="competenciaSearch"
+                                                        md-search-text="searchCompetenciaHistorico"
+                                                        md-items="f in querySearchCompetencia(searchCompetenciaHistorico)"
+                                                        md-item-text="f.mesCompetencia+'/'+f.anoCompetencia"
+                                                        md-delay="100" md-min-length="3">
+                                                        <md-item-template>
+                                                            <div>
+                                                                {{f.mesCompetencia | mes}}/{{f.anoCompetencia}}
+                                                            </div>
+                                                        </md-item-template>
+                                                    </md-autocomplete>
+                                                </div>
+                                                <div layout layout-sm="column" class="col-md-2">
+                                                    <md-button class="md-icon-button" ng-click="limpaSearch()">
+                                                        <md-tooltip md-direction="top">Limpar Filtros
+                                                        </md-tooltip>
+                                                        <md-icon>autorenew</md-icon>
+                                                    </md-button>
+                                                </div>
+                                            </form>
+                                            <div class="row divider">
+                                                <div class="col-md-12">
+                                                    <div class="panel panel-default">
+                                                        <div class="panel-body">
+                                                            <article class="article">
+                                                                <md-card class="row no-margin-h">
+                                                                    <md-table-container>
+                                                                        <table md-table md-progress="promise">
+                                                                            <thead md-head>
+                                                                                <tr md-row>
+                                                                                    <th md-column>
+                                                                                        <span>Relatório</span>
+                                                                                    </th>
+                                                                                    <th md-column>
+                                                                                        <span>Situação</span>
+                                                                                    </th>
+                                                                                    <th md-column>
+                                                                                        <span>Filiais</span>
+                                                                                    </th>
+                                                                                    <th md-column>
+                                                                                        <span>Lotações</span>
+                                                                                    </th>
+                                                                                    <th md-column>
+                                                                                        <span>Competência</span>
+                                                                                    </th>
+                                                                                    <th md-column style="width: 75px;">
+                                                                                        <span>Ações</span>
+                                                                                    </th>
+                                                                                </tr>
+                                                                            </thead>
+                                                                            <tbody md-body>
+                                                                                <tr md-row
+                                                                                    ng-repeat="item in relatoriosSalvos">
+                                                                                    <td md-cell>
+                                                                                        {{ item.descricao }}
+                                                                                    </td>
+                                                                                    <td md-cell>
+                                                                                        {{ item.historicoAtual.status }}
+                                                                                    </td>
+                                                                                    <td md-cell>
+                                                                                        {{ item.filiaisConcat }}
+                                                                                    </td>
+                                                                                    <td md-cell>
+                                                                                        {{ item.lotacoesConcat }}
+                                                                                    </td>
+                                                                                    <td md-cell>
+                                                                                        {{item.folhaCompetencia.mesAno}}
+                                                                                    </td>
+                                                                                    <td md-cell>
+                                                                                        <a href="{{item.anexo.fileDownloadUri}}"
+                                                                                            target="_blank">
+                                                                                            <md-tooltip
+                                                                                                md-direction="top">
+                                                                                                Download
+                                                                                            </md-tooltip> <i
+                                                                                                class="fa fa-download fa-lg"></i>
+                                                                                        </a>
+                                                                                    </td>
+                                                                                </tr>
+                                                                            </tbody>
+                                                                        </table>
+                                                                        <div class="panel panel-default panel-minimal"
+                                                                            ng-if="relatoriosSalvos.length === 0">
+                                                                            <div class="row">
+                                                                                <div class="col-md-12 text-center">
+                                                                                    <h4>NÃO EXISTE REGISTROS PARA SUA
+                                                                                        BUSCA.</h4>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </md-table-container>
+                                                                </md-card>
+                                                            </article>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </md-tab>
+                                    </md-tabs>
+                                </div>
+                            </div>
+                        </div>
+                    </article>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

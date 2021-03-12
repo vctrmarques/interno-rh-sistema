@@ -1,0 +1,370 @@
+<section class="page-form-ele page" ng-controller="FormCtrl">
+
+
+    <div class="row ui-section" ng-controller="InputCtrl">
+        <div class="col-lg-8 clearfix">
+            <h2 class="section-header">Campos de entrada padrão - Material Design</h2>
+        </div>
+        <div class="col-md-12">
+            <section class="panel panel-default">
+                <div class="panel-body">
+                    <div class="row">
+                        <div class="col-lg-8 col-lg-offset-2">
+
+                            <div layout="column" ng-cloak class="md-inline-form inputdemoBasicUsage">
+                                <div layout-padding>
+                                    <form name="userForm">
+                                        <div layout layout-sm="column">
+                                            <md-input-container flex>
+                                                <label>Empresa (Exemplo de Campo desabilitado)</label>
+                                                <input ng-model="user.company" disabled>
+                                            </md-input-container>
+                                            <md-datepicker ng-model="user.submissionDate" md-placeholder="Insira a data.."></md-datepicker>
+                                        </div>
+                                        <div layout layout-sm="column">
+                                            <md-input-container flex>
+                                                <label>Primeiro nome</label>
+                                                <input ng-model="user.firstName">
+                                            </md-input-container>
+                                            <md-input-container flex>
+                                                <label>último nome</label>
+                                                <input ng-model="theMax">
+                                            </md-input-container>
+                                        </div>
+                                        <md-input-container class="md-block">
+                                            <label>Endereço</label>
+                                            <input ng-model="user.address">
+                                        </md-input-container>
+                                        <div layout layout-sm="column">
+                                            <md-input-container flex>
+                                                <label>Cidade</label>
+                                                <input ng-model="user.city">
+                                            </md-input-container>
+                                            <md-input-container flex>
+                                                <label>Estado</label>
+                                                <md-select ng-model="user.statePtBr">
+                                                    <md-option ng-repeat="state in statesPtBr" value="{{state.value}}">
+                                                        {{state.label}}
+                                                    </md-option>
+                                                </md-select>
+                                            </md-input-container>
+                                            <md-input-container flex>
+                                                <label>CEP</label>
+                                                <input name="postalCode" ng-model="user.postalCode" placeholder="50310665" required>
+                                                <div ng-messages="userForm.postalCode.$error" role="alert" multiple>
+                                                    <div ng-message="required" class="my-message">You must supply a postal code.</div>
+                                                </div>
+                                            </md-input-container>
+                                        </div>
+                                        <md-input-container class="md-block">
+                                            <label>Descrição da empresa</label>
+                                            <textarea ng-model="user.biography" columns="1" md-maxlength="150"></textarea>
+                                        </md-input-container>
+                                    </form>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div>
+
+
+    <div class="row ui-section" ng-controller="RadioCtrl">
+        <div class="col-lg-8 clearfix">
+            <h2 class="section-header">Campos radio, checkbox e switch - Material Design</h2>
+        </div>
+        <div class="col-md-12">
+            <section class="panel panel-default">
+                <div class="panel-body padding-xl">
+                    <div class="row">
+                        <div class="col-lg-8 col-lg-offset-2">
+                            <h4>Uso básico</h4>
+                            <div class="divider divider-xl"></div>
+                            <p>
+                                <strong style="display: inline-block; width: 100px;">Radio</strong>
+                                <md-radio-group class="ui-md-radio-group-inline" ng-model="radio.group1">
+                                    <md-radio-button value="Apple" ng-disabled="true">Maça</md-radio-button>
+                                    <md-radio-button value="Banana">Banana</md-radio-button>
+                                    <md-radio-button value="Mango">Manga</md-radio-button>
+                                </md-radio-group>
+                            </p>
+
+                            <div class="divider divider-xl"></div>
+                            <p>
+                                <strong style="display: inline-block; width: 100px;">Checkbox</strong>
+                                <md-checkbox ng-model="checkbox.cb1" aria-label="Checkbox 1"> {{ checkbox.cb1 ? 'Verdadeiro' : 'Falso'}} </md-checkbox>
+                                <md-checkbox ng-model="checkbox.cb2" aria-label="Checkbox 2" ng-true-value="'yup'" ng-false-value="'nope'" class="md-warn">{{ checkbox.cb2 ? 'Sim':'Não' }} </md-checkbox>
+                                <md-checkbox md-no-ink aria-label="Checkbox No Ink" ng-model="checkbox.cb5" class="md-primary"></md-checkbox>
+                            </p>
+
+                            <div class="divider divider-xl"></div>
+
+                            <div class="row">
+                                <div class="col-md-2">
+                                    <p>
+                                        <strong style="display: inline-block; width: 100px;">Switches</strong>
+                                    </p>
+                                </div>
+                                <div class="col-md-10">
+                                    <md-switch ng-model="switchData.cb1" aria-label="Switch 1"> Switch 1: {{ switchData.cb1 ? 'Verdadeiro':'Falso'}} </md-switch>
+                                    <md-switch ng-model="switchData.cb2" aria-label="Switch 2" ng-true-value="'yup'" ng-false-value="'nope'"> Switch 2 {{ switchData.cb2 ?'sim':'Não'}} </md-switch>
+                                    <md-switch class="md-primary" md-no-ink aria-label="Switch No Ink"> </md-switch>
+                                </div>
+                            </div>
+
+
+
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div>
+
+    <div class="row ui-section" ng-controller="MaterialAutocompleteCtrl as ctrl">
+        <div class="col-lg-8 clearfix">
+            <h2 class="section-header">Campo de busca tipo "Autocomplete" - Material Design</h2>
+        </div>
+        <div class="col-md-12">
+            <section class="panel panel-default">
+                <div class="panel-body padding-xl">
+                    <div class="row">
+                        <div class="col-lg-8 col-lg-offset-2">
+
+                            <h4>Uso básico</h4>
+                            <div class="divider divider-md"></div>
+                            <form ng-submit="$event.preventDefault()">
+                                <md-autocomplete ng-disabled="ctrl.isDisabled" md-no-cache="ctrl.noCache" md-selected-item="ctrl.selectedItem" md-search-text-change="ctrl.searchTextChange(ctrl.searchText)"
+                                    md-search-text="ctrl.searchText" md-selected-item-change="ctrl.selectedItemChange(item)"
+                                    md-items="item in ctrl.querySearch(ctrl.searchText)" md-item-text="item.display" md-min-length="0"
+                                    placeholder="Qual estado americano você gostaria de conhecer?">
+                                    <md-item-template>
+                                        <span md-highlight-text="ctrl.searchText" md-highlight-flags="^i">{{item.display}}</span>
+                                    </md-item-template>
+                                    <md-not-found>
+                                        Estado "{{ctrl.searchText}}" não encontrado.
+                                        <a ng-click="ctrl.newState(ctrl.searchText)">Crie aqui!</a>
+                                    </md-not-found>
+                                </md-autocomplete>
+                            </form>
+
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div>
+
+    <div class="row ui-section" ng-controller="ChipsBasicDemoCtrl as ctrl">
+        <div class="col-lg-8 clearfix">
+            <h2 class="section-header">Campo de "tags" - Material Design</h2>
+        </div>
+        <div class="col-md-12">
+            <section class="panel panel-default" ng-cloak>
+                <div class="panel-body padding-xl">
+
+                    <div class="row">
+                        <div class="col-md-2">
+                        </div>
+                        <div class="col-md-8">
+                            <h4>Uso básico</h4>
+                            <md-chips ng-model="ctrl.fruitNames" readonly="ctrl.readonly"></md-chips>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div>
+
+
+    <div class="row ui-section" style="display: none">
+        <div class="col-lg-8 clearfix">
+            <h2 class="section-header">Inputs, Input Variants, Textarea</h2>
+        </div>
+        <div class="col-md-12">
+            <section class="panel panel-default">
+                <div class="panel-body padding-lg">
+                    <form class="form-horizontal">
+
+                        <div class="form-group">
+                            <label for="" class="col-sm-2">Normal input</label>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control">
+                            </div>
+                        </div>
+                        <div class="divider divider-dashed divider-lg pull-in"></div>
+                        <div class="form-group">
+                            <label for="" class="col-sm-2">Rounded input</label>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control input-round">
+                            </div>
+                        </div>
+                        <div class="divider divider-dashed divider-lg pull-in"></div>
+                        <div class="form-group">
+                            <label for="label-focus" class="col-sm-2">Label focus</label>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control" id="label-focus">
+                            </div>
+                        </div>
+                        <div class="divider divider-dashed divider-lg pull-in"></div>
+                        <div class="form-group">
+                            <label for="" class="col-sm-2">With help</label>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control">
+                                <span class="help-block">Some help text goes here.</span>
+                            </div>
+                        </div>
+                        <div class="divider divider-dashed divider-lg pull-in"></div>
+                        <div class="form-group">
+                            <label for="" class="col-sm-2">Password</label>
+                            <div class="col-sm-10">
+                                <input type="password" class="form-control">
+                            </div>
+                        </div>
+                        <div class="divider divider-dashed divider-lg pull-in"></div>
+                        <div class="form-group">
+                            <label for="" class="col-sm-2">Placeholder</label>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control" placeholder="placeholder goes here">
+                            </div>
+                        </div>
+                        <div class="divider divider-dashed divider-lg pull-in"></div>
+                        <div class="form-group">
+                            <label for="" class="col-sm-2">Disabled</label>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control" disabled value="disabled">
+                            </div>
+                        </div>
+                        <div class="divider divider-dashed divider-lg pull-in"></div>
+                        <div class="form-group">
+                            <label for="" class="col-sm-2">Predefined value</label>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control" value="http://">
+                            </div>
+                        </div>
+                        <div class="divider divider-dashed divider-lg pull-in"></div>
+                        <div class="form-group">
+                            <label for="" class="col-sm-2">Input with icons</label>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control">
+                                <span class="icon fa fa-star"></span>
+                            </div>
+                        </div>
+                        <div class="divider divider-dashed divider-lg pull-in"></div>
+                        <div class="form-group">
+                            <label for="" class="col-sm-2">Input primary</label>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control input-primary">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="" class="col-sm-2">Input info</label>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control input-info">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="" class="col-sm-2">Input success</label>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control input-success">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="" class="col-sm-2">Input warning</label>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control input-warning">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="" class="col-sm-2">Input error</label>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control input-danger">
+                            </div>
+                        </div>
+                        <div class="divider divider-dashed divider-lg pull-in"></div>
+                        <div class="form-group">
+                            <label for="" class="col-sm-2">Control sizing</label>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control input-lg">
+                                <div class="divider"></div>
+                                <input type="text" class="form-control">
+                                <div class="divider"></div>
+                                <input type="text" class="form-control input-sm">
+                            </div>
+                        </div>
+                        <div class="divider divider-dashed divider-lg pull-in"></div>
+                        <div class="form-group">
+                            <label for="" class="col-sm-2">Input Group</label>
+                            <div class="col-sm-10">
+                                <div class="input-group">
+                                    <span class="input-group-addon">@</span>
+                                    <input type="text" class="form-control" placeholder="Username">
+                                </div>
+                                <div class="divider"></div>
+                                <div class="input-group">
+                                    <input type="text" class="form-control">
+                                    <span class="input-group-addon">.00</span>
+                                </div>
+                                <div class="divider"></div>
+                                <div class="input-group">
+                                    <span class="input-group-addon">$</span>
+                                    <input type="text" class="form-control">
+                                    <span class="input-group-addon">.00</span>
+                                </div>
+                                <div class="divider"></div>
+                                <div class="input-group">
+                                    <span class="input-group-addon">
+                                        <input type="checkbox">
+                                    </span>
+                                    <input type="text" class="form-control">
+                                </div>
+                                <div class="divider"></div>
+                                <div class="input-group">
+                                    <span class="input-group-addon">
+                                        <input type="radio">
+                                    </span>
+                                    <input type="text" class="form-control">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="divider divider-dashed divider-lg pull-in"></div>
+                        <div class="form-group">
+                            <label for="" class="col-sm-2">Button addons</label>
+                            <div class="col-sm-10">
+                                <div class="row">
+                                    <div class="col-lg-6">
+                                        <div class="input-group">
+                                            <span class="input-group-btn">
+                                                <button class="btn btn-default" type="button">Go!</button>
+                                            </span>
+                                            <input type="text" class="form-control">
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-6">
+                                        <div class="input-group">
+                                            <input type="text" class="form-control">
+                                            <span class="input-group-btn">
+                                                <button class="btn btn-default" type="button">Go!</button>
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="divider divider-dashed divider-lg pull-in"></div>
+                        <div class="form-group">
+                            <label for="" class="col-sm-2">Textarea</label>
+                            <div class="col-sm-10">
+                                <textarea name="" id="" class="form-control" rows="4"></textarea>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </section>
+        </div>
+    </div>
+
+</section>

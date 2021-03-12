@@ -1,0 +1,193 @@
+<md-dialog aria-label="Detalhe Histórico Ficha Financeira">
+    <form ng-cloak>
+        <md-toolbar>
+            <div class="md-toolbar-tools">
+                <h2>Detalhe Histórico Ficha Financeira</h2>
+                <span flex></span>
+                <md-button class="md-icon-button" ng-click="cancel()">
+                    <md-icon class="material-icons">close</md-icon>
+                </md-button>
+            </div>
+        </md-toolbar>
+
+        <md-dialog-content>
+            <div class="page" style="width: 600px;">
+                <div class="row">
+                    <div class="col-md-6">
+                        <md-input-container class="md-block">
+                            <label>Matrícula</label>
+                            <input ng-disabled="true" ng-model="fPagContracheque.funcionario.matricula" placeholder="-">
+                        </md-input-container>
+                        <md-input-container class="md-block">
+                            <label>Data de Admissão</label>
+                            <input name="dataAdmissao" moment-picker="fPagContracheque.funcionario.dataAdmissao"
+                                placeholder="-" ng-model="fPagContracheque.funcionario.dataAdmissao" format="DD/MM/YYYY"
+                                locale="pt-br" start-view="month" ng-model-options="{ updateOn: 'blur' }"
+                                ng-disabled="true" ng-required="true">
+                        </md-input-container>
+                        <md-input-container class="md-block">
+                            <label>Lotação</label>
+                            <input ng-disabled="true" ng-model="fPagContracheque.funcionario.lotacao.descricao"
+                                placeholder="-">
+                        </md-input-container>
+                        <md-input-container class="md-block">
+                            <label>Função</label>
+                            <input ng-disabled="true" ng-model="fPagContracheque.funcionario.funcao.nome"
+                                placeholder="-">
+                        </md-input-container>
+                    </div>
+                    <div class="col-md-6">
+                        <md-input-container class="md-block">
+                            <label>Funcionário</label>
+                            <input ng-disabled="true" ng-model="fPagContracheque.funcionario.nome" placeholder="-">
+                        </md-input-container>
+                        <md-input-container class="md-block">
+                            <label>Filial</label>
+                            <input ng-disabled="true" ng-model="fPagContracheque.funcionario.filial.nomeFilial"
+                                placeholder="-">
+                        </md-input-container>
+                        <md-input-container class="md-block">
+                            <label>Vínculo</label>
+                            <input ng-disabled="true" ng-model="fPagContracheque.funcionario.vinculo.descricao"
+                                placeholder="-">
+                        </md-input-container>
+                        <md-input-container class="md-block">
+                            <label>Cargo</label>
+                            <input ng-disabled="true" ng-model="fPagContracheque.funcionario.cargo.nome"
+                                placeholder="-">
+                        </md-input-container>
+                    </div>
+                </div>
+                <div class="row center">
+                    <div class="col-md-6 col-md-offset-3">
+                        <md-autocomplete ng-disabled="detalhes" md-input-name="competencia" ng-required="true"
+                            md-no-cache="noCache" md-floating-label="Competência  - digite o ano"
+                            md-selected-item="folhaCompetencia" md-search-text="searchCompetencia"
+                            md-items="f in querySearchCompetencia(searchCompetencia)"
+                            md-item-text="f.mesCompetencia+'/'+f.anoCompetencia" md-delay="100" md-min-length="3"
+                            md-selected-item-change="folhaCompetenciaSelect()">
+                            <md-item-template>
+                                <div>{{f.mesCompetencia | mes}}/{{f.anoCompetencia}}
+                                </div>
+                            </md-item-template>
+                        </md-autocomplete>
+                    </div>
+                </div>
+                <div class="panel panel-default panel-minimal" ng-if="fPagContracheque.lancamentosVantagens.length > 0">
+
+                    <table class="table table-hover paycheck-items">
+                        <thead>
+                            <tr class="row">
+                                <th class="col-md-8">Proventos</th>
+                                <th class="col-md-4"><span class="pull-right">Valor</span></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="row" ng-repeat="lancamento in fPagContracheque.lancamentosVantagens">
+                                <td class="col-md-8">
+                                    {{lancamento.verba.codigo}} - {{lancamento.verba.descricaoVerba}} <span
+                                        ng-if="lancamento.valorReferencia">-</span> {{lancamento.valorReferencia}}
+                                </td>
+                                <td class="col-md-4 border-left-paycheck">
+                                    <div class="pull-right">
+                                        {{lancamento.valor | currency}}
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                        <tfoot>
+                            <tr class="row">
+                                <th class="col-md-8"> TOTAL DE PROVENTOS</th>
+                                <th class="col-md-4"><span
+                                        class="pull-right">{{fPagContracheque.valorBruto | currency}}</span></th>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+
+                <div class="panel panel-default panel-minimal" ng-if="fPagContracheque.lancamentosDescontos.length > 0">
+
+                    <table class="table table-hover paycheck-items">
+                        <thead>
+                            <tr class="row">
+                                <th class="col-md-8">Descontos</th>
+                                <th class="col-md-4"><span class="pull-right">Valor</span></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="row" ng-repeat="lancamento in fPagContracheque.lancamentosDescontos">
+                                <td class="col-md-8">
+                                    {{lancamento.verba.codigo}} - {{lancamento.verba.descricaoVerba}} <span
+                                        ng-if="lancamento.valorReferencia">-</span> {{lancamento.valorReferencia}}
+                                </td>
+                                <td class="col-md-4 border-left-paycheck">
+                                    <div class="pull-right">
+                                        {{lancamento.valor | currency}}
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                        <tfoot>
+                            <tr class="row">
+                                <th class="col-md-8"> TOTAL DE DESCONTOS</th>
+                                <th class="col-md-4"><span
+                                        class="pull-right">{{fPagContracheque.valorDesconto | currency}}</span></th>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+
+                <div class="panel panel-default panel-minimal"
+                    ng-if="fPagContracheque.lancamentosVantagens.length > 0 || fPagContracheque.lancamentosDescontos.length > 0">
+                    <table class="table table-hover paycheck-items">
+                        <thead>
+                            <tr class="row">
+                                <th class="col-md-8">LÍQUIDO</th>
+                                <th class="col-md-4"></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="row">
+                                <td class="col-md-8">
+                                    TOTAL DE PROVENTOS
+                                </td>
+                                <td class="col-md-4 border-left-paycheck">
+                                    <div class="pull-right">
+                                        {{fPagContracheque.valorBruto | currency}}
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr class="row">
+                                <td class="col-md-8">
+                                    TOTAL DE DESCONTOS
+                                </td>
+                                <td class="col-md-4 border-left-paycheck">
+                                    <div class="pull-right">
+                                        {{fPagContracheque.valorBruto | currency}}
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr class="row">
+                                <td class="col-md-8">
+                                    TOTAL LÍQUIDO
+                                </td>
+                                <td class="col-md-4 border-left-paycheck">
+                                    <div class="pull-right">
+                                        {{fPagContracheque.valorLiquido | currency}}
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="panel panel-default panel-minimal" ng-if="fPagContracheque.lancamentosVantagens.length === 0 && fPagContracheque.lancamentosDescontos.length === 0">
+                    <div class="row">
+                        <div class="col-md-12 text-center">
+                            <h4>NÃO FOI LOCALIZADO LANÇAMENTOS NA COMPETÊNCIA SELECIONADA.</h4>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </md-dialog-content>
+    </form>
+</md-dialog>

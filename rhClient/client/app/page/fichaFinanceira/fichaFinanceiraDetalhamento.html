@@ -1,0 +1,110 @@
+<div class="page" ng-controller="fichaFinanceiraDetalhamentoCtrl">
+    <div class="row ui-section">
+        <div class="col-lg-8 clearfix">
+            <h2 class="section-header">Histórico Anual Ficha Financeira</h2>
+        </div>
+        <div class="col-md-12">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div layout layout-sm="column">
+                                <md-input-container flex>
+                                    <label>Funcionário</label>
+                                    <input ng-disabled="true" ng-model="funcionario.nome">
+                                </md-input-container>
+                                <md-input-container flex>
+                                    <md-select ng-model="anoSelecionado" name="ano" placeholder="Selecione um ano">
+                                        <md-option ng-repeat="ano in anos" value="{{ano}}">
+                                            {{ano}}
+                                        </md-option>                                        
+                                    </md-select>
+                                </md-input-container>                                
+                            </div>
+                            <div layout layout-sm="column">
+                                <md-table-container>
+                                    <table md-table ng-model="list.data" md-progress="promise" ng-show="!temDadosDoAno">
+                                        <thead ng-if="!options.decapitate" md-head md-order="query.order"
+                                            md-on-reorder="loadList">
+                                            <tr md-head >
+                                                <th md-column>
+                                                    <span>Código Verba</span>
+                                                </th>
+                                                <th md-column>
+                                                    <span>Verba</span>
+                                                </th>
+                                                <th md-column>
+                                                    <span>Janeiro</span>
+                                                </th>
+                                                <th md-column>
+                                                    <span>Fevereiro</span>
+                                                </th>
+
+                                                <th md-column>
+                                                    <span>Março</span>
+                                                </th>
+
+                                                <th md-column>
+                                                    <span>Abril</span>
+                                                </th>
+                                                <th md-column>
+                                                    <span>Maio</span>
+                                                </th>
+                                                <th md-column>
+                                                    <span>Junho</span>
+                                                </th>
+                                                <th md-column>
+                                                    <span>Julho</span>
+                                                </th>
+                                                <th md-column>
+                                                    <span>Agosto</span>
+                                                </th>
+                                                <th md-column>
+                                                    <span>Setembro</span>
+                                                </th>
+                                                <th md-column>
+                                                    <span>Outubro</span>
+                                                </th>
+                                                <th md-column>
+                                                    <span>Novembro</span>
+                                                </th>                                                                                                                                                                                                
+                                                <th md-column>
+                                                    <span>Dezembro</span>
+                                                </th>
+                                            </tr>
+                                        </thead>
+                                        <tbody md-body>
+                                            <tr md-row>
+                                                <td md-cell></td>
+                                                <td md-cell></td>
+                                                <td md-cell></td>
+                                                <td md-cell></td>
+                                                <td md-cell></td>
+                                                <td md-cell></td>
+                                                <td md-cell></td>
+                                                <td md-cell></td>
+                                                <td md-cell></td>
+                                                <td md-cell></td>
+                                                <td md-cell></td>
+                                                <td md-cell></td>
+                                                <td md-cell></td>
+                                                <td md-cell></td>                                                                                                                                                
+                                            </tr>                                          
+                                        </tbody>
+                                    </table>
+                                </md-table-container>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-12 text-center" style="margin-top: 40px">
+                                    <p class="btn btn-default btn-w-md" ui-wave data-ng-click="goBack()">Voltar</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</div>

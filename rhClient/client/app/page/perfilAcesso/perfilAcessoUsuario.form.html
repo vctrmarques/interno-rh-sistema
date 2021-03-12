@@ -1,0 +1,95 @@
+<div class="page" ng-controller="perfilAcessoUsuarioCtrl">
+    <div class="row ui-section">
+        <div class="col-lg-12 clearfix">
+            <h2 class="section-header" style="float: left;">Perfil: <span
+                    style="font-weight: bolder;">{{perfil.nome}}</span> - Gerenciar Usuários</h2>
+        </div>
+        <div class="col-md-12">
+            <form ng-disabled="detalhes" name="perfilAcessoUsuarioForm" ng-submit="save()">
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                        <article class="article">
+                            <md-card class="no-margin-h">
+                                <div layout="column">
+                                    <div layout-padding>
+                                        <div layout layout-sm="column">
+                                            <md-input-container flex>
+                                                <label>Nome</label>
+                                                <input ng-model="nomeUsuarioFiltro" placeholder="Buscar por nome...">
+                                            </md-input-container>
+                                            <md-input-container flex>
+                                                <label>Filial</label>
+                                                <md-select ng-model="idFilialFiltro" name="filial">
+                                                    <md-option value="{{null}}"><em>-- Selecione --</em></md-option>
+                                                    <md-option ng-repeat="filial in listFiliais" value="{{filial.id}}">
+                                                        {{filial.nomeFilial}}
+                                                    </md-option>
+                                                </md-select>
+                                            </md-input-container>
+                                            <md-button class="md-icon-button" ng-click="limpaFiltroUsuario()">
+                                                <md-tooltip md-direction="top">Limpar Filtros</md-tooltip>
+                                                <md-icon>autorenew</md-icon>
+                                            </md-button>
+                                            <md-button class="md-icon-button" ng-click="getUsuarios()">
+                                                <md-tooltip md-direction="top">Atualizar</md-tooltip>
+                                                <md-icon>refresh</md-icon>
+                                            </md-button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <md-table-container>
+                                    <table md-table md-row-select="true" multiple="true"
+                                        ng-model="usuariosSelecionadosIds" md-progress="promise">
+                                        <thead md-head md-order="queryUsuario.order" md-on-reorder="getUsuarios">
+                                            <tr md-row>
+                                                <th md-column md-order-by="nome">
+                                                    <span>Nome</span>
+                                                </th>
+                                                <th md-column>
+                                                    <span>Login</span>
+                                                </th>
+                                                <th md-column>
+                                                    <span>Ativo</span>
+                                                </th>
+                                                <th md-column>
+                                                    <span>CPF</span>
+                                                </th>
+                                                <th md-column>
+                                                    <span>Filial</span>
+                                                </th>
+                                            </tr>
+                                        </thead>
+                                        <tbody md-body>
+                                            <tr md-row md-select="item.id" ng-repeat="item in listUsuario.data">
+                                                <td md-cell>{{item.nome}}</td>
+                                                <td md-cell>{{item.login}}</td>
+                                                <td md-cell>{{item.ativo ? 'Sim': 'Nao'}}</td>
+                                                <td md-cell>{{item.cpf | cpf}}</td>
+                                                <td md-cell>{{item.empresaFilial.descricao}}</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </md-table-container>
+                                <md-table-pagination
+                                    md-label="{page: 'Página:', rowsPerPage: 'Registros por página:', of: 'de'}"
+                                    md-limit="queryUsuario.limit" md-limit-options="limitOptions"
+                                    md-page="queryUsuario.page" md-total="{{listUsuario.count}}"
+                                    md-on-paginate="getUsuarios" md-page-select>
+                                </md-table-pagination>
+                                <div class="row" style="margin: 50px;">
+                                    <div class="col-md-12 text-center">
+                                        <button ng-if="!detalhes"
+                                            ng-disabled="perfilAcessoUsuarioForm.$invalid || !podeAtualizar"
+                                            type="submit" ui-wave class="btn btn-primary btn-w-md">Salvar</button>
+                                        <p class="btn btn-default btn-w-md" ui-wave data-ng-click="goBack()">Voltar
+                                        </p>
+                                    </div>
+                                </div>
+                            </md-card>
+                        </article>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

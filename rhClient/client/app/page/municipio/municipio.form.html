@@ -1,0 +1,129 @@
+<div class="page" ng-controller="municipioFormCtrl">
+    <div class="row ui-section">
+        <div class="col-lg-8 clearfix">
+            <h2 class="section-header">{{!detalhes ? 'Formulário Município' : 'Detalhes do Município'}}</h2>
+        </div>
+        <div class="col-md-12">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <div class="row">
+                        <div class="col-lg-8 col-lg-offset-2">
+                            <div layout="column" ng-cloak class="md-inline-form inputdemoBasicUsage">
+                                <div layout-padding>
+                                    <form ng-disabled="detalhes" name="municipioForm" ng-submit="save()">
+
+                                        <div layout layout-sm="column">
+                                            <md-input-container flex>
+                                                <label>Região Fiscal</label>
+                                                <input ng-disabled="detalhes || edit" ng-required="true"
+                                                    ng-model="municipio.regiaoFiscal" name="regiaoFiscal">
+                                                <div ng-messages="municipioForm.regiaoFiscal.$error" multiple
+                                                    ng-if='municipioForm.regiaoFiscal.$dirty'>
+                                                    <div ng-message="required">Campo de preenchimento obrigatório.</div>
+                                                </div>
+                                            </md-input-container>
+
+                                            <md-input-container flex>
+                                                <label>UF</label>
+                                                <select-component ng-disabled='detalhes || edit' ng-required='true'
+                                                    ng-model='municipio.uf' name='municipio.uf'
+                                                    end-point='/listaUnidadesFederativas'>
+                                                </select-component>
+                                                <div ng-messages='municipioForm.municipio.uf.$error' multiple
+                                                    role='alert'>
+                                                    <div ng-message='required'>Campo de preenchimento
+                                                        obrigatório.</div>
+                                                </div>
+                                            </md-input-container>
+
+                                            <md-input-container class="md-block">
+                                                <label>CEP</label>
+                                                <input ng-disabled="detalhes" ng-model="municipio.cep" name="cep"
+                                                    ui-br-cep-mask required>
+                                                <div ng-messages="municipioForm.cep.$error" role="alert" multiple
+                                                    ng-if='municipioForm.cep.$dirty'>
+                                                    <div ng-message="cep">CEP Inválido.</div>
+                                                    <div ng-message="required">Campo de preenchimento obrigatório.</div>
+                                                </div>
+                                            </md-input-container>
+                                            <md-input-container flex>
+                                                <label>Naturalidade</label>
+                                                <input ng-disabled="detalhes" ng-required="true"
+                                                    ng-model="municipio.naturalidade" name="naturalidade">
+                                                <div ng-messages="municipioForm.naturalidade.$error" multiple
+                                                    ng-if='municipioForm.naturalidade.$dirty'>
+                                                    <div ng-message="required">Campo de preenchimento obrigatório.</div>
+                                                </div>
+                                            </md-input-container>
+                                        </div>
+                                        <div layout layout-sm="column">
+                                            <md-input-container flex>
+                                                <label>Descrição</label>
+                                                <input ng-disabled="detalhes || edit" ng-required="true"
+                                                    ng-model="municipio.descricao" name="descricao">
+                                                <div ng-messages="municipioForm.descricao.$error" multiple
+                                                    ng-if='municipioForm.descricao.$dirty'>
+                                                    <div ng-message="required">Campo de preenchimento obrigatório.</div>
+                                                </div>
+                                            </md-input-container>
+                                        </div>
+
+                                        <div layout layout-sm="column">
+                                            <md-input-container flex>
+                                                <label>Código IBGE</label>
+                                                <input ng-disabled="detalhes" ng-required="false" ui-number-mask="0"
+                                                    maxlength="10" ui-hide-group-sep ng-model="municipio.codigoIbge"
+                                                    name="codigoIbge">
+                                            </md-input-container>
+                                        </div>
+
+
+                                        <div ng-if="detalhes" layout layout-sm="column">
+                                            <table md-table md-progress="promise">
+                                                <thead md-head>
+                                                    <tr md-row>
+                                                        <th md-column>
+                                                            <span>Criado em:</span>
+                                                        </th>
+                                                        <th md-column>
+                                                            <span>Atualizado em:</span>
+                                                        </th>
+                                                        <th md-column>
+                                                            <span>Criado por:</span>
+                                                        </th>
+                                                        <th md-column>
+                                                            <span>Atualizado por:</span>
+                                                        </th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody md-body>
+                                                    <tr md-row>
+                                                        <td md-cell>{{municipio.criadoEm | date:'dd/MM/yy - HH:mm'}}
+                                                        </td>
+                                                        <td md-cell>{{municipio.alteradoEm | date:'dd/MM/yy - HH:mm'}}
+                                                        </td>
+                                                        <td md-cell>{{municipio.criadoPor}}</td>
+                                                        <td md-cell>{{municipio.alteradoPor}}</td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+
+                                        <div class="row">
+                                            <div class="col-md-12 text-center">
+                                                <button ng-if="!detalhes" ng-disabled="nacionalidadeForm.$invalid"
+                                                    type="submit" ui-wave
+                                                    class="btn btn-primary btn-w-md">Salvar</button>
+                                                <p class="btn btn-default btn-w-md" ui-wave data-ng-click="goBack()">
+                                                    Voltar</p>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>

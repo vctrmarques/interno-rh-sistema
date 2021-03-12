@@ -1,0 +1,31 @@
+<md-dialog aria-label="Mango (Fruit)">
+    <form ng-cloak>
+        <md-toolbar>
+            <div class="md-toolbar-tools">
+                <h2>Alterar foto do perfil</h2>
+                <span flex></span>
+                <md-button class="md-icon-button" ng-click="cancel()">
+                    <md-icon class="material-icons">close</md-icon>
+                </md-button>
+            </div>
+        </md-toolbar>
+
+        <md-dialog-content>
+            <div style="width: 500px;text-align: center;min-height: 300px" layout="row" layout-align="center center">
+                <input type="file" id="fileInput" style="display: none!important;" />
+                <div class="cropArea" ng-show="myImage !== ''">
+                    <img-crop image="myImage" result-image="myCroppedImage"></img-crop>
+                </div>
+                <img src="{{currentUser.foto}}" ng-show="currentUser.foto && myImage === ''">
+                <ng-letter-avatar dynamic="true" width="180" fontSize="90" height="180" shape="round" ng-hide="currentUser.foto || myImage !== ''" data="{{currentUser.nome}}"></ng-letter-avatar>
+            </div>
+        </md-dialog-content>
+
+        <md-dialog-actions layout="row">
+            <md-button md-no-ink class="md-primary" ng-click="loadInputFile()">Carregar foto</md-button>
+            <md-button md-no-ink class="md-primary" ng-show="myImage !== ''" ng-click="aplicarRecorte('useful')">
+                Aplicar
+            </md-button>
+        </md-dialog-actions>
+    </form>
+</md-dialog>

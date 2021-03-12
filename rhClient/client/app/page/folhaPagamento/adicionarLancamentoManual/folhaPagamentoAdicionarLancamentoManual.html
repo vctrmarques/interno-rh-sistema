@@ -1,0 +1,176 @@
+<div class="page" ng-controller="folhaPagamentoAdicionarLancamentoManualCtrl">
+    <div class="row ui-section">
+        <div class="col-lg-8 clearfix">
+            <h2 class="section-header">Importador de Lançamento Manual</h2>
+        </div>
+        <div class="col-md-12">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <form ng-disabled="detalhes" name="importadorLancamentoManualForm">
+
+                                <input aria-label="anexo" style="display: none!important;" id="fileInput" type="file"
+                                    nv-file-select uploader="uploader" accept=".xlsx" />
+
+                                <div layout="column" ng-cloak class="md-inline-form inputdemoBasicUsage">
+                                    <div layout-padding>
+                                        <md-tabs md-dynamic-height md-border-bottom md-selected="abaActive">
+                                            <md-tab label="Formulário">
+                                                <md-content class="md-padding">
+
+                                                    <article class="article">
+                                                        <md-card class="no-margin-h">
+                                                            <div layout="column">
+                                                                <div layout-padding>
+
+                                                                    <div class="row">
+                                                                        <div layout class="col-md-5" layout-sm="column">
+                                                                            <md-input-container flex>
+                                                                                <input
+                                                                                    value="{{uploader.queue && uploader.queue.length > 0 ? uploader.queue[0].file.name : ''}}"
+                                                                                    ng-disabled="true"
+                                                                                    placeholder="Nome do Arquivo">
+                                                                            </md-input-container>
+                                                                        </div>
+                                                                        <div layout class="col-md-3" layout-sm="column">
+                                                                            <md-container flex>
+                                                                                <md-button ng-click="loadInputFile()"
+                                                                                    ng-disabled="selected.length==0"
+                                                                                    class="md-raised md-accent btn-form btn btn-info btn-block">
+                                                                                    SELECIONAR ARQUIVO
+                                                                                </md-button>
+                                                                            </md-container>
+                                                                        </div>
+                                                                        <div layout class="col-md-2" layout-sm="column">
+                                                                            <md-container flex>
+                                                                                <md-button
+                                                                                    ng-disabled="!uploader.queue || uploader.queue.length === 0"
+                                                                                    ng-click="uploader.queue[0].upload()"
+                                                                                    class="md-raised md-accent btn-form btn btn-info btn-block">
+                                                                                    IMPORTAR
+                                                                                </md-button>
+                                                                            </md-container>
+                                                                        </div>
+                                                                        <div layout class="col-md-2" layout-sm="column">
+                                                                            <md-container class="md-block">
+                                                                                <md-button
+                                                                                    ng-click="showLayoutEntrada($event)"
+                                                                                    class="md-raised md-accent btn-form btn btn-info btn-block">
+                                                                                    LAYOUT
+                                                                                </md-button>
+                                                                            </md-container>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <md-table-container>
+                                                                <table md-table md-progress="promise">
+                                                                    <thead md-head md-order="query.order"
+                                                                        md-on-reorder="loadList">
+                                                                        <tr md-row>
+                                                                            <th md-column>
+                                                                                <span>Linha</span>
+                                                                            </th>
+                                                                            <th md-column>
+                                                                                <span>Descrição</span>
+                                                                            </th>
+                                                                        </tr>
+                                                                    </thead>
+                                                                    <tbody md-body>
+                                                                        <tr md-row ng-repeat="item in erroList">
+                                                                            <td md-cell>{{item.linha}}</td>
+                                                                            <td md-cell>{{item.descricao}}</td>
+                                                                        </tr>
+                                                                    </tbody>
+                                                                </table>
+                                                            </md-table-container>
+                                                            <div class="row" style="padding: 20px;">
+                                                                <div class="col-md-12">
+                                                                    <div class="progress md-progress"
+                                                                        ng-show="progress && uploader.isUploading">
+                                                                        <div class="progress-bar" role="progressbar"
+                                                                            style="width: {{progress}}; height: 20px"
+                                                                            aria-valuenow="25" aria-valuemin="0"
+                                                                            aria-valuemax="100">
+                                                                            {{progress}}
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </md-card>
+                                                    </article>
+                                                </md-content>
+                                            </md-tab>
+                                            <md-tab label="Importação">
+                                                <md-content class="md-padding">
+                                                    <article class="article">
+                                                        <md-card class="no-margin-h">
+                                                            <md-table-container>
+                                                                <table md-table ng-model="selected"
+                                                                    md-progress="promise">
+                                                                    <thead md-head md-order="query.order"
+                                                                        md-on-reorder="loadList">
+                                                                        <tr md-row>
+                                                                            <th md-column>
+                                                                                <span>Arquivo</span>
+                                                                            </th>
+                                                                            <th md-column>
+                                                                                <span>Data e Hora da Importação</span>
+                                                                            </th>
+                                                                            <th md-column>
+                                                                                <span>Ações</span>
+                                                                            </th>
+                                                                        </tr>
+                                                                    </thead>
+                                                                    <tbody md-body>
+                                                                        <tr md-row md-select="item" md-select-id="item"
+                                                                            md-auto-select
+                                                                            ng-repeat="item in list.data">
+                                                                            <td md-cell>
+                                                                                <a
+                                                                                    href="{{item.arquivoImportacao.fileDownloadUri}}">{{item.arquivoImportacao.fileName}}</a>
+                                                                            </td>
+                                                                            <td md-cell>
+                                                                                {{item.criadoEm | date:'dd/MM/yyyy - HH:mm'}}
+                                                                            </td>
+                                                                            <td md-cell>
+                                                                                <a href=""
+                                                                                    ng-click="showConfirm($event,item.id)">
+                                                                                    <md-tooltip md-direction="top">
+                                                                                        Excluir</md-tooltip>
+                                                                                    <i class="fa fa-trash-o fa-lg"></i>
+                                                                                </a>
+                                                                            </td>
+                                                                        </tr>
+                                                                    </tbody>
+                                                                </table>
+                                                            </md-table-container>
+                                                            <md-table-pagination
+                                                                md-label="{page: 'Página:', rowsPerPage: 'Registros por página:', of: 'de'}"
+                                                                md-limit="query.limit" md-limit-options="limitOptions"
+                                                                md-page="query.page" md-total="{{list.count}}"
+                                                                md-on-paginate="loadList" md-page-select>
+                                                            </md-table-pagination>
+                                                        </md-card>
+                                                    </article>
+                                                </md-content>
+                                            </md-tab>
+                                        </md-tabs>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-md-12 text-center">
+                                        <p class="btn btn-default btn-w-md" ui-wave data-ng-click="goBack()">Voltar</p>
+                                    </div>
+                                </div>
+
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,151 @@
+<section class="page container-fluid with-maxwidth chapter" ng-controller="pensaoAlimenticiaCtrl">
+
+    <div class="row ui-section">
+        <div class="col-lg-9 clearfix">
+            <h2 class="section-header">Gestão de Pensão Alimentícia</h2>
+        </div>
+        <div class="col-lg-3 clearfix" style="padding-top: 10px;">
+            <div class="pull-right">
+                <md-button class="md-fab md-primary" ng-href="" ng-click="showRelatorio()">
+                    <md-tooltip md-direction="bottom">Relatório</md-tooltip>
+                    <span class="fa fa-file-pdf-o"></span>
+                </md-button>
+                <md-button ng-show="podeCadastrar" class="md-fab md-accent" ng-href="#!/pensaoAlimenticia/formulario">
+                    <md-tooltip md-direction="bottom">Nova Pensão Alimentícia</md-tooltip>
+                    <span class="fa fa-plus"></span>
+                </md-button>
+            </div>
+        </div>
+        <div class="col-md-12">
+
+            <article class="article">
+                <md-card class="no-margin-h">
+                    <div layout="column">
+                        <div layout-padding>
+                            <div layout layout-sm="column">
+                                <md-input-container flex>
+                                    <label>Funcionário</label>
+                                    <input ng-model="search" placeholder="Buscar por Nome, Matrícula ou CPF..."
+                                        ng-keypress="($event.keyCode === 13) && loadList()">
+                                </md-input-container>
+                                <md-button class="md-icon-button" ng-click="limpaFiltro()">
+                                    <md-tooltip md-direction="top">Limpar Filtros</md-tooltip>
+                                    <md-icon>autorenew</md-icon>
+                                </md-button>
+                                <md-button class="md-icon-button" ng-click="loadList()">
+                                    <md-tooltip md-direction="top">Atualizar</md-tooltip>
+                                    <md-icon>refresh</md-icon>
+                                </md-button>
+                            </div>
+                        </div>
+                    </div>
+                    <md-table-container>
+                        <md-tabs md-dynamic-height md-border-bottom md-selected="myTabIndex" md-center-tabs>
+                            <md-tab label="Funcionários" md-on-select="onTab0Selected(tab)">
+                                <table md-table md-progress="promise">
+                                    <thead md-head md-order="query.order" md-on-reorder="loadList">
+                                        <tr md-row>
+                                            <th md-column md-order-by="nome">
+                                                <span>Nome do Funcionário</span>
+                                            </th>
+                                            <th md-column>
+                                                <span>Matrícula</span>
+                                            </th>
+                                            <th md-column>
+                                                <span>Filial</span>
+                                            </th>
+                                            <th md-column>
+                                                <span>Pensões Vigentes</span>
+                                            </th>
+                                            <th md-column>
+                                                <span>Pensões Encerradas</span>
+                                            </th>
+                                            <th md-column>
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody md-body>
+                                        <tr md-row ng-repeat="item in list.data">
+                                            <td md-cell>{{item.nome}}</td>
+                                            <td md-cell>{{item.matricula}}</td>
+                                            <td md-cell>{{item.empresa.nomeFilial}}</td>
+                                            <td md-cell>{{item.vigentes}}</td>
+                                            <td md-cell>{{item.encerradas}}</td>
+                                            <td md-cell>
+                                                <a href="" ng-click="changetab1(item.pensoes);">
+                                                    <md-tooltip md-direction="top">Visualizar Alimentandos</md-tooltip>
+                                                    <i class="fa fa-arrow-right fa-lg"></i>
+                                                </a>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </md-tab>
+                            <md-tab label="Alimentandos" ng-disabled="bloquearTabAlimentando">
+                                <table md-table>
+                                    <thead md-head>
+                                        <tr md-row>
+                                            <th md-column>
+                                            </th>
+                                            <th md-column md-order-by="nome">
+                                                <span>Nome do Alimentando</span>
+                                            </th>
+                                            <th md-column>
+                                                <span>CPF</span>
+                                            </th>
+                                            <th md-column>
+                                                <span>Tipo de Pensão</span>
+                                            </th>
+                                            <th md-column>
+                                                <span>Situação</span>
+                                            </th>
+                                            <th md-column>
+                                                <span>Ações</span>
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody md-body>
+                                        <tr md-row ng-repeat="pensao in pensoes">
+                                            <td md-cell>
+                                                <a href="" ng-click="changetab0();">
+                                                    <md-tooltip md-direction="top">Voltar</md-tooltip>
+                                                    <i class="fa fa-arrow-left fa-lg"></i>
+                                                </a>
+                                            </td>
+                                            <td md-cell>{{pensao.nomeAlimentando}}</td>
+                                            <td md-cell>{{pensao.cpf}}</td>
+                                            <td md-cell>{{pensao.tipoPensao}}</td>
+                                            <td md-cell>{{pensao.situacao}}</td>
+                                            <td md-cell>
+                                                <a href=""
+                                                    ui-sref="pensaoAlimenticiaFormularioDetalhes({ id: pensao.id, detalhes: true })">
+                                                    <md-tooltip md-direction="top">Detalhes Cadastrais</md-tooltip>
+                                                    <i class="fa fa-search fa-lg"></i>
+                                                </a>
+                                                <a href="" ng-show="podeAtualizar"
+                                                    ui-sref="pensaoAlimenticiaFormularioEdit({ id: pensao.id })">
+                                                    <md-tooltip md-direction="top">Editar</md-tooltip>
+                                                    <i class="fa fa-pencil fa-lg"></i>
+                                                </a>
+                                                <a ng-show="podeExcluir" href=""
+                                                    ng-click="showConfirm($event, pensao.id)">
+                                                    <md-tooltip md-direction="top">Excluir</md-tooltip>
+                                                    <i class="fa fa-trash-o fa-lg"></i>
+                                                </a>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </md-tab>
+                        </md-tabs>
+                    </md-table-container>
+                    <md-table-pagination md-label="{page: 'Página:', rowsPerPage: 'Registros por página:', of: 'de'}"
+                        md-limit="query.limit" md-limit-options="limitOptions" md-page="query.page"
+                        md-total="{{list.count}}" md-on-paginate="loadList" md-page-select></md-table-pagination>
+                </md-card>
+            </article>
+        </div>
+    </div>
+
+
+</section>

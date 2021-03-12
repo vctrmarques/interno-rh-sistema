@@ -1,0 +1,580 @@
+<section class="page-form-ele page" ng-controller="verbaMotor2FormCtrl">
+    <div class="row ui-section">
+        <div class="col-lg-8 clearfix">
+            <h2 class="section-header">
+                <h2 class="section-header">{{!detalhes ? 'Formulário da Verba' : 'Detalhes da Verba'}}</h2>
+        </div>
+        <div class="col-md-12">
+            <section class="panel panel-default">
+                <div class="panel-body">
+                    <div class="row">
+                        <div class="col-lg-8 col-lg-offset-2">
+                            <div layout="column" ng-cloak class="md-inline-form inputdemoBasicUsage">
+                                <div layout-padding>
+
+                                    <form name="verbaForm" ng-disabled="detalhes" ng-submit="save()">
+                                        <md-tabs md-dynamic-height md-border-bottom>
+                                            <md-tab label="Dados Cadastrais">
+                                                <div class="divider divider"></div>
+                                                <div class="divider divider"></div>
+                                                <div class="divider divider"></div>
+
+                                                <div layout layout-sm="column">
+                                                    <md-input-container flex>
+                                                        <label>Código</label>
+                                                        <input ng-disabled="detalhes" ng-required="true"
+                                                            ng-model="verba.codigo" name="codigo" max="255">
+                                                        <div ng-messages="verbaForm.codigo.$error" multiple
+                                                            role="alert">
+                                                            <div ng-message="required">Campo de preenchimento
+                                                                obrigatório.</div>
+                                                        </div>
+                                                    </md-input-container>
+                                                    <md-input-container flex>
+                                                        <label>Descrição</label>
+                                                        <input ng-disabled="detalhes" ng-required="true"
+                                                            ng-model="verba.descricaoVerba" max="255"
+                                                            name="descricaoVerba">
+                                                        <div ng-messages="verbaForm.descricaoVerba.$error" multiple
+                                                            role="alert">
+                                                            <div ng-message="required">Campo de preenchimento
+                                                                obrigatório.</div>
+                                                        </div>
+                                                    </md-input-container>
+                                                </div>
+
+                                                <div layout layout-sm="column">
+                                                    <md-input-container flex>
+                                                        <label>Descrição Resumida</label>
+                                                        <input ng-disabled="detalhes" ng-required="true"
+                                                            ng-model="verba.descricaoResumida" max="255"
+                                                            name="descricaoResumida">
+                                                        <div ng-messages="verbaForm.descricaoResumida.$error" multiple
+                                                            role="alert">
+                                                            <div ng-message="required">Campo de preenchimento
+                                                                obrigatório.</div>
+                                                        </div>
+                                                    </md-input-container>
+                                                    <md-input-container flex>
+                                                        <label>Tipo de Verba</label>
+                                                        <md-select ng-disabled="detalhes" ng-model="verba.tipoVerba"
+                                                            name="tipoVerba" ng-required="true">
+                                                            <md-option ng-repeat="tipoVerba in tipoVerbas"
+                                                                value="{{tipoVerba.value}}">
+                                                                {{tipoVerba.label}} </md-option>
+                                                        </md-select>
+                                                        <div ng-messages="verbaForm.tipoVerba.$error" role="alert"
+                                                            multiple>
+                                                            <div ng-message="required">Campo de
+                                                                preenchimento obrigatório.</div>
+                                                        </div>
+                                                    </md-input-container>
+                                                    <md-input-container flex>
+                                                        <label>Destinação Externa</label>
+                                                        <md-select
+                                                            ng-disabled="detalhes || verba.tipoVerba !== 'DESCONTO'"
+                                                            ng-required="verba.tipoVerba === 'DESCONTO'"
+                                                            ng-model="verba.destinacaoExterna" name="destinacaoExterna">
+                                                            <md-option
+                                                                ng-repeat="destinacaoExterna in destinacaoExternas"
+                                                                value="{{destinacaoExterna.value}}">
+                                                                {{destinacaoExterna.label}} </md-option>
+                                                        </md-select>
+                                                        <div ng-messages="verbaForm.destinacaoExterna.$error"
+                                                            role="alert" multiple>
+                                                            <div ng-message="required">Campo de
+                                                                preenchimento obrigatório.</div>
+                                                        </div>
+                                                    </md-input-container>
+                                                </div>
+
+                                                <div layout layout-sm="column">
+                                                    <md-input-container flex>
+                                                        <label>Tipo de Valor</label>
+                                                        <md-select ng-disabled="detalhes" ng-model="verba.tipoValor"
+                                                            name="tipoValor" ng-required="true">
+                                                            <md-option ng-repeat="tipoValor in tipoValores"
+                                                                value="{{tipoValor.value}}">
+                                                                {{tipoValor.label}} </md-option>
+                                                        </md-select>
+                                                        <div ng-messages="verbaForm.tipoValor.$error" role="alert"
+                                                            multiple>
+                                                            <div ng-message="required">Campo de
+                                                                preenchimento obrigatório.</div>
+                                                        </div>
+                                                    </md-input-container>
+                                                    <md-input-container flex>
+                                                        <label>Recorrência</label>
+                                                        <md-select ng-disabled="detalhes" ng-model="verba.recorrencia"
+                                                            name="recorrencia" ng-required="true">
+                                                            <md-option ng-repeat="recorrencia in recorrencias"
+                                                                value="{{recorrencia.value}}">
+                                                                {{recorrencia.label}} </md-option>
+                                                        </md-select>
+                                                        <div ng-messages="verbaForm.recorrencia.$error" role="alert"
+                                                            multiple>
+                                                            <div ng-message="required">Campo de
+                                                                preenchimento obrigatório.</div>
+                                                        </div>
+                                                    </md-input-container>
+                                                    <md-input-container flex>
+                                                        <label>Centro de Custo</label>
+                                                        <md-select ng-disabled="detalhes" ng-model="verba.centroCustoId"
+                                                            name="centroCustoId" ng-required="true">
+                                                            <md-option ng-repeat="centro in centros"
+                                                                ng-value="centro.id"> {{centro.descricao}}
+                                                            </md-option>
+                                                        </md-select>
+                                                        <div ng-messages="verbaForm.centroCustoId.$error" role="alert"
+                                                            multiple>
+                                                            <div ng-message="required">Campo de
+                                                                preenchimento obrigatório.</div>
+                                                        </div>
+                                                    </md-input-container>
+                                                </div>
+
+                                                <div class="divider divider"></div>
+                                                <div class="divider divider"></div>
+
+                                                <h4>Contas</h4>
+
+                                                <div layout layout-sm="column">
+                                                    <md-autocomplete flex ng-required="true" ng-disabled="detalhes"
+                                                        md-input-name="autocompleteField" md-no-cache="noCache"
+                                                        md-floating-label="Conta Débito"
+                                                        md-selected-item="verba.contaDebito" md-search-text="buscaCD"
+                                                        md-min-length="1"
+                                                        md-items="conta in querySearchConta(buscaCD,'Débito')"
+                                                        md-item-text="conta.conta.toString()" md-delay="100"
+                                                        md-selected-item-change="contaDebitoSelecionada(verba.contaDebito)">
+                                                        <md-item-template>
+                                                            <div>{{conta.conta}}</div>
+                                                        </md-item-template>
+                                                    </md-autocomplete>
+                                                    <md-autocomplete flex ng-disabled="detalhes" ng-required="true"
+                                                        md-input-name="autocompleteField" md-no-cache="noCache"
+                                                        md-floating-label="Conta Crédito"
+                                                        md-selected-item="verba.contaCredito" md-search-text="buscaCC"
+                                                        md-min-length="1"
+                                                        md-items="contaCredito in querySearchConta(buscaCC,'Crédito')"
+                                                        md-item-text="contaCredito.conta.toString()" md-delay="100"
+                                                        md-selected-item-change="contaCreditoSelecionada(verba.contaCredito)">
+                                                        <md-item-template>
+                                                            <div>{{contaCredito.conta}}</div>
+                                                        </md-item-template>
+                                                    </md-autocomplete>
+                                                </div>
+
+                                                <div layout layout-sm="column">
+                                                    <md-input-container flex>
+                                                        <label>Conta Auxiliar Primária</label>
+                                                        <input ng-disabled="detalhes"
+                                                            ng-model="verba.contaAuxiliarPrimaria"
+                                                            name="contaAuxiliarPrimaria" ui-number-mask="0"
+                                                            ui-hide-group-sep>
+                                                    </md-input-container>
+                                                    <md-input-container flex>
+                                                        <label>Conta Auxiliar Secundária</label>
+                                                        <input ng-disabled="detalhes"
+                                                            ng-model="verba.contaAuxiliarSecundaria"
+                                                            name="contaAuxiliarSecundaria" ui-number-mask="0"
+                                                            ui-hide-group-sep>
+                                                    </md-input-container>
+                                                </div>
+
+                                                <h4>Vigência</h4>
+
+                                                <div layout layout-sm="column">
+                                                    <md-input-container flex>
+                                                        <label>Inicial</label>
+                                                        <md-icon class="material-icons icon-momentpicker"
+                                                            ng-class="md-datepicker-calendar-icon"
+                                                            aria-label="md-calendar">
+                                                            date_range </md-icon> <input name="vigenciaInicial"
+                                                            moment-picker="verba.vigenciaInicial"
+                                                            placeholder="Selecione a data"
+                                                            ng-model="verba.vigenciaInicial" format="DD/MM/YYYY"
+                                                            locale="pt-br" start-view="month"
+                                                            ng-model-options="{ updateOn: 'blur' }"
+                                                            ng-disabled="detalhes">
+                                                    </md-input-container>
+                                                    <md-input-container flex>
+                                                        <label>Final</label>
+                                                        <md-icon class="material-icons icon-momentpicker"
+                                                            ng-class="md-datepicker-calendar-icon"
+                                                            aria-label="md-calendar">
+                                                            date_range </md-icon> <input name="vigenciaFinal"
+                                                            moment-picker="verba.vigenciaFinal"
+                                                            min-date="verba.vigenciaInicial"
+                                                            placeholder="Selecione a data"
+                                                            ng-model="verba.vigenciaFinal" format="DD/MM/YYYY"
+                                                            locale="pt-br" start-view="month"
+                                                            ng-model-options="{ updateOn: 'blur' }"
+                                                            ng-disabled="detalhes">
+                                                    </md-input-container>
+                                                </div>
+
+                                                <h4>Verba Associada</h4>
+
+                                                <div layout layout-sm="column">
+                                                    <md-input-container flex>
+                                                        <label>Identificação da Verba</label>
+                                                        <md-select ng-disabled="detalhes"
+                                                            ng-model="verba.identificadorVerba"
+                                                            name="identificadorVerba">
+                                                            <md-option ng-value=null><em>Não Definido</em>
+                                                            </md-option>
+                                                            <md-option
+                                                                ng-repeat="identificadorVerba in identificadorVerbas"
+                                                                value="{{identificadorVerba.value}}">
+                                                                {{identificadorVerba.label}} </md-option>
+                                                        </md-select>
+                                                    </md-input-container>
+                                                    <md-autocomplete flex
+                                                        ng-disabled="!verba.identificadorVerba || detalhes"
+                                                        md-no-cache="true" md-floating-label="Verba Associada"
+                                                        md-selected-item="verba.verbaAssociada"
+                                                        md-search-text="searchVerbaAssociada"
+                                                        md-items="item in querySearchVerbaAssociada(searchVerbaAssociada)"
+                                                        md-item-text="item.descricao" md-delay="1000" md-min-length="3"
+                                                        name="verbaAssociada"
+                                                        ng-required="verba.identificadorVerba === 'DIFERENCA' || verba.identificadorVerba === 'DEVOLUCAO'">
+                                                        <md-item-template>
+                                                            <span md-highlight-text="searchVerbaAssociada"
+                                                                md-highlight-flags="^i">{{item.descricao}}</span>
+                                                        </md-item-template>
+                                                        <md-not-found>
+                                                            Item "{{searchVerbaAssociada}}" não encontrado.
+                                                        </md-not-found>
+                                                    </md-autocomplete>
+                                                </div>
+
+                                                <h4>Demais informações</h4>
+
+                                                <div layout layout-sm="column">
+                                                    <md-input-container flex>
+                                                        <label>Valor Máximo</label>
+                                                        <input ng-disabled="detalhes" ng-model="verba.valorMaximo"
+                                                            name="valorMaximo" ui-number-mask="2" ui-hide-group-sep>
+                                                    </md-input-container>
+                                                    <md-input-container flex>
+                                                        <label>Referência Padrão</label>
+                                                        <input ng-disabled="detalhes" ng-model="verba.referencia"
+                                                            name="referencia" ui-number-mask="2" ui-hide-group-sep>
+                                                    </md-input-container>
+                                                    <md-input-container flex>
+                                                        <label>Faixa de Alíquota</label>
+                                                        <md-select ng-disabled="detalhes" ng-model="verba.faixaAliquota"
+                                                            name="faixaAliquota">
+                                                            <md-option ng-value=null>
+                                                                Não Definido
+                                                            </md-option>
+                                                            <md-option ng-repeat="item in faixasEnum"
+                                                                value="{{item.value}}">
+                                                                {{item.label}} </md-option>
+                                                        </md-select>
+                                                    </md-input-container>
+                                                </div>
+
+                                                <div layout layout-sm="column">
+                                                    <md-input-container flex>
+                                                        <label>Comentário</label>
+                                                        <textarea name="comentario" ng-disabled="detalhes"
+                                                            md-maxlength="2000" rows="3" ng-model="verba.comentario">
+                                                        </textarea>
+                                                    </md-input-container>
+                                                </div>
+
+                                            </md-tab>
+
+                                            <md-tab label="Fórmula *">
+
+                                                <div class="callout callout-info">
+                                                    <p>Crie abaixo a fórmula da verba escolhendo atributos,
+                                                        rotinas, operadores matemáticos, condicionais, datas,
+                                                        números ou
+                                                        textos.</p>
+                                                </div>
+
+                                                <div class="divider divider"></div>
+                                                <div class="divider divider"></div>
+
+                                                <h4>Atributos ou Rotinas</h4>
+
+                                                <div layout layout-sm="column">
+                                                    <md-input-container flex>
+                                                        <label>Atributos</label>
+                                                        <md-select ng-disabled="detalhes" ng-change="changeAtributo();"
+                                                            ng-model="atributoSelecinado">
+                                                            <md-option ng-repeat="item in atributoList" ng-value="item">
+                                                                {{item.label | uppercase}}
+                                                            </md-option>
+                                                        </md-select>
+                                                    </md-input-container>
+                                                    <md-autocomplete ng-disabled="detalhes" flex md-no-cache="noCache"
+                                                        md-floating-label="Rotinas" md-selected-item="rotinaSelecionada"
+                                                        md-search-text="searchVerba"
+                                                        md-items="verba in querySearchVerba(searchVerba)"
+                                                        md-item-text="verba.descricaoVerba" md-delay="100"
+                                                        md-min-length="3" md-selected-item-change="changeRotina()">
+                                                        <md-item-template> <span md-highlight-text="search"
+                                                                md-highlight-flags="^i"> {{verba.codigo}} -
+                                                                {{verba.descricaoVerba}}</span> </md-item-template>
+                                                        <md-not-found> Item "{{search}}" não
+                                                            encontrado. </md-not-found>
+                                                    </md-autocomplete>
+                                                </div>
+
+                                                <div class="divider divider"></div>
+
+                                                <h4>Operações ou Dados</h4>
+
+                                                <div layout layout-sm="column" ng-if="detalhes">
+                                                    <div class="col-sm-12" style="text-align: center;">
+                                                        <apan ng-repeat="item in operacoesFormula" class="spanTag">
+                                                            {{item.label}}</apan>
+                                                        <apan class="spanTag">
+                                                            DATA</apan>
+                                                        <apan class="spanTag">
+                                                            NUMERAL</apan>
+                                                        <apan class="spanTag">
+                                                            TEXTO</apan>
+                                                    </div>
+                                                </div>
+
+                                                <div layout layout-sm="column" ng-if="!detalhes">
+                                                    <div class="col-sm-12" style="text-align: center;">
+                                                        <apan ng-repeat="item in operacoesFormula"
+                                                            ng-click="changeOperadorOuCondicao(item)" class="spanTag">
+                                                            {{item.label}}</apan>
+                                                        <apan ng-click="showDialogDado($event, 'data')" class="spanTag">
+                                                            DATA</apan>
+                                                        <apan ng-click="showDialogDado($event, 'numeral')"
+                                                            class="spanTag">
+                                                            NUMERAL</apan>
+                                                        <apan ng-click="showDialogDado($event, 'texto')"
+                                                            class="spanTag">
+                                                            TEXTO</apan>
+                                                    </div>
+                                                </div>
+
+                                                <div class="divider divider"></div>
+
+                                                <h4>Condições</h4>
+
+                                                <div layout layout-sm="column">
+                                                    <div class="col-sm-12" style="text-align: center;" ng-if="detalhes">
+                                                        <apan ng-repeat="item in condicoesFormula" class="spanTag">
+                                                            {{item.label}}</apan>
+                                                    </div>
+                                                    <div class="col-sm-12" style="text-align: center;"
+                                                        ng-if="!detalhes">
+                                                        <apan ng-repeat="item in condicoesFormula"
+                                                            ng-click="changeOperadorOuCondicao(item)" class="spanTag">
+                                                            {{item.label}}</apan>
+                                                    </div>
+                                                </div>
+
+                                                <div class="divider divider"></div>
+                                                <div class="divider divider"></div>
+
+                                                <md-table-container>
+                                                    <table md-table md-row-select="!detalhes" multiple="false"
+                                                        ng-model="itemFormulaSelecionada">
+                                                        <thead md-head>
+                                                            <tr md-row>
+                                                                <th md-column><span>Item de Fórmula</span></th>
+                                                                <th md-column><span>Tipo</span></th>
+                                                                <th md-column><span>Ações</span></th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody md-body>
+                                                            <tr md-row md-select="item"
+                                                                ng-repeat="item in verba.formulas">
+                                                                <td md-cell>{{item.descricao | uppercase}}</td>
+                                                                <td md-cell>{{item.tipo | uppercase}}</td>
+                                                                <td md-cell style="padding: 0 !important;">
+                                                                    <a ng-click="sobe(item)" href=""
+                                                                        style="margin-right: 15px;"
+                                                                        ng-if="!detalhes && itemFormulaSelecionada.length === 1 && itemFormulaSelecionada[0].ordem === item.ordem">
+                                                                        <md-tooltip md-direction="top">
+                                                                            Sobe
+                                                                        </md-tooltip>
+                                                                        <i class="fa fa-arrow-up fa-lg"></i>
+                                                                    </a>
+                                                                    <a ng-click="desce(item)" href=""
+                                                                        style="margin-right: 15px;"
+                                                                        ng-if="!detalhes && itemFormulaSelecionada.length === 1 && itemFormulaSelecionada[0].ordem === item.ordem">
+                                                                        <md-tooltip md-direction="top">
+                                                                            Desce
+                                                                        </md-tooltip>
+                                                                        <i class="fa fa-arrow-down fa-lg"></i>
+                                                                    </a>
+                                                                    <a ng-click="exclui($index)" href=""
+                                                                        ng-if="!detalhes && itemFormulaSelecionada.length === 1 && itemFormulaSelecionada[0].ordem === item.ordem">
+                                                                        <md-tooltip md-direction="top">Excluir
+                                                                        </md-tooltip>
+                                                                        <i class="fa fa-trash-o fa-lg"></i>
+                                                                    </a>
+                                                                </td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </md-table-container>
+
+                                                <!-- <div class="row">
+                                                    <div class="col-md-12">
+                                                        <div layout layout-sm="column">
+                                                            <md-input-container class="md-block" flex>
+                                                                <table class="table">
+                                                                    <tbody>
+                                                                        <tr ng-repeat="item in verba.formulas">
+                                                                            <td
+                                                                                style="border: none;margin: 0;padding: 0;width: 100%">
+                                                                                {{item.descricao | uppercase}}
+                                                                            </td>
+                                                                            <td
+                                                                                style="border: none;margin: 0;padding: 0 15px;">
+                                                                                <a ng-click="sobe(item)" href=""
+                                                                                    ng-if="!detalhes"><i
+                                                                                        class="fa fa-arrow-up"></i></a>
+                                                                            </td>
+                                                                            <td
+                                                                                style="border: none;margin: 0;padding: 0 15px;">
+                                                                                <a ng-click="desce(item)" href=""
+                                                                                    ng-if="!detalhes"><i
+                                                                                        class="fa fa-arrow-down"></i></a>
+                                                                            </td>
+                                                                            <td
+                                                                                style="border: none;margin: 0;padding: 0 15px;">
+                                                                                <a ng-click="exclui($index)" href=""
+                                                                                    ng-if="!detalhes"><i
+                                                                                        class="fa fa-times"></i></a>
+                                                                            </td>
+                                                                        </tr>
+                                                                    </tbody>
+                                                                </table>
+                                                            </md-input-container>
+                                                        </div>
+                                                    </div>
+                                                </div> -->
+
+                                                <div class="divider divider"></div>
+                                                <div class="divider divider"></div>
+
+                                                <div class="row">
+                                                    <div class="col-md-12 text-center">
+
+                                                        <!-- <button type="button" ui-wave class="btn btn-wanning"
+                                                            ng-disabled="detalhes" ng-click="validarFormula()">Validar
+                                                            Fórmula</button> -->
+
+                                                        <!-- <button type="button" ui-wave class="btn btn-primary" ng-click="editarMontaListaFormulas()" ng-if="verba.id">Alterar</button> -->
+                                                        <!-- <button type="button" ui-wave class="btn btn-primary" ng-click="montaListaFormulas()" ng-if="!verba.id">Adicionar</button> -->
+
+                                                        <!-- <button type="button" ui-wave class="btn btn-wanning"
+                                                            ng-disabled="detalhes"
+                                                            ng-click="extrairVariaveis()">Preencher
+                                                            Variáveis</button> -->
+
+                                                        <!--Preencher valores para modificar as chaves-->
+                                                        <!-- <div class="col-sm-12">
+																		<div ng-repeat="chave in chaves">
+																			<md-input-container flex>
+																				<label>{{chave.label}}</label><input
+																					type="number"
+																					id="value{{chave}}"
+																					ng-model="chave.value" />
+																			</md-input-container>
+																		</div>
+																	</div> -->
+                                                    </div>
+                                                </div>
+                                            </md-tab>
+
+                                            <md-tab label="incidências">
+
+                                                <div class="callout callout-info">
+                                                    <p>Adicione abaixo verbas cujo valor incidam nesta verba.</p>
+                                                </div>
+
+                                                <h4>Verbas Incidentes</h4>
+
+                                                <div layout layout-sm="column">
+                                                    <md-autocomplete ng-disabled="detalhes" flex md-no-cache="true"
+                                                        md-floating-label="Selecione uma verba"
+                                                        md-selected-item="verbaIncidencia" md-search-text="searchVerba"
+                                                        md-items="verba in querySearchVerba(searchVerba)"
+                                                        md-item-text="verba.label" md-delay="100" md-min-length="3"
+                                                        md-selected-item-change="adicionarVerbaIncidente()">
+                                                        <md-item-template> <span md-highlight-text="search"
+                                                                md-highlight-flags="^i"> {{verba.label}}</span>
+                                                        </md-item-template>
+                                                        <md-not-found> Item "{{search}}" não
+                                                            encontrado. </md-not-found>
+                                                    </md-autocomplete>
+                                                </div>
+
+                                                <div class="divider divider"></div>
+
+                                                <md-table-container ng-if="incidencias && incidencias.length > 0">
+                                                    <table md-table ng-model="selected" md-progress="promise">
+                                                        <thead md-head md-on-reorder="loadList">
+                                                            <tr md-row>
+                                                                <th md-column><span>Código</span></th>
+                                                                <th md-column><span>Descrição da
+                                                                        Verba</span></th>
+                                                                <th md-column><span>Tipo</span></th>
+                                                                <th md-column ng-if="!detalhes">
+                                                                    <span>Ações</span>
+                                                                </th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody md-body>
+                                                            <tr md-row md-select="item" md-select-id="item"
+                                                                md-auto-select ng-repeat="verba in incidencias">
+                                                                <td md-cell>{{verba.codigo}}</td>
+                                                                <td md-cell>{{verba.label}}
+                                                                </td>
+                                                                <td md-cell>{{verba.tipoVerba}}</td>
+                                                                <td md-cell><a ng-if="!botoesGestao && !detalhes"
+                                                                        ng-click="removerVerbaIncidente($index)">
+                                                                        <md-tooltip md-direction="top">
+                                                                            Excluir</md-tooltip> <i
+                                                                            class="fa fa-trash-o fa-lg"></i>
+                                                                    </a></td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </md-table-container>
+                                                <p ng-if="!incidencias || incidencias.length === 0">Nenhuma incidência
+                                                    adicionada.</p>
+                                            </md-tab>
+                                        </md-tabs>
+
+                                        <audit-data show="detalhes" data="verba"></audit-data>
+
+                                        <div class="row">
+                                            <div class="col-md-12 text-center">
+                                                <div class="divider divider"></div>
+                                                <div class="divider divider"></div>
+                                                <button ng-if="!detalhes" type="submit" ui-wave
+                                                    ng-disabled="verbaForm.$invalid"
+                                                    class="btn btn-primary btn-w-md">Salvar</button>
+                                                <p class="btn btn-default btn-w-md" ui-wave data-ng-click="goBack()">
+                                                    Voltar
+                                                </p>
+                                                <div class="divider divider"></div>
+                                                <div class="divider divider"></div>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div>
+</section>

@@ -1,0 +1,44 @@
+<md-dialog style="min-width: 500px;">
+    <form ng-cloak>
+        <md-toolbar>
+            <div style="background-color: #01722c" class="md-toolbar-tools">
+                <h2>Alterar Situação</h2>
+                <span flex></span>
+                <a ng-click="cancel()">
+                    <i class="fa fa-close"></i>
+                </a>
+            </div>
+        </md-toolbar>
+
+        <md-dialog-content>
+            <div class="page">
+                <div class="row">
+                    <div flex class="col-sm-12">
+                        <md-input-container class="md-block">
+                            <label>Situação</label>
+                            <md-select ng-disabled="detalhes" required
+                                placeholder="Selecione a situação"
+                                name="novaSituacao" ng-model="novaSituacao.arquivoRemessa.situacao">
+                                <md-option ng-value="item.label"
+                                    ng-repeat="item in lista.situacao">{{item.label}}
+                                </md-option>
+                            </md-select>
+                        </md-input-container>
+                    </div>
+                    <div flex class="col-sm-12" ng-show="novaSituacao.arquivoRemessa.situacao == 'Arquivo rejeitado'">
+                        <md-input-container class="md-block">
+                            <label>Motivo</label>
+                            <textarea ng-model="novaSituacao.arquivoRemessa.motivo"></textarea>
+                        </md-input-container>
+                    </div>
+                </div>
+               
+	        </div>
+
+            <div class="md-dialog-content text-center">
+                <button class="btn btn-primary btn-w-md" ng-click="updateSituacao()">Atualizar</button>
+				<button class="btn btn-default btn-w-md" ng-click="cancel()">Voltar</button>
+            </div>
+        </md-dialog-content>
+    </form>
+</md-dialog>

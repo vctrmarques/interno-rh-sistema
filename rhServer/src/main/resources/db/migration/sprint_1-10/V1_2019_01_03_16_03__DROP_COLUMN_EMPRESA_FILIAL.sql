@@ -1,0 +1,1 @@
+ALTER TABLE empresa_filial DROP COLUMN subordinacao_empresa;

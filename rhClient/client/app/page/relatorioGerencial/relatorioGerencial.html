@@ -1,0 +1,331 @@
+<section class="page container-fluid with-maxwidth chapter" ng-controller="relatorioGerencialCtrl">
+
+    <div class="row ui-section">
+        <div class="col-lg-9 clearfix">
+            <h2 class="section-header">Gestão de Relatório Gerencial</h2>
+        </div>
+        <div class="col-lg-3 clearfix" style="padding-top: 10px;">
+            <div class="pull-right">
+                <md-button class="md-fab md-primary" ng-href="" ng-disabled="compareDisabled()"
+                    ng-click="showMesCompare($event)">
+                    <md-tooltip md-direction="bottom">Comparar</md-tooltip>
+                    <span class="fa fa-files-o"></span>
+                </md-button>
+                <md-button class="md-fab md-primary" ng-href="" ng-disabled="loadingDownload"
+                    ng-click="showRelatorio('excel')">
+                    <md-tooltip md-direction="bottom">Relatório Excel</md-tooltip>
+                    <span class="fa fa-file-excel-o"></span>
+                </md-button>
+                <md-button class="md-fab md-primary" ng-href="" ng-disabled="loadingDownload"
+                    ng-click="showRelatorio('pdf')">
+                    <md-tooltip md-direction="bottom">Relatório PDF</md-tooltip>
+                    <span class="fa fa-file-pdf-o"></span>
+                </md-button>
+            </div>
+        </div>
+        <div class="col-md-12">
+            <article class="article">
+                <md-card class="no-margin-h">
+                    <div layout="column">
+                        <div layout-padding>
+                            <div layout layout-sm="column">
+                                <md-input-container flex>
+                                    <label>Ano da Competência</label>
+                                    <md-select name="relatorioGerencialFiltroAno" ng-change="changeAno();"
+                                        ng-disabled="anoDisabled()" ng-model="relatorioGerencialFiltro.ano">
+                                        <md-option ng-repeat="item in anoCompetenciaList" ng-value="item">
+                                            {{item}}
+                                        </md-option>
+                                    </md-select>
+                                </md-input-container>
+                                <md-input-container flex>
+                                    <label>Mês da Competência</label>
+                                    <md-select name="relatorioGerencialFiltroCompetencia" ng-change="changeMes()"
+                                        ng-disabled="competenciaDisabled()"
+                                        ng-model="relatorioGerencialFiltro.competencia">
+                                        <md-option ng-repeat="item in competenciaList" ng-value="item">
+                                            {{item.mesCompetenciaLabel}}
+                                        </md-option>
+                                    </md-select>
+                                </md-input-container>
+                                <md-input-container flex>
+                                    <label>Tipo de Processamento</label>
+                                    <md-select ng-disabled="tipoProcessamentoDisabled()" name="tipoProcessamento"
+                                        ng-model="relatorioGerencialFiltro.tipoProcessamento" ng-required>
+                                        <md-option ng-repeat="item in tipoProcessamentoList" ng-value="item">
+                                            {{item.codigo}} -
+                                            {{item.descricao}}
+                                        </md-option>
+                                    </md-select>
+                                </md-input-container>
+                                <md-input-container flex ng-show="tabs[0].selectedItem">
+                                    <label>Filial Selecionada</label>
+                                    <input ng-model="tabs[0].selectedItem.tipo.descricao" ng-disabled="true">
+                                </md-input-container>
+                                <md-button class="md-icon-button" ng-click="limpaFiltro()">
+                                    <md-tooltip md-direction="bottom">Limpar Filtros</md-tooltip>
+                                    <md-icon>autorenew</md-icon>
+                                </md-button>
+                                <md-button class="md-icon-button" ng-click="loadList();">
+                                    <md-tooltip md-direction="bottom">Atualizar</md-tooltip>
+                                    <md-icon>refresh</md-icon>
+                                </md-button>
+                            </div>
+                            <div ng-show="mesComparacao"
+                                style="top: 75px; left: 35%; position: absolute; width: 30%; color: rgb(0,150,136);"
+                                class="text-center">
+                                Mês de Comparação: <span
+                                    style="font-weight: bold;">{{mesComparacao.mesCompetenciaLabel}}</span>
+                                <md-button class="md-icon-button" ng-click="mesComparacao = null; loadList();">
+                                    <md-tooltip md-direction="bottom">Limpar Comparação</md-tooltip>
+                                    <md-icon>clear</md-icon>
+                                </md-button>
+                            </div>
+                        </div>
+                    </div>
+                    <md-tabs md-dynamic-height md-border-bottom md-selected="selectedTabIndex" md-autoselect>
+                        <md-tab ng-repeat="tab in tabs" label="{{getLabelTab(tab.value)}}"
+                            md-on-select="onTabSelected()">
+                            <md-table-container>
+                                <table md-table md-progress="promise">
+                                    <thead md-head md-order="query.order" md-on-reorder="loadList">
+                                        <tr md-row>
+                                            <th md-column ng-if="tab.value === 'filial' || tab.value === 'resumo'"
+                                                style="padding: 0 15px;">
+                                                <span>Código</span>
+                                            </th>
+                                            <th md-column ng-if="tab.value !== 'funcionario'" style="padding: 0 15px;">
+                                                <span>Descrição</span>
+                                            </th>
+                                            <th md-column ng-if="tab.value !== 'funcionario'"
+                                                style="padding-right: 30px;">
+                                                <span>Qtd. Funcionários</span>
+                                            </th>
+                                            <th md-column ng-if="tab.value === 'funcionario'">
+                                                <span>Nome</span>
+                                            </th>
+                                            <th md-column ng-if="tab.value === 'funcionario'">
+                                                <span>Matricula</span>
+                                            </th>
+                                            <th md-column ng-if="tab.value === 'funcionario'">
+                                                <span>Lotação</span>
+                                            </th>
+                                            <th md-column ng-if="tab.value === 'funcionario'">
+                                                <span>Situação Atual</span>
+                                            </th>
+                                            <th md-column ng-if="tab.value !== 'resumo'">
+                                                <span>Total de Proventos</span>
+                                            </th>
+                                            <th md-column ng-if="tab.value !== 'resumo'">
+                                                <span>Total de Descontos</span>
+                                            </th>
+                                            <th md-column ng-if="tab.value !== 'resumo'">
+                                                <span>Total Líquido</span>
+                                            </th>
+                                            <th md-column ng-if="tab.value !== 'funcionario' && tab.value !== 'resumo'">
+                                                <span>Valor Médio</span>
+                                            </th>
+                                            <th md-column ng-if="tab.value === 'resumo'">
+                                                <span>Valor</span>
+                                            </th>
+                                            <th md-column style="text-align: center !important; padding-right: 15px;"
+                                                ng-hide="tab.value === 'resumo'">
+                                                <span>Ações</span>
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody md-body>
+                                        <tr md-row ng-repeat="item in list.data">
+                                            <td md-cell ng-if="tab.value === 'filial'" style="padding: 0 15px;">
+                                                {{item.tipo.id}}
+                                            </td>
+                                            <td md-cell ng-if="tab.value === 'resumo'" style="padding: 0 15px;">
+                                                {{item.codigoVerba}}
+                                            </td>
+                                            <td md-cell ng-if="tab.value !== 'funcionario' && tab.value !== 'resumo'"
+                                                style="padding: 0 15px;">
+                                                {{item.tipo.descricao}}
+                                            </td>
+                                            <td md-cell ng-if="tab.value === 'resumo'" style="padding: 0 15px;"
+                                                ng-style="item.colorStyle"
+                                                ng-class="{'font-weight-bold': item.somatorioResumo }">
+                                                {{item.descricaoVerba}}
+                                            </td>
+                                            <td md-cell ng-if="tab.value !== 'funcionario'" style="padding-right: 40px;"
+                                                ng-class="{'font-weight-bold': $last}">
+                                                <div class="row">
+                                                    <div class="col-md-2">
+                                                        {{item.qtdFuncionario}}
+                                                    </div>
+                                                    <div class="col-md-2"
+                                                        ng-if="tab.value !== 'funcionario' && item.qtdFuncionarioCompare"
+                                                        style="color: rgb(0,150,136);">
+                                                        {{item.qtdFuncionarioCompare}}
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td md-cell ng-if="tab.value === 'funcionario'"
+                                                style="padding-right: 40px;">
+                                                {{item.funcionario.nome}}
+                                            </td>
+                                            <td md-cell ng-if="tab.value === 'funcionario'"
+                                                style="padding-right: 40px;">
+                                                {{item.funcionario.matricula}}
+                                            </td>
+                                            <td md-cell ng-if="tab.value === 'funcionario'"
+                                                style="padding-right: 40px;">
+                                                {{item.funcionario.lotacao}}
+                                            </td>
+                                            <td md-cell ng-if="tab.value === 'funcionario'"
+                                                style="padding-right: 40px;">
+                                                {{item.funcionario.tipoSituacaoFuncional}}
+                                            </td>
+                                            <td md-cell ng-if="tab.value !== 'resumo'" style="padding-right: 40px;"
+                                                ng-class="{'font-weight-bold': $last}">
+                                                <div ng-if="!item.totalProventoCompare" class="row">
+                                                    <div class="col-sm-6">
+                                                        {{item.totalProvento | currency}}
+                                                    </div>
+                                                </div>
+                                                <div ng-if="item.totalProventoCompare" class="row"
+                                                    style="width: 200px;">
+                                                    <div class="col-sm-6">
+                                                        {{item.totalProvento | currency}}
+                                                    </div>
+                                                    <div class="col-sm-6" style="color: rgb(0,150,136);">
+                                                        {{item.totalProventoCompare | currency}}
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td md-cell ng-if="tab.value !== 'resumo'" style="padding-right: 40px;"
+                                                ng-class="{'font-weight-bold': $last}">
+                                                <div ng-if="!item.totalDescontoCompare" class="row">
+                                                    <div class="col-sm-6">
+                                                        {{item.totalDesconto | currency}}
+                                                    </div>
+                                                </div>
+                                                <div ng-if="item.totalDescontoCompare" class="row"
+                                                    style="width: 200px;">
+                                                    <div class="col-sm-6">
+                                                        {{item.totalDesconto | currency}}
+                                                    </div>
+                                                    <div class="col-sm-6" style="color: rgb(0,150,136);">
+                                                        {{item.totalDescontoCompare | currency}}
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td md-cell ng-if="tab.value !== 'resumo'" style="padding-right: 40px;"
+                                                ng-class="{'font-weight-bold': $last}">
+                                                <div ng-if="!item.totalLiquidoCompare" class="row">
+                                                    <div class="col-sm-6">
+                                                        {{item.totalLiquido | currency}}
+                                                    </div>
+                                                </div>
+                                                <div ng-if="item.totalLiquidoCompare" class="row" style="width: 200px;">
+                                                    <div class="col-sm-6">
+                                                        {{item.totalLiquido | currency}}
+                                                    </div>
+                                                    <div class="col-sm-6" style="color: rgb(0,150,136);">
+                                                        {{item.totalLiquidoCompare | currency}}
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td md-cell ng-if="tab.value !== 'funcionario' && tab.value !== 'resumo'"
+                                                style="padding-right: 40px;" ng-class="{'font-weight-bold': $last}">
+                                                <div ng-if="!item.valorMedioCompare" class="row">
+                                                    <div class="col-sm-6">
+                                                        {{item.valorMedio | currency}}
+                                                    </div>
+                                                </div>
+                                                <div ng-if="item.valorMedioCompare" class="row" style="width: 200px;">
+                                                    <div class="col-sm-6">
+                                                        {{item.valorMedio | currency}}
+                                                    </div>
+                                                    <div class="col-sm-6" style="color: rgb(0,150,136);">
+                                                        {{item.valorMedioCompare | currency}}
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td md-cell ng-if="tab.value === 'resumo'" style="padding-right: 40px;"
+                                                ng-style="item.colorStyle"
+                                                ng-class="{'font-weight-bold': item.somatorioResumo }">
+                                                <div ng-if="!item.valorCompare" class="row">
+                                                    <div class="col-sm-6">
+                                                        {{item.valor | currency}}
+                                                    </div>
+                                                </div>
+                                                <div ng-if="item.valorCompare" class="row" style="width: 200px;">
+                                                    <div class="col-sm-6">
+                                                        {{item.valor | currency}}
+                                                    </div>
+                                                    <div class="col-sm-6" style="color: rgb(0,150,136);">
+                                                        {{item.valorCompare | currency}}
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td md-cell style="text-align: center !important; padding-right: 15px;">
+                                                <div ng-hide="$last || tab.value === 'resumo'">
+                                                    <md-menu-bar>
+                                                        <md-menu md-position-mode="target-right target">
+                                                            <a href="" ng-click="$mdMenu.open()">
+                                                                <md-tooltip md-direction="bottom">Listar Opções
+                                                                </md-tooltip>
+                                                                <i class="fa fa-bars fa-lg"></i>
+                                                            </a>
+                                                            <md-menu-content width="3" ng-mouseleave="$mdMenu.close()">
+                                                                <md-menu-item
+                                                                    ng-show="tab.value === 'filial' || tab.value === 'lotacao'">
+                                                                    <md-button ng-click="addTab('cargo', item)">
+                                                                        Cargos
+                                                                    </md-button>
+                                                                </md-menu-item>
+                                                                <md-menu-item ng-show="tab.value === 'filial'">
+                                                                    <md-button ng-click="addTab('lotacao', item)">
+                                                                        Lotações
+                                                                    </md-button>
+                                                                </md-menu-item>
+                                                                <md-menu-item
+                                                                    ng-show="tab.value === 'filial' || tab.value === 'lotacao'">
+                                                                    <md-button ng-click="addTab('funcao', item)">
+                                                                        Funções
+                                                                    </md-button>
+                                                                </md-menu-item>
+                                                                <md-menu-item
+                                                                    ng-show="tab.value === 'filial' || tab.value === 'lotacao'">
+                                                                    <md-button ng-click="addTab('vinculo', item)">
+                                                                        Vínculos
+                                                                    </md-button>
+                                                                </md-menu-item>
+                                                                <md-menu-item
+                                                                    ng-show="tab.value === 'filial' || tab.value === 'cargo' || tab.value === 'funcao' || tab.value === 'lotacao' || tab.value === 'vinculo' || tab.value === 'funcionario'">
+                                                                    <md-button ng-click="addTab('resumo', item)">
+                                                                        Resumo
+                                                                    </md-button>
+                                                                </md-menu-item>
+                                                                <md-menu-item
+                                                                    ng-show="tab.value === 'filial' || tab.value === 'cargo' || tab.value === 'funcao' || tab.value === 'lotacao' || tab.value === 'vinculo'">
+                                                                    <md-button ng-click="addTab('funcionario', item)">
+                                                                        Funcionários
+                                                                    </md-button>
+                                                                </md-menu-item>
+                                                            </md-menu-content>
+                                                        </md-menu>
+                                                    </md-menu-bar>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </md-table-container>
+                            <md-table-pagination ng-disabled="tab.value === 'resumo'"
+                                md-label="{page: 'Página:', rowsPerPage: 'Registros por página:', of: 'de'}"
+                                md-limit="query.limit" md-limit-options="limitOptions" md-page="query.page"
+                                md-total="{{list.count}}" md-on-paginate="loadList" md-page-select>
+                            </md-table-pagination>
+                        </md-tab>
+                    </md-tabs>
+                </md-card>
+            </article>
+        </div>
+    </div>
+</section>

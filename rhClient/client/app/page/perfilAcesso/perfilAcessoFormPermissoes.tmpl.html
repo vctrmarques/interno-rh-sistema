@@ -1,0 +1,45 @@
+<md-dialog aria-label="Permissões">
+    <form ng-cloak>
+        <md-toolbar>
+            <div class="md-toolbar-tools">
+                <h2>Permissões</h2>
+                <span flex></span>
+                <a href="" ng-click="cancel()">
+                    <i class="fa fa-close"></i>
+                </a>
+            </div>
+        </md-toolbar>
+
+        <md-dialog-content>
+            <div class="page" style="min-width: 500px;">
+                <div class="row">
+                    <div class="col-md-12" style="text-align: center;padding: 10px 50px 30px 0px;">
+                        <h5>{{permissoes[0].menu.nome}}</h5>
+                    </div>
+                </div>
+                <div class="panel panel-default panel-minimal">
+                    <md-table-container>
+                        <table md-table>
+                            <thead md-head>
+                                <tr md-row>
+                                    <th md-column>
+                                        <span>Item</span>
+                                    </th>
+                                    <th md-column>
+                                        <span>Papel</span>
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody md-body>
+                                <tr md-row ng-repeat="permissao in permissoes">
+                                    <td md-cell>{{$index + 1}}</td>
+                                    <td md-cell>{{permissao.nome}}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </md-table-container>
+                </div>
+            </div>
+        </md-dialog-content>
+    </form>
+</md-dialog>

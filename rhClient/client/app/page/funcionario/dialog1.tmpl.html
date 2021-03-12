@@ -1,0 +1,56 @@
+<md-dialog>
+    <form ng-cloak>
+        <md-toolbar>
+            <div style="background-color: #01722c" class="md-toolbar-tools">
+                <h2>Níveis Salariais de {{funcionario.funcao.nome}}</h2>
+                <span flex></span>
+                <a href="" ng-click="cancel()">
+                    <i class="fa fa-close"></i>
+                </a>
+            </div>
+        </md-toolbar>
+        <md-dialog-content>
+            <div class="page">
+                <div class="row ui-section">
+                    <div class="col-md-12">
+                        <div class="panel panel-default">
+                            <div class="panel-body">
+                                <div class="row">
+                                    <div class="col-lg-12">
+                                        <strong style="color: #01722c">Níveis:</strong>
+                                        <div layout="column" ng-cloak class="md-inline-form inputdemoBasicUsage">
+                                            <div layout layout-sm="column" ng-if="funcionario.funcao.faixaSalarial.niveisSalariais.length > 0">
+                                                <md-table-container flex>
+                                                    <table md-table>
+                                                        <thead md-head>
+                                                            <tr md-row>
+                                                                <th md-column>Código</th>
+                                                                <th md-column>Nível Salarial</th>
+                                                                <th md-column>Valor</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody md-body>
+                                                            <tr md-row ng-repeat="faixa in funcionario.funcao.faixaSalarial.niveisSalariais">
+                                                                <td md-cell>{{faixa.codigo}}</td>
+                                                                <td md-cell>{{faixa.descricao}}</td>
+                                                                <td md-cell>{{faixa.valor | currency}}</td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </md-table-container>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="md-dialog-content text-center">
+                <button class="btn btn-primary btn-w-md" ng-click="cancel()">Voltar</button>
+            </div>
+        </md-dialog-content>
+
+    </form>
+</md-dialog>
